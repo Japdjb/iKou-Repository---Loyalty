@@ -181,7 +181,7 @@
     </footer>
   </div>
 
-  <!-- ===== Program overlay (dual mode markdown) ===== -->
+  <!-- ===== Program overlay (dual mode markdown + inline email preview) ===== -->
   <div id="prog-overlay" class="overlay" aria-hidden="true">
     <div class="ov-panel" role="dialog" aria-modal="true" aria-labelledby="prog-title">
       <div class="ov-bar">
@@ -200,7 +200,17 @@
 
           <div>
             <div id="prog-desc" class="muted" style="margin-bottom:10px"></div>
+
             <div id="prog-doc"></div>
+
+            <!-- Inline email preview (below documentation) -->
+            <div id="email-preview-wrap" style="display:none;margin-top:14px">
+              <div class="row" style="margin-bottom:8px">
+                <div style="font-weight:700">Email Preview</div>
+                <button id="email-preview-close" class="btn" type="button">Close preview</button>
+              </div>
+              <iframe id="email-preview-frame" style="width:100%;height:520px;border:1px solid var(--stroke);border-radius:12px;background:#fff"></iframe>
+            </div>
 
             <div style="font-weight:700;margin:14px 0 8px">Included Emails</div>
             <div id="prog-emails" class="grid" style="grid-template-columns:1fr"></div>
@@ -210,15 +220,13 @@
     </div>
   </div>
 
-  <!-- ===== JS (no writing block — code must be in code fence) ===== -->
-  <script>
-    // Minimal, self-contained app:
-    // - Loads data/programs.json
-    // - Renders Programs grid
-    // - Opens overlay with dual-mode markdown (exec/deep)
-    // Emails tab wiring comes next.
+  <!-- Optional: Markdown rendering.
+       If you add vendor/marked.min.js, uncomment this line to render markdown nicely.
+       <script src="vendor/marked.min.js"></script>
+  -->
 
-    let STATE = { mode:"exec", programs:[], active:null };
+  <script>
+    let STATE = { mode:"exec", programs:[], emails:[], active:null };
 
     function el(id){ return document.getElementById(id); }
     function escapeHTML(str){
@@ -261,27 +269,32 @@
       if(STATE.active) renderProgramDoc(STATE.active).catch(console.error);
     }
 
+    function closeInlineEmailPreview(){
+      const wrap = el("email-preview-wrap");
+      const frame = el("email-preview-frame");
+      if(frame) frame.removeAttribute("src");
+      if(wrap) wrap.style.display = "none";
+    }
+
+    function openInlineEmailPreview(email){
+      const wrap = el("email-preview-wrap");
+      const frame = el("email-preview-frame");
+      if(!wrap || !frame) return;
+      frame.src = email.previewPath;
+      wrap.style.display = "";
+      wrap.scrollIntoView({behavior:"smooth", block:"start"});
+    }
+
     function closeProgram(){
       const overlay = el("prog-overlay");
       overlay.classList.remove("show");
       overlay.setAttribute("aria-hidden","true");
       STATE.active = null;
+
       const img = el("prog-img");
       if(img) img.removeAttribute("src");
-    }
 
-    function renderEmailsPlaceholder(p){
-      const root = el("prog-emails");
-      root.innerHTML="";
-      const card = document.createElement("div");
-      card.className="card";
-      card.innerHTML = `
-        <div class="muted">
-          Emails will appear here once we wire <code>data/emails.json</code>.<br/>
-          For now, put preview snapshots under:
-          <div class="code">${escapeHTML(p.emailFolder || "(no emailFolder set)")}</div>
-        </div>`;
-      root.appendChild(card);
+      closeInlineEmailPreview();
     }
 
     async function renderProgramDoc(p){
@@ -292,13 +305,52 @@
         return;
       }
       const md = await fetchText(path);
-
-      // Optional: if you add vendor/marked.min.js, this will render markdown.
       if(window.marked){
         target.innerHTML = window.marked.parse(md);
       }else{
         target.innerHTML = `<pre class="code">${escapeHTML(md)}</pre>`;
       }
+    }
+
+    function renderProgramEmails(p){
+      const root = el("prog-emails");
+      if(!root) return;
+
+      closeInlineEmailPreview();
+      root.innerHTML = "";
+
+      const rows = STATE.emails
+        .filter(e => e.programId === p.id)
+        .sort((a,b) => (a.order ?? 9999) - (b.order ?? 9999));
+
+      if(rows.length === 0){
+        const empty = document.createElement("div");
+        empty.className = "card";
+        empty.innerHTML = `<div class="muted">No emails mapped yet for this program. Add rows to <code>data/emails.json</code>.</div>`;
+        root.appendChild(empty);
+        return;
+      }
+
+      rows.forEach(email => {
+        const card = document.createElement("article");
+        card.className = "card";
+
+        card.innerHTML = `
+          <div class="row">
+            <div style="font-weight:700">${escapeHTML(email.title || email.id)}</div>
+            <span class="badge">${escapeHTML(email.status || "Draft")}</span>
+          </div>
+          ${email.description ? `<div class="muted" style="font-size:12px">${escapeHTML(email.description)}</div>` : ""}
+          <div class="actions">
+            <button class="btn primary" type="button">Preview</button>
+            <a class="btn" href="${escapeHTML(email.previewPath || "#")}" target="_blank" rel="noopener">Open in new tab</a>
+          </div>
+          <div class="code">${escapeHTML(email.previewPath || "")}</div>
+        `;
+
+        card.querySelector("button.primary").addEventListener("click", ()=> openInlineEmailPreview(email));
+        root.appendChild(card);
+      });
     }
 
     function openProgram(p){
@@ -316,7 +368,7 @@
         el("prog-doc").innerHTML = `<div class="muted">Could not load doc: ${escapeHTML(err.message || String(err))}</div>`;
       });
 
-      renderEmailsPlaceholder(p);
+      renderProgramEmails(p);
 
       const overlay = el("prog-overlay");
       overlay.classList.add("show");
@@ -386,53 +438,39 @@
       el("tab-emails").setAttribute("aria-selected", programsSelected ? "false" : "true");
       el("programs-view").style.display = programsSelected ? "" : "none";
       el("emails-view").style.display   = programsSelected ? "none" : "";
+
       if(programsSelected) renderPrograms();
-      else {
-        el("emails-view").innerHTML = `<div class="card"><div class="muted">Emails tab wiring comes next (data/emails.json).</div></div>`;
-      }
+      else el("emails-view").innerHTML = `<div class="card"><div class="muted">Emails tab (global) comes after program emails are working.</div></div>`;
     }
 
     async function init(){
-      // Footer year
       el("year").textContent = new Date().getFullYear();
 
-      // Mode buttons
       el("mode-exec").addEventListener("click",()=>setMode("exec"));
       el("mode-deep").addEventListener("click",()=>setMode("deep"));
       setMode("exec");
 
-      // Overlay close
       el("prog-close").addEventListener("click", closeProgram);
       el("prog-overlay").addEventListener("click",(e)=>{ if(e.target===el("prog-overlay")) closeProgram(); });
       document.addEventListener("keydown",(e)=>{ if(e.key==="Escape") closeProgram(); });
 
-      // Tabs
+      const closeEmailBtn = el("email-preview-close");
+      if(closeEmailBtn) closeEmailBtn.addEventListener("click", closeInlineEmailPreview);
+
       el("tab-programs").addEventListener("click",()=>setTab(true));
       el("tab-emails").addEventListener("click",()=>setTab(false));
 
-      // Filters
       el("q").addEventListener("input", renderPrograms);
       el("phaseFilter").addEventListener("change", renderPrograms);
       el("sort").addEventListener("change", renderPrograms);
 
-      // Load programs
-      try{
-        STATE.programs = await fetchJSON("data/programs.json");
-      }catch(err){
-        console.error(err);
-        STATE.programs = [];
-      }
+      try{ STATE.programs = await fetchJSON("data/programs.json"); } catch(e){ STATE.programs = []; console.error(e); }
+      try{ STATE.emails   = await fetchJSON("data/emails.json"); } catch(e){ STATE.emails   = []; console.error(e); }
 
-      // Default tab
       setTab(true);
     }
 
     document.addEventListener("DOMContentLoaded", init);
   </script>
-
-  <!-- Optional: Markdown rendering.
-       Add vendor/marked.min.js and uncomment below line if you want formatted markdown.
-       <script src="vendor/marked.min.js"></script>
-  -->
 </body>
 </html>
