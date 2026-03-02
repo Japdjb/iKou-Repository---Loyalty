@@ -1,1 +1,32 @@
-
+[
+  {
+    "id": "birthday_email_01",
+    "programId": "loyalty_02_birthday_series",
+    "title": "Birthday Email 1 — Celebration",
+    "order": 1,
+    "status": "Draft",
+    "klaviyoName": "BDAY | Email 1 | Celebration",
+    "description": "Primary birthday celebration email introducing reward/treat.",
+    "previewPath": "emails/loyalty/02-lifecycle/birthday/email-01/preview.html"
+  },
+  {
+    "id": "birthday_email_02",
+    "programId": "loyalty_02_birthday_series",
+    "title": "Birthday Email 2 — Reminder",
+    "order": 2,
+    "status": "Draft",
+    "klaviyoName": "BDAY | Email 2 | Reminder",
+    "description": "Reminder email if reward not yet redeemed.",
+    "previewPath": "emails/loyalty/02-lifecycle/birthday/email-02/preview.html"
+  },
+  {
+    "id": "birthday_email_03",
+    "programId": "loyalty_02_birthday_series",
+    "title": "Birthday Email 3 — Last Chance",
+    "order": 3,
+    "status": "Draft",
+    "klaviyoName": "BDAY | Email 3 | Last Chance",
+    "description": "Final reminder before birthday window closes.",
+    "previewPath": "emails/loyalty/02-lifecycle/birthday/email-03/preview.html"
+  }
+]
