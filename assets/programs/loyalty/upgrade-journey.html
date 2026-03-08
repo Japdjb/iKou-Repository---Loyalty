@@ -1,0 +1,742 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Upgrade Journey</title>
+  <style>
+    :root {
+      --bg: #ececec;
+      --text: #222;
+      --line: #2f2f2f;
+
+      --purple-fill: #c7bbff;
+      --purple-stroke: #7450ff;
+
+      --yellow-fill: #f6e0a3;
+      --yellow-stroke: #e0a11b;
+
+      --green-fill: #bfe9bf;
+      --green-stroke: #59b86a;
+
+      --teal-fill: #baf5f2;
+      --teal-stroke: #42d3cd;
+
+      --shadow: 0 18px 50px rgba(0, 0, 0, 0.18);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+    }
+
+    .page {
+      width: 100%;
+      min-height: 100vh;
+      overflow-x: auto;
+    }
+
+    .board {
+      position: relative;
+      width: 1600px;
+      height: 860px;
+      margin: 0 auto;
+      background: var(--bg);
+    }
+
+    .title-pill {
+      position: absolute;
+      top: 12px;
+      left: 12px;
+      background: #d6d6d6;
+      border: 1px solid #9b9b9b;
+      border-radius: 8px;
+      font-size: 22px;
+      font-weight: 700;
+      padding: 8px 14px;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.5);
+      z-index: 4;
+    }
+
+    .hint {
+      position: absolute;
+      top: 14px;
+      right: 16px;
+      font-size: 12px;
+      color: #666;
+      background: rgba(255,255,255,.65);
+      padding: 6px 10px;
+      border-radius: 999px;
+      z-index: 4;
+    }
+
+    .node {
+      position: absolute;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      user-select: none;
+      border: 0;
+      background: transparent;
+      padding: 0;
+      z-index: 2;
+      transition: transform .16s ease, filter .16s ease, box-shadow .16s ease;
+    }
+
+    .node:hover {
+      transform: translateY(-2px);
+      filter: brightness(1.02);
+    }
+
+    .node.active {
+      box-shadow: 0 0 0 5px rgba(17,17,17,.08), 0 0 0 10px rgba(116,80,255,.08);
+      border-radius: 18px;
+      transform: translateY(-2px) scale(1.01);
+    }
+
+    .node-label {
+      position: absolute;
+      top: calc(100% + 10px);
+      left: 50%;
+      transform: translateX(-50%);
+      width: 160px;
+      text-align: center;
+      font-size: 8.5px;
+      line-height: 1.25;
+      color: #222;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+
+    .node-label .desc {
+      display: block;
+      margin-top: 4px;
+      font-size: 8px;
+      font-weight: 400;
+      text-transform: none;
+      line-height: 1.25;
+    }
+
+    .shape-envelope {
+      width: 78px;
+      height: 54px;
+      border-radius: 8px;
+      background: var(--purple-fill);
+      border: 2px solid var(--purple-stroke);
+      position: relative;
+    }
+
+    .shape-envelope:before,
+    .shape-envelope:after {
+      content: "";
+      position: absolute;
+      top: 13px;
+      height: 2px;
+      background: var(--purple-stroke);
+      width: 34px;
+    }
+
+    .shape-envelope:before {
+      left: 5px;
+      transform: rotate(34deg);
+      transform-origin: left center;
+    }
+
+    .shape-envelope:after {
+      right: 5px;
+      transform: rotate(-34deg);
+      transform-origin: right center;
+    }
+
+    .shape-circle {
+      width: 82px;
+      height: 82px;
+      border-radius: 50%;
+      background: var(--yellow-fill);
+      border: 2px solid var(--yellow-stroke);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 10px 8px;
+      font-size: 7.2px;
+      line-height: 1.15;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+
+    .shape-trigger {
+      width: 72px;
+      height: 72px;
+      background: var(--teal-fill);
+      border: 2px solid var(--teal-stroke);
+      clip-path: polygon(0 46%, 42% 46%, 42% 0, 100% 50%, 42% 100%, 42% 54%, 0 54%);
+    }
+
+    .shape-finish {
+      width: 92px;
+      height: 48px;
+      background: var(--green-fill);
+      border: 2px solid var(--green-stroke);
+      clip-path: polygon(0 0, 78% 0, 100% 50%, 78% 100%, 0 100%, 14% 50%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      color: #2d6c38;
+    }
+
+    .tiny {
+      position: absolute;
+      font-size: 9px;
+      color: #444;
+      z-index: 1;
+    }
+
+    svg.lines {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+    }
+
+    .overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,.45);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      z-index: 20;
+    }
+
+    .overlay.open { display: flex; }
+
+    .modal {
+      width: min(720px, 100%);
+      background: #fff;
+      border-radius: 18px;
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .modal-header {
+      padding: 18px 22px 14px;
+      border-bottom: 1px solid #ececec;
+      display: flex;
+      justify-content: space-between;
+      gap: 14px;
+      align-items: center;
+    }
+
+    .eyebrow {
+      font-size: 11px;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      color: #777;
+      margin-bottom: 6px;
+      font-weight: 700;
+    }
+
+    .modal-title {
+      margin: 0;
+      font-size: 22px;
+      line-height: 1.2;
+    }
+
+    .close-btn {
+      width: 38px;
+      height: 38px;
+      border-radius: 999px;
+      border: 0;
+      background: #f2f2f2;
+      font-size: 20px;
+      cursor: pointer;
+    }
+
+    .modal-body {
+      padding: 22px;
+    }
+
+    .modal-body p {
+      margin: 0 0 14px;
+      line-height: 1.55;
+      font-size: 15px;
+    }
+
+    .meta-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+      margin-top: 16px;
+    }
+
+    .meta-card {
+      background: #f7f7f7;
+      border: 1px solid #ececec;
+      border-radius: 12px;
+      padding: 14px;
+    }
+
+    .meta-card h4 {
+      margin: 0 0 6px;
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: .05em;
+      color: #666;
+    }
+
+    .meta-card p {
+      margin: 0;
+      font-size: 14px;
+      line-height: 1.45;
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <div class="board">
+      <div class="title-pill">Upgrade Journey</div>
+      <div class="hint">Click any token to view its description. Click outside the popup to return.</div>
+
+      <!-- tiny path labels -->
+      <div class="tiny" style="left: 190px; top: 379px;">Wait<br>5 Minutes</div>
+
+      <div class="tiny" style="left: 327px; top: 242px;">Yes</div>
+      <div class="tiny" style="left: 442px; top: 378px;">No</div>
+      <div class="tiny" style="left: 557px; top: 380px;">Yes</div>
+      <div class="tiny" style="left: 668px; top: 380px;">Wait</div>
+      <div class="tiny" style="left: 782px; top: 380px;">No</div>
+      <div class="tiny" style="left: 894px; top: 380px;">Wait</div>
+      <div class="tiny" style="left: 1006px; top: 380px;">No</div>
+
+      <div class="tiny" style="left: 565px; top: 202px;">Wait</div>
+      <div class="tiny" style="left: 675px; top: 202px;">No</div>
+      <div class="tiny" style="left: 786px; top: 202px;">Wait</div>
+      <div class="tiny" style="left: 900px; top: 202px;">No</div>
+
+      <div class="tiny" style="left: 573px; top: 707px;">Yes</div>
+      <div class="tiny" style="left: 683px; top: 707px;">Wait</div>
+      <div class="tiny" style="left: 798px; top: 707px;">No</div>
+      <div class="tiny" style="left: 905px; top: 707px;">Wait</div>
+      <div class="tiny" style="left: 1017px; top: 707px;">No</div>
+
+      <div class="tiny" style="left: 576px; top: 571px;">Yes</div>
+      <div class="tiny" style="left: 792px; top: 571px;">Yes</div>
+      <div class="tiny" style="left: 1012px; top: 571px;">Yes</div>
+
+      <div class="tiny" style="left: 576px; top: 343px;">Yes</div>
+      <div class="tiny" style="left: 793px; top: 344px;">Yes</div>
+      <div class="tiny" style="left: 577px; top: 755px;">Yes</div>
+      <div class="tiny" style="left: 906px; top: 755px;">Yes</div>
+
+      <svg class="lines" viewBox="0 0 1600 860" aria-hidden="true">
+        <defs>
+          <marker id="arrow" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto">
+            <path d="M0,0 L12,6 L0,12 z" fill="#2f2f2f"></path>
+          </marker>
+        </defs>
+
+        <!-- trigger to first split -->
+        <path d="M125 377 H 180" stroke="#2f2f2f" stroke-width="3" fill="none" marker-end="url(#arrow)"/>
+
+        <!-- first split up -->
+        <path d="M262 340 V 120 H 380" stroke="#2f2f2f" stroke-width="3" fill="none" marker-end="url(#arrow)"/>
+
+        <!-- first split to second split -->
+        <path d="M302 377 H 410" stroke="#2f2f2f" stroke-width="3" fill="none" marker-end="url(#arrow)"/>
+
+        <!-- top row -->
+        <path d="M458 120 H 540" stroke="#2f2f2f" stroke-width="3" fill="none" marker-end="url(#arrow)"/>
+        <path d="M620 120 H 715" stroke="#2f2f2f" stroke-width="3" fill="none" marker-end="url(#arrow)"/>
+        <path d="M790 120 H 875" stroke="#2f2f2f" stroke-width="3" fill="none" marker-end="url(#arrow)"/>
+        <path d="M955 120 H 1048 V 565 H 1502" stroke="#2f2f2f" stroke-width="3" fill="none" marker-end="url(#arrow)"/>
+
+        <!-- top yes drops -->
+        <path d="M580 161 V 255 Q580 290 615 290 H 1440 Q1480 290 1480 330 V 565" stroke="#2f2f2f" stroke-width="3" fill="none"/>
+        <path d="M866 161 V 255 Q866 290 900 290 H 1440 Q1480 290 1480 330 V 565" stroke="#2f2f2f" stroke-width="3" fill="none"/>
+
+        <!-- mid row -->
+        <path d="M498 377 H 590" stroke="#2f2f2f" stroke-width="3" fill="none" marker-end="url(#arrow)"/>
+        <path d="M670 377 H 748" stroke="#2f2f2f" stroke-width="3" fill="none" marker-end="url(#arrow)"/>
+        <path d="M826 377 H 910" stroke="#2f2f2f" stroke-width="3" fill="none" marker-end="url(#arrow)"/>
+        <path d="M992 377 H 1080" stroke="#2f2f2f" stroke-width="3" fill="none" marker-end="url(#arrow)"/>
+        <path d="M1157 377 H 1430 V 565 H 1502" stroke="#2f2f2f" stroke-width="3" fill="none" marker-end="url(#arrow)"/>
+
+        <!-- mid yes drops -->
+        <path d="M710 418 V 525 H 1490 V 565" stroke="#2f2f2f" stroke-width="3" fill="none"/>
+        <path d="M996 418 V 525 H 1490 V 565" stroke="#2f2f2f" stroke-width="3" fill="none"/>
+
+        <!-- second split down -->
+        <path d="M480 418 V 665 H 575" stroke="#2f2f2f" stroke-width="3" fill="none" marker-end="url(#arrow)"/>
+
+        <!-- bottom row -->
+        <path d="M655 665 H 740" stroke="#2f2f2f" stroke-width="3" fill="none" marker-end="url(#arrow)"/>
+        <path d="M820 665 H 905" stroke="#2f2f2f" stroke-width="3" fill="none" marker-end="url(#arrow)"/>
+        <path d="M984 665 H 1070" stroke="#2f2f2f" stroke-width="3" fill="none" marker-end="url(#arrow)"/>
+        <path d="M1150 665 H 1430 V 565 H 1502" stroke="#2f2f2f" stroke-width="3" fill="none" marker-end="url(#arrow)"/>
+
+        <!-- bottom yes drops -->
+        <path d="M780 706 V 790 H 1480 V 565" stroke="#2f2f2f" stroke-width="3" fill="none"/>
+        <path d="M1060 706 V 790 H 1480 V 565" stroke="#2f2f2f" stroke-width="3" fill="none"/>
+      </svg>
+
+      <!-- trigger -->
+      <button class="node" style="left: 52px; top: 355px;" data-id="trigger-upgrade">
+        <div class="shape-trigger"></div>
+        <div class="node-label">
+          TRIGGER
+          <span class="desc">When someone<br>Properties about someone:<br>pr_upgradeTierWelcome</span>
+        </div>
+      </button>
+
+      <!-- first split -->
+      <button class="node" style="left: 180px; top: 336px;" data-id="split-tier1">
+        <div class="shape-circle">CONDITIONAL SPLIT<br><br>Properties about someone:<br>Level - equals 2</div>
+      </button>
+
+      <!-- second split -->
+      <button class="node" style="left: 410px; top: 336px;" data-id="split-tier2">
+        <div class="shape-circle">CONDITIONAL SPLIT<br><br>Properties about someone:<br>Level - equals 3</div>
+      </button>
+
+      <!-- top row / level 2 -->
+      <button class="node" style="left: 380px; top: 92px;" data-id="l2-email1">
+        <div class="shape-envelope"></div>
+        <div class="node-label">
+          SEND EMAIL
+          <span class="desc">L2 Upgrade Email 1<br>Welcome to Tier</span>
+        </div>
+      </button>
+
+      <button class="node" style="left: 540px; top: 78px;" data-id="l2-split1">
+        <div class="shape-circle">CONDITIONAL SPLIT<br><br>Someone has -<br>Redeemed Reward -<br>equals True</div>
+      </button>
+
+      <button class="node" style="left: 715px; top: 92px;" data-id="l2-email2">
+        <div class="shape-envelope"></div>
+        <div class="node-label">
+          SEND EMAIL
+          <span class="desc">L2 Upgrade Email 2<br>Reward Reminder</span>
+        </div>
+      </button>
+
+      <button class="node" style="left: 875px; top: 78px;" data-id="l2-split2">
+        <div class="shape-circle">CONDITIONAL SPLIT<br><br>Someone has -<br>Redeemed Reward -<br>equals True</div>
+      </button>
+
+      <button class="node" style="left: 1048px; top: 92px;" data-id="l2-email3">
+        <div class="shape-envelope"></div>
+        <div class="node-label">
+          SEND EMAIL
+          <span class="desc">L2 Upgrade Email 3<br>Reward Last Chance</span>
+        </div>
+      </button>
+
+      <!-- middle row / level 3 -->
+      <button class="node" style="left: 590px; top: 349px;" data-id="l3-email1">
+        <div class="shape-envelope"></div>
+        <div class="node-label">
+          SEND EMAIL
+          <span class="desc">L3 Upgrade Email 1<br>Welcome to Tier</span>
+        </div>
+      </button>
+
+      <button class="node" style="left: 748px; top: 335px;" data-id="l3-split1">
+        <div class="shape-circle">CONDITIONAL SPLIT<br><br>Someone has -<br>Redeemed Reward -<br>equals True</div>
+      </button>
+
+      <button class="node" style="left: 910px; top: 349px;" data-id="l3-email2">
+        <div class="shape-envelope"></div>
+        <div class="node-label">
+          SEND EMAIL
+          <span class="desc">L3 Upgrade Email 2<br>Reward Reminder</span>
+        </div>
+      </button>
+
+      <button class="node" style="left: 1080px; top: 335px;" data-id="l3-split2">
+        <div class="shape-circle">CONDITIONAL SPLIT<br><br>Someone has -<br>Redeemed Reward -<br>equals True</div>
+      </button>
+
+      <button class="node" style="left: 1242px; top: 349px;" data-id="l3-email3">
+        <div class="shape-envelope"></div>
+        <div class="node-label">
+          SEND EMAIL
+          <span class="desc">L3 Upgrade Email 3<br>Reward Last Chance</span>
+        </div>
+      </button>
+
+      <!-- bottom row / level 4 -->
+      <button class="node" style="left: 575px; top: 637px;" data-id="split-tier3">
+        <div class="shape-circle">CONDITIONAL SPLIT<br><br>Properties about someone:<br>Level - equals 4</div>
+      </button>
+
+      <button class="node" style="left: 740px; top: 649px;" data-id="l4-email1">
+        <div class="shape-envelope"></div>
+        <div class="node-label">
+          SEND EMAIL
+          <span class="desc">L4 Upgrade Email 1<br>Welcome to Tier</span>
+        </div>
+      </button>
+
+      <button class="node" style="left: 905px; top: 635px;" data-id="l4-split1">
+        <div class="shape-circle">CONDITIONAL SPLIT<br><br>Someone has -<br>Redeemed Reward -<br>equals True</div>
+      </button>
+
+      <button class="node" style="left: 1070px; top: 649px;" data-id="l4-email2">
+        <div class="shape-envelope"></div>
+        <div class="node-label">
+          SEND EMAIL
+          <span class="desc">L4 Upgrade Email 2<br>Reward Reminder</span>
+        </div>
+      </button>
+
+      <button class="node" style="left: 1235px; top: 635px;" data-id="l4-split2">
+        <div class="shape-circle">CONDITIONAL SPLIT<br><br>Someone has -<br>Redeemed Reward -<br>equals True</div>
+      </button>
+
+      <button class="node" style="left: 1398px; top: 649px;" data-id="l4-email3">
+        <div class="shape-envelope"></div>
+        <div class="node-label">
+          SEND EMAIL
+          <span class="desc">L3 Upgrade Email 3<br>Reward Last Chance</span>
+        </div>
+      </button>
+
+      <!-- finish -->
+      <button class="node" style="left: 1502px; top: 542px;" data-id="finish-upgrade">
+        <div class="shape-finish">Finish</div>
+      </button>
+    </div>
+  </div>
+
+  <div class="overlay" id="overlay" aria-hidden="true">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+      <div class="modal-header">
+        <div>
+          <div class="eyebrow" id="modalEyebrow">Token details</div>
+          <h2 class="modal-title" id="modalTitle">Title</h2>
+        </div>
+        <button class="close-btn" id="closeBtn" aria-label="Close">×</button>
+      </div>
+      <div class="modal-body">
+        <p id="modalDescription"></p>
+        <div class="meta-grid">
+          <div class="meta-card">
+            <h4>Section</h4>
+            <p id="modalSection"></p>
+          </div>
+          <div class="meta-card">
+            <h4>Flow logic</h4>
+            <p id="modalLogic"></p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const tokenData = {
+      "trigger-upgrade": {
+        eyebrow: "Upgrade journey",
+        title: "Trigger",
+        description: "Starts the upgrade journey when the profile enters the upgrade welcome condition.",
+        section: "Entry",
+        logic: "This is the flow entry point before level-based routing begins."
+      },
+      "split-tier1": {
+        eyebrow: "Upgrade journey",
+        title: "Conditional Split — Level equals 2",
+        description: "Checks whether the customer belongs to Level 2.",
+        section: "Routing",
+        logic: "Yes sends the customer into the Level 2 upgrade branch. No continues to the Level 3 check."
+      },
+      "split-tier2": {
+        eyebrow: "Upgrade journey",
+        title: "Conditional Split — Level equals 3",
+        description: "Checks whether the customer belongs to Level 3.",
+        section: "Routing",
+        logic: "Yes sends the customer into the Level 3 upgrade branch. No continues to the Level 4 check."
+      },
+      "split-tier3": {
+        eyebrow: "Upgrade journey",
+        title: "Conditional Split — Level equals 4",
+        description: "Checks whether the customer belongs to Level 4.",
+        section: "Routing",
+        logic: "Yes sends the customer into the Level 4 upgrade branch."
+      },
+
+      "l2-email1": {
+        eyebrow: "Level 2 branch",
+        title: "L2 Upgrade Email 1",
+        description: "Welcome to Tier email for customers who have just upgraded into Level 2.",
+        section: "Level 2",
+        logic: "First email in the Level 2 upgrade onboarding sequence."
+      },
+      "l2-split1": {
+        eyebrow: "Level 2 branch",
+        title: "Conditional Split — Redeemed Reward equals True",
+        description: "Checks if the customer redeemed the Level 2 reward after the first email.",
+        section: "Level 2",
+        logic: "Yes exits to flow completion. No continues to reminder messaging."
+      },
+      "l2-email2": {
+        eyebrow: "Level 2 branch",
+        title: "L2 Upgrade Email 2",
+        description: "Reward reminder email for Level 2 customers who have not redeemed yet.",
+        section: "Level 2",
+        logic: "Second email in the Level 2 upgrade sequence."
+      },
+      "l2-split2": {
+        eyebrow: "Level 2 branch",
+        title: "Conditional Split — Redeemed Reward equals True",
+        description: "Checks again whether the Level 2 reward has been redeemed.",
+        section: "Level 2",
+        logic: "Yes exits. No proceeds to the last chance email."
+      },
+      "l2-email3": {
+        eyebrow: "Level 2 branch",
+        title: "L2 Upgrade Email 3",
+        description: "Last chance redemption email for Level 2 customers.",
+        section: "Level 2",
+        logic: "Final reminder before the Level 2 branch ends."
+      },
+
+      "l3-email1": {
+        eyebrow: "Level 3 branch",
+        title: "L3 Upgrade Email 1",
+        description: "Welcome to Tier email for customers who have just upgraded into Level 3.",
+        section: "Level 3",
+        logic: "First email in the Level 3 upgrade onboarding sequence."
+      },
+      "l3-split1": {
+        eyebrow: "Level 3 branch",
+        title: "Conditional Split — Redeemed Reward equals True",
+        description: "Checks if the customer redeemed the Level 3 reward after the first email.",
+        section: "Level 3",
+        logic: "Yes exits to flow completion. No continues to reminder messaging."
+      },
+      "l3-email2": {
+        eyebrow: "Level 3 branch",
+        title: "L3 Upgrade Email 2",
+        description: "Reward reminder email for Level 3 customers who have not redeemed yet.",
+        section: "Level 3",
+        logic: "Second email in the Level 3 upgrade sequence."
+      },
+      "l3-split2": {
+        eyebrow: "Level 3 branch",
+        title: "Conditional Split — Redeemed Reward equals True",
+        description: "Checks again whether the Level 3 reward has been redeemed.",
+        section: "Level 3",
+        logic: "Yes exits. No proceeds to the last chance email."
+      },
+      "l3-email3": {
+        eyebrow: "Level 3 branch",
+        title: "L3 Upgrade Email 3",
+        description: "Last chance redemption email for Level 3 customers.",
+        section: "Level 3",
+        logic: "Final reminder before the Level 3 branch ends."
+      },
+
+      "l4-email1": {
+        eyebrow: "Level 4 branch",
+        title: "L4 Upgrade Email 1",
+        description: "Welcome to Tier email for customers who have just upgraded into Level 4.",
+        section: "Level 4",
+        logic: "First email in the Level 4 upgrade onboarding sequence."
+      },
+      "l4-split1": {
+        eyebrow: "Level 4 branch",
+        title: "Conditional Split — Redeemed Reward equals True",
+        description: "Checks if the customer redeemed the Level 4 reward after the first email.",
+        section: "Level 4",
+        logic: "Yes exits to flow completion. No continues to reminder messaging."
+      },
+      "l4-email2": {
+        eyebrow: "Level 4 branch",
+        title: "L4 Upgrade Email 2",
+        description: "Reward reminder email for Level 4 customers who have not redeemed yet.",
+        section: "Level 4",
+        logic: "Second email in the Level 4 upgrade sequence."
+      },
+      "l4-split2": {
+        eyebrow: "Level 4 branch",
+        title: "Conditional Split — Redeemed Reward equals True",
+        description: "Checks again whether the Level 4 reward has been redeemed.",
+        section: "Level 4",
+        logic: "Yes exits. No proceeds to the last chance email."
+      },
+      "l4-email3": {
+        eyebrow: "Level 4 branch",
+        title: "L4 Upgrade Email 3",
+        description: "Last chance redemption email for Level 4 customers.",
+        section: "Level 4",
+        logic: "Final reminder before the Level 4 branch ends."
+      },
+
+      "finish-upgrade": {
+        eyebrow: "Upgrade journey",
+        title: "Finish",
+        description: "The journey ends here after reward redemption or completion of the reminder path.",
+        section: "Completion",
+        logic: "Terminal step for all branches."
+      }
+    };
+
+    const overlay = document.getElementById("overlay");
+    const closeBtn = document.getElementById("closeBtn");
+    const modalEyebrow = document.getElementById("modalEyebrow");
+    const modalTitle = document.getElementById("modalTitle");
+    const modalDescription = document.getElementById("modalDescription");
+    const modalSection = document.getElementById("modalSection");
+    const modalLogic = document.getElementById("modalLogic");
+    const nodes = document.querySelectorAll(".node");
+
+    function openModal(id, node) {
+      const data = tokenData[id];
+      if (!data) return;
+
+      nodes.forEach(n => n.classList.remove("active"));
+      node.classList.add("active");
+
+      modalEyebrow.textContent = data.eyebrow;
+      modalTitle.textContent = data.title;
+      modalDescription.textContent = data.description;
+      modalSection.textContent = data.section;
+      modalLogic.textContent = data.logic;
+
+      overlay.classList.add("open");
+      overlay.setAttribute("aria-hidden", "false");
+    }
+
+    function closeModal() {
+      overlay.classList.remove("open");
+      overlay.setAttribute("aria-hidden", "true");
+      nodes.forEach(n => n.classList.remove("active"));
+    }
+
+    nodes.forEach(node => {
+      node.addEventListener("click", (e) => {
+        e.stopPropagation();
+        openModal(node.dataset.id, node);
+      });
+    });
+
+    closeBtn.addEventListener("click", closeModal);
+    overlay.addEventListener("click", (e) => {
+      if (e.target === overlay) closeModal();
+    });
+
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape") closeModal();
+    });
+  </script>
+</body>
+</html>
