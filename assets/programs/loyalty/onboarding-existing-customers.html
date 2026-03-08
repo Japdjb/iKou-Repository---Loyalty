@@ -38,13 +38,12 @@
     }
 
     body {
-      min-width: 1600px;
+      min-width: 0;
     }
 
     .page {
       padding: 42px 40px 60px;
       position: relative;
-      overflow-x: auto;
     }
 
     .shell {
@@ -66,6 +65,7 @@
       align-items: flex-start;
       gap: 24px;
       margin-bottom: 28px;
+      flex-wrap: wrap;
     }
 
     .hero h1 {
@@ -124,7 +124,8 @@
 
     .board {
       position: relative;
-      width: 1640px;
+      width: 100%;
+      max-width: 1640px;
       min-height: 1500px;
       background:
         radial-gradient(circle at top right, rgba(232,222,245,0.35), transparent 24%),
@@ -135,6 +136,7 @@
       box-shadow: var(--shadow-soft);
       padding: 34px 34px 50px;
       overflow: hidden;
+      margin: 0 auto;
     }
 
     .board::before,
@@ -201,14 +203,32 @@
       max-width: 980px;
     }
 
+    .flow-wrap {
+      width: 100%;
+      overflow-x: auto;
+      overflow-y: hidden;
+      padding-bottom: 8px;
+    }
+
+    .flow-wrap::-webkit-scrollbar {
+      height: 10px;
+    }
+
+    .flow-wrap::-webkit-scrollbar-thumb {
+      background: rgba(84, 51, 18, 0.18);
+      border-radius: 999px;
+    }
+
     .flow {
       position: relative;
       min-height: 260px;
+      min-width: 1540px;
       padding: 10px 0 0;
     }
 
     .flow.dual {
       min-height: 430px;
+      min-width: 1540px;
     }
 
     svg.connector-layer {
@@ -269,6 +289,7 @@
     }
 
     .card.finish {
+      width: 180px;
       background: var(--dark-olive);
       border-color: var(--dark-olive);
       color: var(--bg);
@@ -325,10 +346,17 @@
       margin: 0;
     }
 
+    .diamond-node {
+      width: 170px;
+      height: 170px;
+    }
+
     .diamond {
       width: 170px;
       height: 170px;
+      margin: 0 auto;
       transform: rotate(45deg);
+      transform-origin: center center;
       background: linear-gradient(180deg, rgba(237,232,186,0.96), rgba(255,245,237,0.95));
       border: 1.8px solid rgba(56,51,23,0.24);
       border-radius: 26px;
@@ -341,8 +369,11 @@
 
     .diamond-inner {
       width: 118px;
-      transform: rotate(-45deg);
+      transform: rotate(-45deg) translateY(-2px);
       text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
     }
 
     .diamond .node-type {
@@ -350,16 +381,19 @@
       margin-bottom: 8px;
       font-size: 11px;
       letter-spacing: 0.10em;
+      line-height: 1;
     }
 
     .diamond .node-title {
       font-size: 16px;
-      margin-bottom: 4px;
+      line-height: 1.25;
+      margin: 0 0 4px;
     }
 
     .diamond .node-copy {
       font-size: 13px;
       line-height: 1.35;
+      margin: 0;
     }
 
     .arrow-label {
@@ -370,6 +404,7 @@
       background: rgba(255,245,237,0.85);
       padding: 3px 8px;
       border-radius: 999px;
+      white-space: nowrap;
     }
 
     .mini-card {
@@ -492,6 +527,28 @@
       font-size: 14px;
       line-height: 1.55;
     }
+
+    @media (max-width: 1100px) {
+      .page {
+        padding: 28px 20px 40px;
+      }
+
+      .hero h1 {
+        font-size: 46px;
+      }
+
+      .hero p {
+        font-size: 18px;
+      }
+
+      .section-title {
+        font-size: 28px;
+      }
+
+      .meta-grid {
+        grid-template-columns: 1fr;
+      }
+    }
   </style>
 </head>
 <body>
@@ -529,31 +586,33 @@
             </p>
           </div>
 
-          <div class="flow" style="height: 240px;">
-            <svg class="connector-layer" viewBox="0 0 1540 240" aria-hidden="true">
-              <defs>
-                <marker id="arrowA" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto">
-                  <path d="M0,0 L10,5 L0,10 z" fill="#543312"></path>
-                </marker>
-              </defs>
-              <path d="M250 118 H 430" stroke="#543312" stroke-width="2.5" fill="none" marker-end="url(#arrowA)"/>
-            </svg>
+          <div class="flow-wrap">
+            <div class="flow" style="min-height: 240px; min-width: 1540px;">
+              <svg class="connector-layer" viewBox="0 0 1540 240" aria-hidden="true" preserveAspectRatio="xMinYMin meet">
+                <defs>
+                  <marker id="arrowA" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto">
+                    <path d="M0,0 L10,5 L0,10 z" fill="#543312"></path>
+                  </marker>
+                </defs>
+                <path d="M250 118 H 430" stroke="#543312" stroke-width="2.5" fill="none" marker-end="url(#arrowA)"/>
+              </svg>
 
-            <button class="node" style="left: 40px; top: 48px;" data-id="bau-campaign">
-              <div class="card action">
-                <div class="node-type"><span class="node-icon">✦</span>Campaign placement</div>
-                <h3 class="node-title">BAU Campaign Sends</h3>
-                <p class="node-copy">Regular business-as-usual emails where teaser messaging is seeded into every relevant send.</p>
-              </div>
-            </button>
+              <button class="node" style="left: 40px; top: 48px;" data-id="bau-campaign" type="button">
+                <div class="card action">
+                  <div class="node-type"><span class="node-icon">✦</span>Campaign placement</div>
+                  <h3 class="node-title">BAU Campaign Sends</h3>
+                  <p class="node-copy">Regular business-as-usual emails where teaser messaging is seeded into every relevant send.</p>
+                </div>
+              </button>
 
-            <button class="node" style="left: 430px; top: 48px;" data-id="dynamic-content">
-              <div class="mini-card">
-                <div class="node-type"><span class="node-icon">≋</span>Dynamic content</div>
-                <h3 class="node-title">Loyalty teaser block</h3>
-                <p class="node-copy">Conditional teaser visible only to the intended eligible audience segment.</p>
-              </div>
-            </button>
+              <button class="node" style="left: 430px; top: 48px;" data-id="dynamic-content" type="button">
+                <div class="mini-card">
+                  <div class="node-type"><span class="node-icon">≋</span>Dynamic content</div>
+                  <h3 class="node-title">Loyalty teaser block</h3>
+                  <p class="node-copy">Conditional teaser visible only to the intended eligible audience segment.</p>
+                </div>
+              </button>
+            </div>
           </div>
         </section>
 
@@ -567,90 +626,90 @@
             </p>
           </div>
 
-          <div class="flow dual">
-            <svg class="connector-layer" viewBox="0 0 1540 430" aria-hidden="true">
-              <defs>
-                <marker id="arrowB" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto">
-                  <path d="M0,0 L10,5 L0,10 z" fill="#543312"></path>
-                </marker>
-              </defs>
+          <div class="flow-wrap">
+            <div class="flow dual">
+              <svg class="connector-layer" viewBox="0 0 1540 430" aria-hidden="true" preserveAspectRatio="xMinYMin meet">
+                <defs>
+                  <marker id="arrowB" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto">
+                    <path d="M0,0 L10,5 L0,10 z" fill="#543312"></path>
+                  </marker>
+                </defs>
 
-              <!-- main line -->
-              <path d="M250 120 H 350" stroke="#543312" stroke-width="2.5" fill="none" marker-end="url(#arrowB)"/>
-              <path d="M560 120 H 650" stroke="#543312" stroke-width="2.5" fill="none" marker-end="url(#arrowB)"/>
-              <path d="M900 120 H 990" stroke="#543312" stroke-width="2.5" fill="none" marker-end="url(#arrowB)"/>
-              <path d="M1240 120 H 1370" stroke="#543312" stroke-width="2.5" fill="none" marker-end="url(#arrowB)"/>
+                <path d="M250 120 H 350" stroke="#543312" stroke-width="2.5" fill="none" marker-end="url(#arrowB)"/>
+                <path d="M590 120 H 640" stroke="#543312" stroke-width="2.5" fill="none" marker-end="url(#arrowB)"/>
+                <path d="M900 120 H 990" stroke="#543312" stroke-width="2.5" fill="none" marker-end="url(#arrowB)"/>
+                <path d="M1210 120 H 1270" stroke="#543312" stroke-width="2.5" fill="none" marker-end="url(#arrowB)"/>
 
-              <!-- yes exits down -->
-              <path d="M455 205 V 330 H 1410 V 160" stroke="#543312" stroke-width="2.5" fill="none" stroke-dasharray="8 8"/>
-              <path d="M1095 205 V 330 H 1410 V 160" stroke="#543312" stroke-width="2.5" fill="none" stroke-dasharray="8 8"/>
-            </svg>
+                <path d="M455 205 V 330 H 1410 V 160" stroke="#543312" stroke-width="2.5" fill="none" stroke-dasharray="8 8"/>
+                <path d="M1095 205 V 330 H 1410 V 160" stroke="#543312" stroke-width="2.5" fill="none" stroke-dasharray="8 8"/>
+              </svg>
 
-            <div class="arrow-label" style="left: 598px; top: 104px;">No</div>
-            <div class="arrow-label" style="left: 938px; top: 104px;">No</div>
-            <div class="arrow-label" style="left: 500px; top: 258px;">Yes</div>
-            <div class="arrow-label" style="left: 1140px; top: 258px;">Yes</div>
+              <div class="arrow-label" style="left: 602px; top: 102px;">No</div>
+              <div class="arrow-label" style="left: 924px; top: 102px;">No</div>
+              <div class="arrow-label" style="left: 500px; top: 258px;">Yes</div>
+              <div class="arrow-label" style="left: 1140px; top: 258px;">Yes</div>
 
-            <button class="node" style="left: 28px; top: 56px;" data-id="trigger-recent">
-              <div class="card trigger">
-                <div class="node-type"><span class="node-icon">⚡</span>Trigger</div>
-                <h3 class="node-title">Purchased in last 12 months</h3>
-                <p class="node-copy">Customer enters the welcome series because they are an existing active purchaser.</p>
-              </div>
-            </button>
-
-            <button class="node" style="left: 350px; top: 30px;" data-id="email1-recent">
-              <div class="card email">
-                <div class="node-type"><span class="node-icon">✉</span>Send email</div>
-                <h3 class="node-title">Welcome Existing Email #1</h3>
-                <p class="node-copy">Welcome to Loyalty, Loyalists.</p>
-              </div>
-            </button>
-
-            <button class="node" style="left: 640px; top: 10px;" data-id="split1-recent">
-              <div class="diamond">
-                <div class="diamond-inner">
-                  <div class="node-type"><span class="node-icon">◇</span>Split</div>
-                  <div class="node-title">Redeemed Reward?</div>
-                  <div class="node-copy">Equals true</div>
+              <button class="node" style="left: 28px; top: 56px;" data-id="trigger-recent" type="button">
+                <div class="card trigger">
+                  <div class="node-type"><span class="node-icon">⚡</span>Trigger</div>
+                  <h3 class="node-title">Purchased in last 12 months</h3>
+                  <p class="node-copy">Customer enters the welcome series because they are an existing active purchaser.</p>
                 </div>
-              </div>
-            </button>
+              </button>
 
-            <button class="node" style="left: 980px; top: 30px;" data-id="email2-recent">
-              <div class="card email">
-                <div class="node-type"><span class="node-icon">✉</span>Send email</div>
-                <h3 class="node-title">Welcome Existing Email #2</h3>
-                <p class="node-copy">Reward reminder for non-redeemers.</p>
-              </div>
-            </button>
-
-            <button class="node" style="left: 1270px; top: 10px;" data-id="split2-recent">
-              <div class="diamond">
-                <div class="diamond-inner">
-                  <div class="node-type"><span class="node-icon">◇</span>Split</div>
-                  <div class="node-title">Redeemed Reward?</div>
-                  <div class="node-copy">Equals true</div>
+              <button class="node" style="left: 350px; top: 30px;" data-id="email1-recent" type="button">
+                <div class="card email">
+                  <div class="node-type"><span class="node-icon">✉</span>Send email</div>
+                  <h3 class="node-title">Welcome Existing Email #1</h3>
+                  <p class="node-copy">Welcome to Loyalty, Loyalists.</p>
                 </div>
-              </div>
-            </button>
+              </button>
 
-            <button class="node" style="left: 980px; top: 250px;" data-id="email3-recent">
-              <div class="card email">
-                <div class="node-type"><span class="node-icon">✉</span>Send email</div>
-                <h3 class="node-title">Welcome Existing Email #3</h3>
-                <p class="node-copy">Reward last chance email.</p>
-              </div>
-            </button>
-
-            <button class="node" style="left: 1380px; top: 260px;" data-id="finish-recent">
-              <div class="card finish">
-                <div>
-                  <div class="node-type">Finish</div>
-                  <div class="node-title">Sequence complete</div>
+              <button class="node diamond-node" style="left: 640px; top: 10px;" data-id="split1-recent" type="button">
+                <div class="diamond">
+                  <div class="diamond-inner">
+                    <div class="node-type"><span class="node-icon">◇</span>Split</div>
+                    <div class="node-title">Redeemed Reward?</div>
+                    <div class="node-copy">Equals true</div>
+                  </div>
                 </div>
-              </div>
-            </button>
+              </button>
+
+              <button class="node" style="left: 980px; top: 30px;" data-id="email2-recent" type="button">
+                <div class="card email">
+                  <div class="node-type"><span class="node-icon">✉</span>Send email</div>
+                  <h3 class="node-title">Welcome Existing Email #2</h3>
+                  <p class="node-copy">Reward reminder for non-redeemers.</p>
+                </div>
+              </button>
+
+              <button class="node diamond-node" style="left: 1270px; top: 10px;" data-id="split2-recent" type="button">
+                <div class="diamond">
+                  <div class="diamond-inner">
+                    <div class="node-type"><span class="node-icon">◇</span>Split</div>
+                    <div class="node-title">Redeemed Reward?</div>
+                    <div class="node-copy">Equals true</div>
+                  </div>
+                </div>
+              </button>
+
+              <button class="node" style="left: 980px; top: 250px;" data-id="email3-recent" type="button">
+                <div class="card email">
+                  <div class="node-type"><span class="node-icon">✉</span>Send email</div>
+                  <h3 class="node-title">Welcome Existing Email #3</h3>
+                  <p class="node-copy">Reward last chance email.</p>
+                </div>
+              </button>
+
+              <button class="node" style="left: 1360px; top: 260px;" data-id="finish-recent" type="button">
+                <div class="card finish">
+                  <div>
+                    <div class="node-type">Finish</div>
+                    <div class="node-title">Sequence complete</div>
+                  </div>
+                </div>
+              </button>
+            </div>
           </div>
         </section>
 
@@ -665,104 +724,104 @@
             </p>
           </div>
 
-          <div class="flow dual" style="min-height: 500px;">
-            <svg class="connector-layer" viewBox="0 0 1540 500" aria-hidden="true">
-              <defs>
-                <marker id="arrowC" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto">
-                  <path d="M0,0 L10,5 L0,10 z" fill="#543312"></path>
-                </marker>
-              </defs>
+          <div class="flow-wrap">
+            <div class="flow dual" style="min-height: 500px; min-width: 1540px;">
+              <svg class="connector-layer" viewBox="0 0 1540 500" aria-hidden="true" preserveAspectRatio="xMinYMin meet">
+                <defs>
+                  <marker id="arrowC" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto">
+                    <path d="M0,0 L10,5 L0,10 z" fill="#543312"></path>
+                  </marker>
+                </defs>
 
-              <!-- top flow -->
-              <path d="M250 120 H 330" stroke="#543312" stroke-width="2.5" fill="none" marker-end="url(#arrowC)"/>
-              <path d="M520 120 H 610" stroke="#543312" stroke-width="2.5" fill="none" marker-end="url(#arrowC)"/>
-              <path d="M860 120 H 950" stroke="#543312" stroke-width="2.5" fill="none" marker-end="url(#arrowC)"/>
-              <path d="M1200 120 H 1290" stroke="#543312" stroke-width="2.5" fill="none" marker-end="url(#arrowC)"/>
-              <path d="M980 350 H 1380" stroke="#543312" stroke-width="2.5" fill="none" marker-end="url(#arrowC)"/>
+                <path d="M250 120 H 330" stroke="#543312" stroke-width="2.5" fill="none" marker-end="url(#arrowC)"/>
+                <path d="M550 120 H 610" stroke="#543312" stroke-width="2.5" fill="none" marker-end="url(#arrowC)"/>
+                <path d="M900 120 H 950" stroke="#543312" stroke-width="2.5" fill="none" marker-end="url(#arrowC)"/>
+                <path d="M1240 120 H 1290" stroke="#543312" stroke-width="2.5" fill="none" marker-end="url(#arrowC)"/>
+                <path d="M980 350 H 1380" stroke="#543312" stroke-width="2.5" fill="none" marker-end="url(#arrowC)"/>
 
-              <!-- split paths -->
-              <path d="M420 205 V 420 H 1390 V 390" stroke="#543312" stroke-width="2.5" fill="none" stroke-dasharray="8 8"/>
-              <path d="M760 205 V 350 H 980" stroke="#543312" stroke-width="2.5" fill="none" stroke-dasharray="8 8"/>
-              <path d="M1440 205 V 420 H 1390 V 390" stroke="#543312" stroke-width="2.5" fill="none" stroke-dasharray="8 8"/>
-            </svg>
+                <path d="M420 205 V 420 H 1390 V 390" stroke="#543312" stroke-width="2.5" fill="none" stroke-dasharray="8 8"/>
+                <path d="M760 205 V 350 H 980" stroke="#543312" stroke-width="2.5" fill="none" stroke-dasharray="8 8"/>
+                <path d="M1440 205 V 420 H 1390 V 390" stroke="#543312" stroke-width="2.5" fill="none" stroke-dasharray="8 8"/>
+              </svg>
 
-            <div class="arrow-label" style="left: 460px; top: 104px;">No</div>
-            <div class="arrow-label" style="left: 558px; top: 255px;">Yes</div>
-            <div class="arrow-label" style="left: 900px; top: 104px;">No</div>
-            <div class="arrow-label" style="left: 815px; top: 255px;">Yes</div>
-            <div class="arrow-label" style="left: 1240px; top: 104px;">No</div>
-            <div class="arrow-label" style="left: 1470px; top: 255px;">Yes</div>
+              <div class="arrow-label" style="left: 470px; top: 102px;">No</div>
+              <div class="arrow-label" style="left: 558px; top: 255px;">Yes</div>
+              <div class="arrow-label" style="left: 902px; top: 102px;">No</div>
+              <div class="arrow-label" style="left: 815px; top: 255px;">Yes</div>
+              <div class="arrow-label" style="left: 1248px; top: 102px;">No</div>
+              <div class="arrow-label" style="left: 1470px; top: 255px;">Yes</div>
 
-            <button class="node" style="left: 28px; top: 56px;" data-id="trigger-lapsed">
-              <div class="card trigger">
-                <div class="node-type"><span class="node-icon">⚡</span>Trigger</div>
-                <h3 class="node-title">Placed Order</h3>
-                <p class="node-copy">Entry event for customers who may be reactivated after a period of inactivity.</p>
-              </div>
-            </button>
-
-            <button class="node" style="left: 330px; top: 10px;" data-id="split0-lapsed">
-              <div class="diamond">
-                <div class="diamond-inner">
-                  <div class="node-type"><span class="node-icon">◇</span>Split</div>
-                  <div class="node-title">Placed order in last 12 months?</div>
-                  <div class="node-copy">Filter active customers out</div>
+              <button class="node" style="left: 28px; top: 56px;" data-id="trigger-lapsed" type="button">
+                <div class="card trigger">
+                  <div class="node-type"><span class="node-icon">⚡</span>Trigger</div>
+                  <h3 class="node-title">Placed Order</h3>
+                  <p class="node-copy">Entry event for customers who may be reactivated after a period of inactivity.</p>
                 </div>
-              </div>
-            </button>
+              </button>
 
-            <button class="node" style="left: 610px; top: 30px;" data-id="email1-lapsed">
-              <div class="card email">
-                <div class="node-type"><span class="node-icon">✉</span>Send email</div>
-                <h3 class="node-title">Welcome Existing Email #1</h3>
-                <p class="node-copy">Welcome to Loyalty, Loyalists.</p>
-              </div>
-            </button>
-
-            <button class="node" style="left: 950px; top: 10px;" data-id="split1-lapsed">
-              <div class="diamond">
-                <div class="diamond-inner">
-                  <div class="node-type"><span class="node-icon">◇</span>Split</div>
-                  <div class="node-title">Redeemed Reward?</div>
-                  <div class="node-copy">Equals true</div>
+              <button class="node diamond-node" style="left: 330px; top: 10px;" data-id="split0-lapsed" type="button">
+                <div class="diamond">
+                  <div class="diamond-inner">
+                    <div class="node-type"><span class="node-icon">◇</span>Split</div>
+                    <div class="node-title">Placed order in last 12 months?</div>
+                    <div class="node-copy">Filter active customers out</div>
+                  </div>
                 </div>
-              </div>
-            </button>
+              </button>
 
-            <button class="node" style="left: 1290px; top: 30px;" data-id="email2-lapsed">
-              <div class="card email">
-                <div class="node-type"><span class="node-icon">✉</span>Send email</div>
-                <h3 class="node-title">Welcome Existing Email #2</h3>
-                <p class="node-copy">Reward reminder for non-redeemers.</p>
-              </div>
-            </button>
-
-            <button class="node" style="left: 980px; top: 260px;" data-id="email3-lapsed">
-              <div class="card email">
-                <div class="node-type"><span class="node-icon">✉</span>Send email</div>
-                <h3 class="node-title">Welcome Existing Email #3</h3>
-                <p class="node-copy">Reward last chance email.</p>
-              </div>
-            </button>
-
-            <button class="node" style="left: 1290px; top: 240px;" data-id="split2-lapsed">
-              <div class="diamond">
-                <div class="diamond-inner">
-                  <div class="node-type"><span class="node-icon">◇</span>Split</div>
-                  <div class="node-title">Redeemed Reward?</div>
-                  <div class="node-copy">Final redemption check</div>
+              <button class="node" style="left: 610px; top: 30px;" data-id="email1-lapsed" type="button">
+                <div class="card email">
+                  <div class="node-type"><span class="node-icon">✉</span>Send email</div>
+                  <h3 class="node-title">Welcome Existing Email #1</h3>
+                  <p class="node-copy">Welcome to Loyalty, Loyalists.</p>
                 </div>
-              </div>
-            </button>
+              </button>
 
-            <button class="node" style="left: 1380px; top: 360px;" data-id="finish-lapsed">
-              <div class="card finish">
-                <div>
-                  <div class="node-type">Finish</div>
-                  <div class="node-title">Sequence complete</div>
+              <button class="node diamond-node" style="left: 950px; top: 10px;" data-id="split1-lapsed" type="button">
+                <div class="diamond">
+                  <div class="diamond-inner">
+                    <div class="node-type"><span class="node-icon">◇</span>Split</div>
+                    <div class="node-title">Redeemed Reward?</div>
+                    <div class="node-copy">Equals true</div>
+                  </div>
                 </div>
-              </div>
-            </button>
+              </button>
+
+              <button class="node" style="left: 1290px; top: 30px;" data-id="email2-lapsed" type="button">
+                <div class="card email">
+                  <div class="node-type"><span class="node-icon">✉</span>Send email</div>
+                  <h3 class="node-title">Welcome Existing Email #2</h3>
+                  <p class="node-copy">Reward reminder for non-redeemers.</p>
+                </div>
+              </button>
+
+              <button class="node" style="left: 980px; top: 260px;" data-id="email3-lapsed" type="button">
+                <div class="card email">
+                  <div class="node-type"><span class="node-icon">✉</span>Send email</div>
+                  <h3 class="node-title">Welcome Existing Email #3</h3>
+                  <p class="node-copy">Reward last chance email.</p>
+                </div>
+              </button>
+
+              <button class="node diamond-node" style="left: 1290px; top: 240px;" data-id="split2-lapsed" type="button">
+                <div class="diamond">
+                  <div class="diamond-inner">
+                    <div class="node-type"><span class="node-icon">◇</span>Split</div>
+                    <div class="node-title">Redeemed Reward?</div>
+                    <div class="node-copy">Final redemption check</div>
+                  </div>
+                </div>
+              </button>
+
+              <button class="node" style="left: 1360px; top: 360px;" data-id="finish-lapsed" type="button">
+                <div class="card finish">
+                  <div>
+                    <div class="node-type">Finish</div>
+                    <div class="node-title">Sequence complete</div>
+                  </div>
+                </div>
+              </button>
+            </div>
           </div>
         </section>
       </div>
@@ -776,7 +835,7 @@
           <div class="modal-kicker" id="modalEyebrow">Node details</div>
           <h2 class="modal-title" id="modalTitle">Title</h2>
         </div>
-        <button class="close-btn" id="closeBtn" aria-label="Close">×</button>
+        <button class="close-btn" id="closeBtn" aria-label="Close" type="button">×</button>
       </div>
 
       <div class="modal-body">
