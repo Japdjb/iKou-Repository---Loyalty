@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Spend to Next</title>
+<style>
+  :root{
+    --bg:#FFF5ED; --lav:#E8DEF5; --olive:#383317; --blue:#CFF0FF; --burg:#570A05;
+    --brown:#331700; --yellow:#EDE8BA; --choc:#543312; --rose:#DBA6A1; --stroke:rgba(84,51,18,.12);
+  }
+  *{box-sizing:border-box} html,body{margin:0;height:100%}
+  body{
+    font-family:Inter,Arial,sans-serif; overflow:hidden; color:var(--brown);
+    background:
+      radial-gradient(circle at top right, rgba(232,222,245,.58), transparent 28%),
+      radial-gradient(circle at bottom left, rgba(237,232,186,.35), transparent 24%),
+      var(--bg);
+  }
+  .card{height:100vh;padding:18px;display:flex;flex-direction:column;justify-content:space-between;border:1px solid var(--stroke);border-radius:16px;background:rgba(255,250,246,.76)}
+  .eyebrow{font:700 10px/1 Inter,Arial,sans-serif;letter-spacing:.16em;text-transform:uppercase;color:var(--burg);margin-bottom:8px}
+  .brand{font:600 18px/1.05 Georgia,"Times New Roman",serif;letter-spacing:.08em;margin-bottom:10px}
+  h1{margin:0 0 10px;font:600 clamp(22px,5vw,40px)/.92 Georgia,"Times New Roman",serif}
+  p{margin:0;font-size:12px;line-height:1.45;color:var(--choc);max-width:92%}
+  .progress-wrap{margin:10px 0 16px;display:grid;gap:10px}
+  .row{display:flex;align-items:center;gap:8px}
+  .label{width:38px;font-size:11px;font-weight:700;color:var(--burg)}
+  .bar{
+    flex:1;height:14px;border-radius:999px;background:rgba(84,51,18,.08);
+    overflow:hidden;border:1px solid rgba(84,51,18,.08);
+  }
+  .fill{height:100%;border-radius:999px;background:linear-gradient(90deg, var(--lav), var(--rose))}
+  .f1{width:42%}.f2{width:68%}.f3{width:84%}
+  .target{
+    width:18px;height:18px;border-radius:999px;background:linear-gradient(180deg, rgba(237,232,186,.96), rgba(255,245,237,.96));
+    border:1.2px solid rgba(84,51,18,.14); flex:0 0 auto;
+  }
+  .footer{display:flex;align-items:center;justify-content:space-between;gap:10px}
+  .badge{padding:5px 8px;border-radius:999px;font-size:10px;font-weight:600;border:1px solid rgba(87,10,5,.14);background:rgba(219,166,161,.16);color:var(--burg)}
+  .hint{font-size:10px;color:#7a6a5d}
+</style>
+</head>
+<body>
+  <div class="card">
+    <div>
+      <div class="eyebrow">IKOU Loyalty</div>
+      <div class="brand">IKOU</div>
+      <h1>Spend to Next Tier</h1>
+      <p>Spend-gap reminder journeys that move customers toward their next loyalty threshold.</p>
+    </div>
+
+    <div class="progress-wrap">
+      <div class="row"><span class="label">L1→L2</span><div class="bar"><div class="fill f1"></div></div><span class="target"></span></div>
+      <div class="row"><span class="label">L2→L3</span><div class="bar"><div class="fill f2"></div></div><span class="target"></span></div>
+      <div class="row"><span class="label">L3→L4</span><div class="bar"><div class="fill f3"></div></div><span class="target"></span></div>
+    </div>
+
+    <div class="footer">
+      <span class="badge">Tier Progression</span>
+      <span class="hint">Interactive flow available</span>
+    </div>
+  </div>
+</body>
+</html>
