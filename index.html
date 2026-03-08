@@ -366,12 +366,33 @@
   .thumb-card{
     width:100%;
     height:220px;
-    object-fit:contain;
-    object-position:center;
     border-radius:14px;
     border:1px solid var(--stroke);
     background:#fff;
-    padding:8px;
+    display:block;
+  }
+
+  .thumb-frame{
+    width:100%;
+    height:100%;
+    border:0;
+    border-radius:14px;
+    background:#fff;
+    pointer-events:none;
+  }
+
+  .thumb-placeholder{
+    width:100%;
+    height:220px;
+    border-radius:14px;
+    border:1px solid var(--stroke);
+    background:#fff;
+    padding:14px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+    color:#6f6258;
   }
 
   .thumb-hero{
@@ -382,18 +403,15 @@
     border:1px solid var(--stroke);
     border-radius:16px;
     background:#fff;
-    cursor:zoom-in;
-    user-select:none;
     box-shadow:var(--elev);
   }
 
-  .thumb-hero img{
+  .program-frame{
     width:100%;
     height:100%;
-    object-fit:contain;
-    transform-origin:center;
-    transition:transform .12s ease;
-    pointer-events:none;
+    border:0;
+    border-radius:16px;
+    background:#fff;
   }
 
   .footer{
@@ -638,7 +656,7 @@
       <div class="ov-bar">
         <div id="prog-title" class="ov-title">Program</div>
         <div class="ov-actions">
-          <button id="zoom-reset" class="btn" type="button" title="Reset zoom">Reset zoom</button>
+          <button id="open-program-new-tab" class="btn" type="button" title="Open program in new tab">Open in new tab</button>
           <button id="prog-close" class="close-x" aria-label="Close">Close</button>
         </div>
       </div>
@@ -646,14 +664,12 @@
       <div class="ov-content">
         <div class="ov-cols">
           <div>
-            <div id="zoom-container" class="thumb-hero" aria-label="Program image zoom area">
-             <iframe id="prog-html"
-style="width:100%;height:100%;border:0;border-radius:12px;background:#fff">
-</iframe>
+            <div id="zoom-container" class="thumb-hero" aria-label="Program HTML preview area">
+              <iframe id="prog-html" class="program-frame" title="Program flow preview"></iframe>
             </div>
             <div class="muted" style="font-size:12px;margin-top:8px" id="prog-meta"></div>
             <div class="muted" style="font-size:12px;margin-top:6px">
-              Tip: Use mouse wheel to zoom, move mouse to pan, or double-click to toggle zoom.
+              Interactive HTML flow preview. Use “Open in new tab” for a larger standalone view.
             </div>
           </div>
 
@@ -693,6 +709,10 @@ style="width:100%;height:100%;border:0;border-radius:12px;background:#fff">
         "04-retention-risk":"Retention Risk"
       };
       return map[phase] || phase || "";
+    }
+
+    function getProgramPreviewPath(p){
+      return p.programHtml || p.programScreenshot || "";
     }
 
     async function fetchJSON(path){
@@ -744,11 +764,10 @@ style="width:100%;height:100%;border:0;border-radius:12px;background:#fff">
       overlay.setAttribute("aria-hidden","true");
       STATE.active = null;
 
-      const img = el("prog-img");
-      if(img) img.removeAttribute("src");
+      const frame = el("prog-html");
+      if(frame) frame.removeAttribute("src");
 
       closeInlineEmailPreview();
-      resetZoom();
     }
 
     async function renderProgramDoc(p){
@@ -814,17 +833,27 @@ style="width:100%;height:100%;border:0;border-radius:12px;background:#fff">
       el("prog-desc").textContent  = p.description || "";
       el("prog-meta").textContent  = `${phaseLabel(p.phase)} • ${p.status || "Draft"}`;
 
-      const img = el("prog-img");
-      if(p.programScreenshot) img.src = p.programScreenshot;
-      else img.removeAttribute("src");
+      const previewPath = getProgramPreviewPath(p);
+      const frame = el("prog-html");
+      if(previewPath){
+        frame.src = previewPath;
+      }else{
+        frame.removeAttribute("src");
+      }
+
+      const openInNewTabBtn = el("open-program-new-tab");
+      if(openInNewTabBtn){
+        openInNewTabBtn.onclick = () => {
+          const path = getProgramPreviewPath(p);
+          if(path) window.open(path, "_blank", "noopener");
+        };
+      }
 
       renderProgramDoc(p).catch(err=>{
         el("prog-doc").innerHTML = `<div class="muted">Could not load doc: ${escapeHTML(err.message || String(err))}</div>`;
       });
 
       renderProgramEmails(p);
-
-      resetZoom();
 
       const overlay = el("prog-overlay");
       overlay.classList.add("show");
@@ -834,11 +863,12 @@ style="width:100%;height:100%;border:0;border-radius:12px;background:#fff">
     function buildProgramCard(p){
       const card = document.createElement("article");
       card.className="card";
-      const img = p.programScreenshot || "";
+      const previewPath = getProgramPreviewPath(p);
+
       card.innerHTML = `
-        ${img
-          ? `<img class="thumb-card" src="${img}" alt="${escapeHTML(p.title)}">`
-          : `<div class="thumb-card" style="display:flex;align-items:center;justify-content:center;color:#6f6258">No image</div>`
+        ${previewPath
+          ? `<div class="thumb-card"><iframe class="thumb-frame" src="${escapeHTML(previewPath)}" title="${escapeHTML(p.title)} preview" loading="lazy"></iframe></div>`
+          : `<div class="thumb-placeholder">No preview available</div>`
         }
         <div class="row">
           <div style="font-weight:700;color:var(--dark-brown)">${escapeHTML(p.title)}</div>
@@ -899,47 +929,6 @@ style="width:100%;height:100%;border:0;border-radius:12px;background:#fff">
       else el("emails-view").innerHTML = `<div class="card"><div class="muted">Emails tab (global) comes after program emails are working.</div></div>`;
     }
 
-    let ZOOM = { scale: 1, min: 1, max: 4 };
-
-    function resetZoom(){
-      ZOOM.scale = 1;
-      const img = el("prog-img");
-      if(img) img.style.transform = "scale(1)";
-      if(img) img.style.transformOrigin = "center";
-    }
-
-    function initZoom(){
-      const container = el("zoom-container");
-      const img = el("prog-img");
-      if(!container || !img) return;
-
-      container.addEventListener("wheel", (e) => {
-        e.preventDefault();
-        ZOOM.scale += (e.deltaY * -0.0015);
-        ZOOM.scale = Math.min(Math.max(ZOOM.min, ZOOM.scale), ZOOM.max);
-        img.style.transform = `scale(${ZOOM.scale})`;
-      }, { passive:false });
-
-      container.addEventListener("mousemove", (e) => {
-        if(ZOOM.scale === 1) return;
-        const rect = container.getBoundingClientRect();
-        const x = ((e.clientX - rect.left) / rect.width) * 100;
-        const y = ((e.clientY - rect.top) / rect.height) * 100;
-        img.style.transformOrigin = `${x}% ${y}%`;
-      });
-
-      container.addEventListener("dblclick", () => {
-        if(ZOOM.scale === 1){
-          ZOOM.scale = 2;
-        }else{
-          ZOOM.scale = 1;
-        }
-        img.style.transform = `scale(${ZOOM.scale})`;
-      });
-
-      el("zoom-reset").addEventListener("click", resetZoom);
-    }
-
     async function init(){
       el("year").textContent = new Date().getFullYear();
 
@@ -964,7 +953,6 @@ style="width:100%;height:100%;border:0;border-radius:12px;background:#fff">
       try{ STATE.programs = await fetchJSON("data/programs.json"); } catch(e){ STATE.programs = []; console.error(e); }
       try{ STATE.emails   = await fetchJSON("data/emails.json"); } catch(e){ STATE.emails   = []; console.error(e); }
 
-      initZoom();
       setTab(true);
     }
 
