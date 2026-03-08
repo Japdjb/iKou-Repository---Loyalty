@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Loyalty Anniversary</title>
+  <style>
+    :root {
+      --bg: #FFF5ED;
+      --surface: #fffaf6;
+      --text: #0A0D0A;
+      --muted: #543312;
+      --line: #543312;
+
+      --lavender: #E8DEF5;
+      --dark-olive: #383317;
+      --light-blue: #CFF0FF;
+      --deep-burgundy: #570A05;
+      --dark-brown: #331700;
+      --pale-yellow: #EDE8BA;
+      --chocolate: #543312;
+      --dusty-rose: #DBA6A1;
+
+      --shadow-soft: 0 12px 30px rgba(56, 51, 23, 0.08);
+      --shadow-strong: 0 24px 60px rgba(56, 51, 23, 0.18);
+    }
+
+    * { box-sizing: border-box; }
+
+    html, body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: Inter, Arial, Helvetica, sans-serif;
+    }
+
+    body {
+      min-width: 1360px;
+    }
+
+    .page {
+      padding: 42px 40px 60px;
+      overflow-x: auto;
+    }
+
+    .shell {
+      max-width: 1460px;
+      margin: 0 auto;
+    }
+
+    .brand {
+      font-family: "Times New Roman", Georgia, serif;
+      font-size: 24px;
+      letter-spacing: 0.08em;
+      color: var(--dark-olive);
+      margin-bottom: 18px;
+    }
+
+    .hero {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 24px;
+      margin-bottom: 28px;
+    }
+
+    .hero h1 {
+      margin: 0;
+      font-family: "Times New Roman", Georgia, serif;
+      font-size: 60px;
+      line-height: 0.98;
+      font-weight: 600;
+      color: var(--dark-brown);
+    }
+
+    .hero p {
+      margin: 14px 0 0;
+      max-width: 880px;
+      font-size: 20px;
+      line-height: 1.5;
+      color: var(--chocolate);
+    }
+
+    .legend {
+      display: flex;
+      gap: 14px;
+      align-items: center;
+      flex-wrap: wrap;
+      background: rgba(255,255,255,0.55);
+      border: 1px solid rgba(84, 51, 18, 0.12);
+      border-radius: 999px;
+      padding: 14px 18px;
+      box-shadow: var(--shadow-soft);
+      margin-top: 8px;
+    }
+
+    .legend-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 14px;
+      color: var(--dark-olive);
+      font-weight: 600;
+      white-space: nowrap;
+    }
+
+    .legend-swatch {
+      width: 16px;
+      height: 16px;
+      border-radius: 5px;
+      border: 1.5px solid rgba(56, 51, 23, 0.28);
+      flex: 0 0 auto;
+    }
+
+    .sw-trigger { background: var(--light-blue); }
+    .sw-email { background: var(--lavender); }
+    .sw-finish { background: var(--dark-olive); border-color: var(--dark-olive); }
+
+    .board {
+      position: relative;
+      width: 1340px;
+      min-height: 760px;
+      background:
+        radial-gradient(circle at top right, rgba(232,222,245,0.25), transparent 24%),
+        radial-gradient(circle at bottom left, rgba(207,240,255,0.22), transparent 22%),
+        var(--surface);
+      border: 1px solid rgba(84, 51, 18, 0.08);
+      border-radius: 32px;
+      box-shadow: var(--shadow-soft);
+      padding: 34px 34px 50px;
+      overflow: hidden;
+    }
+
+    .board::before,
+    .board::after {
+      content: "";
+      position: absolute;
+      pointer-events: none;
+      border: 1px solid rgba(219,166,161,0.28);
+      border-radius: 999px;
+    }
+
+    .board::before {
+      width: 260px;
+      height: 260px;
+      top: -120px;
+      right: -80px;
+    }
+
+    .board::after {
+      width: 200px;
+      height: 200px;
+      bottom: -80px;
+      left: -70px;
+    }
+
+    .section {
+      position: relative;
+      border-radius: 26px;
+      padding: 28px 24px 36px;
+      background: rgba(255,255,255,0.45);
+      border: 1px solid rgba(84, 51, 18, 0.07);
+      min-height: 610px;
+    }
+
+    .section-header {
+      margin-bottom: 24px;
+    }
+
+    .section-kicker {
+      font-size: 12px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--deep-burgundy);
+      font-weight: 700;
+      margin-bottom: 10px;
+    }
+
+    .section-title {
+      margin: 0;
+      font-family: "Times New Roman", Georgia, serif;
+      font-size: 34px;
+      line-height: 1.1;
+      color: var(--dark-brown);
+      font-weight: 600;
+    }
+
+    .section-subtitle {
+      margin: 10px 0 0;
+      color: var(--chocolate);
+      font-size: 16px;
+      line-height: 1.55;
+      max-width: 930px;
+    }
+
+    .flow {
+      position: relative;
+      min-height: 400px;
+      padding-top: 10px;
+    }
+
+    svg.connector-layer {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      overflow: visible;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .node {
+      position: absolute;
+      z-index: 2;
+      border: 0;
+      padding: 0;
+      background: transparent;
+      cursor: pointer;
+      text-align: left;
+      transition: transform 0.18s ease, box-shadow 0.18s ease, filter 0.18s ease;
+      border-radius: 24px;
+    }
+
+    .node:hover {
+      transform: translateY(-3px);
+      filter: brightness(1.01);
+    }
+
+    .node.active {
+      box-shadow: 0 0 0 4px rgba(87,10,5,0.09), 0 0 0 9px rgba(232,222,245,0.55);
+      transform: translateY(-2px);
+    }
+
+    .card {
+      width: 270px;
+      min-height: 150px;
+      padding: 22px 20px 18px;
+      border-radius: 24px;
+      box-shadow: var(--shadow-soft);
+      border: 1.5px solid rgba(84, 51, 18, 0.14);
+      background: white;
+    }
+
+    .card.trigger {
+      background: linear-gradient(180deg, rgba(207,240,255,0.92), rgba(207,240,255,0.72));
+      border-color: rgba(56,51,23,0.15);
+    }
+
+    .card.email {
+      background: linear-gradient(180deg, rgba(232,222,245,0.98), rgba(232,222,245,0.82));
+      border-color: rgba(116,80,255,0.22);
+    }
+
+    .card.finish {
+      background: var(--dark-olive);
+      border-color: var(--dark-olive);
+      color: var(--bg);
+      min-height: 110px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+    }
+
+    .card.finish .node-type,
+    .card.finish .node-title,
+    .card.finish .node-copy {
+      color: var(--bg);
+    }
+
+    .node-type {
+      font-size: 12px;
+      letter-spacing: 0.10em;
+      text-transform: uppercase;
+      font-weight: 700;
+      color: var(--deep-burgundy);
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .node-icon {
+      width: 22px;
+      height: 22px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 999px;
+      background: rgba(56,51,23,0.08);
+      color: var(--dark-olive);
+      font-size: 13px;
+      flex: 0 0 auto;
+    }
+
+    .node-title {
+      font-size: 20px;
+      line-height: 1.2;
+      font-weight: 700;
+      color: var(--text);
+      margin: 0 0 8px;
+    }
+
+    .node-copy {
+      font-size: 15px;
+      line-height: 1.5;
+      color: var(--chocolate);
+      margin: 0;
+    }
+
+    .flow-label {
+      position: absolute;
+      top: 165px;
+      z-index: 1;
+      font-size: 13px;
+      color: var(--chocolate);
+      background: rgba(255,245,237,0.9);
+      padding: 4px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(84,51,18,0.08);
+    }
+
+    .notes {
+      margin-top: 30px;
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .note-card {
+      background: rgba(255,255,255,0.78);
+      border: 1px solid rgba(84,51,18,0.08);
+      border-radius: 18px;
+      padding: 18px;
+      box-shadow: var(--shadow-soft);
+    }
+
+    .note-card h4 {
+      margin: 0 0 8px;
+      font-size: 12px;
+      letter-spacing: 0.10em;
+      text-transform: uppercase;
+      color: var(--deep-burgundy);
+    }
+
+    .note-card p {
+      margin: 0;
+      font-size: 14px;
+      line-height: 1.6;
+      color: var(--chocolate);
+    }
+
+    .overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(10, 13, 10, 0.38);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 26px;
+      z-index: 30;
+      backdrop-filter: blur(2px);
+    }
+
+    .overlay.open { display: flex; }
+
+    .modal {
+      width: min(760px, 100%);
+      background: rgba(255,250,246,0.98);
+      border: 1px solid rgba(84,51,18,0.12);
+      border-radius: 28px;
+      box-shadow: var(--shadow-strong);
+      overflow: hidden;
+    }
+
+    .modal-header {
+      padding: 24px 26px 18px;
+      border-bottom: 1px solid rgba(84,51,18,0.08);
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 20px;
+    }
+
+    .modal-kicker {
+      font-size: 11px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--deep-burgundy);
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    .modal-title {
+      margin: 0;
+      font-family: "Times New Roman", Georgia, serif;
+      font-size: 34px;
+      line-height: 1.05;
+      color: var(--dark-brown);
+      font-weight: 600;
+    }
+
+    .close-btn {
+      width: 42px;
+      height: 42px;
+      border-radius: 999px;
+      border: 0;
+      cursor: pointer;
+      background: rgba(84,51,18,0.07);
+      color: var(--dark-brown);
+      font-size: 22px;
+      line-height: 1;
+      flex: 0 0 auto;
+    }
+
+    .modal-body {
+      padding: 24px 26px 28px;
+    }
+
+    .modal-body p {
+      margin: 0 0 18px;
+      font-size: 16px;
+      line-height: 1.65;
+      color: var(--chocolate);
+    }
+
+    .meta-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+      margin-top: 18px;
+    }
+
+    .meta-card {
+      background: rgba(255,255,255,0.78);
+      border: 1px solid rgba(84,51,18,0.08);
+      border-radius: 18px;
+      padding: 16px;
+    }
+
+    .meta-card h4 {
+      margin: 0 0 8px;
+      font-size: 12px;
+      letter-spacing: 0.10em;
+      text-transform: uppercase;
+      color: var(--deep-burgundy);
+    }
+
+    .meta-card p {
+      margin: 0;
+      font-size: 14px;
+      line-height: 1.55;
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <div class="shell">
+      <div class="brand">IKOU</div>
+
+      <div class="hero">
+        <div>
+          <h1>Loyalty<br>Anniversary</h1>
+          <p>
+            Anniversary recognition flow triggered by sign-up date. Customers receive a simple thank-you message
+            celebrating their tenure in the loyalty program, then exit the sequence.
+          </p>
+        </div>
+
+        <div class="legend">
+          <span class="legend-item"><span class="legend-swatch sw-trigger"></span>Trigger</span>
+          <span class="legend-item"><span class="legend-swatch sw-email"></span>Email</span>
+          <span class="legend-item"><span class="legend-swatch sw-finish"></span>Finish</span>
+        </div>
+      </div>
+
+      <div class="board">
+        <section class="section">
+          <div class="section-header">
+            <div class="section-kicker">Anniversary recognition</div>
+            <h2 class="section-title">Single-path loyalty anniversary automation</h2>
+            <p class="section-subtitle">
+              This is a straightforward anniversary recognition flow. When the customer’s sign-up date matches the current day,
+              the journey sends a thank-you anniversary message and then completes.
+            </p>
+          </div>
+
+          <div class="flow">
+            <svg class="connector-layer" viewBox="0 0 1260 400" aria-hidden="true">
+              <defs>
+                <marker id="arrowAnn" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto">
+                  <path d="M0,0 L10,5 L0,10 z" fill="#543312"></path>
+                </marker>
+              </defs>
+
+              <path d="M360 190 H 610" stroke="#543312" stroke-width="2.8" fill="none" marker-end="url(#arrowAnn)"/>
+              <path d="M890 190 H 1090" stroke="#543312" stroke-width="2.8" fill="none" marker-end="url(#arrowAnn)"/>
+            </svg>
+
+            <div class="flow-label" style="left: 470px;">Send anniversary email</div>
+            <div class="flow-label" style="left: 930px;">Complete</div>
+
+            <button class="node" style="left: 46px; top: 100px;" data-id="trigger-anniversary">
+              <div class="card trigger">
+                <div class="node-type"><span class="node-icon">⚡</span>Trigger</div>
+                <h3 class="node-title">Sign Up Date is Today</h3>
+                <p class="node-copy">Customer enters the anniversary flow when their loyalty sign-up date matches the current date.</p>
+              </div>
+            </button>
+
+            <button class="node" style="left: 620px; top: 100px;" data-id="email-anniversary">
+              <div class="card email">
+                <div class="node-type"><span class="node-icon">✉</span>Send email</div>
+                <h3 class="node-title">Happy Anniversary</h3>
+                <p class="node-copy">Thank the customer for being with the brand for X years.</p>
+              </div>
+            </button>
+
+            <button class="node" style="left: 1090px; top: 120px;" data-id="finish-anniversary">
+              <div class="card finish">
+                <div>
+                  <div class="node-type">Finish</div>
+                  <div class="node-title">Anniversary flow complete</div>
+                </div>
+              </div>
+            </button>
+          </div>
+
+          <div class="notes">
+            <div class="note-card">
+              <h4>Primary purpose</h4>
+              <p>Recognize customer loyalty tenure with a lightweight anniversary thank-you touchpoint.</p>
+            </div>
+            <div class="note-card">
+              <h4>Logic model</h4>
+              <p>This is a single-send journey with no conditional split. It is designed for simple acknowledgment rather than redemption behavior.</p>
+            </div>
+          </div>
+        </section>
+      </div>
+    </div>
+  </div>
+
+  <div class="overlay" id="overlay" aria-hidden="true">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+      <div class="modal-header">
+        <div>
+          <div class="modal-kicker" id="modalEyebrow">Node details</div>
+          <h2 class="modal-title" id="modalTitle">Title</h2>
+        </div>
+        <button class="close-btn" id="closeBtn" aria-label="Close">×</button>
+      </div>
+
+      <div class="modal-body">
+        <p id="modalDescription"></p>
+        <div class="meta-grid">
+          <div class="meta-card">
+            <h4>Section</h4>
+            <p id="modalSection"></p>
+          </div>
+          <div class="meta-card">
+            <h4>Flow Logic</h4>
+            <p id="modalLogic"></p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const tokenData = {
+      "trigger-anniversary": {
+        eyebrow: "Loyalty anniversary",
+        title: "Trigger — Sign Up Date is Today",
+        description: "Starts the loyalty anniversary flow when the customer’s original sign-up date aligns with the current day.",
+        section: "Entry",
+        logic: "This is the time-based entry condition for anniversary recognition."
+      },
+      "email-anniversary": {
+        eyebrow: "Loyalty anniversary",
+        title: "Send Email — Happy Anniversary",
+        description: "Anniversary thank-you email that acknowledges the customer’s tenure and celebrates how long they have been with the brand.",
+        section: "Message",
+        logic: "Single email send used for anniversary recognition."
+      },
+      "finish-anniversary": {
+        eyebrow: "Loyalty anniversary",
+        title: "Finish — Anniversary flow complete",
+        description: "End state for the anniversary journey after the email has been sent.",
+        section: "Completion",
+        logic: "This is a simple single-path automation with no additional branching."
+      }
+    };
+
+    const overlay = document.getElementById("overlay");
+    const closeBtn = document.getElementById("closeBtn");
+    const modalEyebrow = document.getElementById("modalEyebrow");
+    const modalTitle = document.getElementById("modalTitle");
+    const modalDescription = document.getElementById("modalDescription");
+    const modalSection = document.getElementById("modalSection");
+    const modalLogic = document.getElementById("modalLogic");
+    const nodes = document.querySelectorAll(".node");
+
+    function openModal(id, node) {
+      const data = tokenData[id];
+      if (!data) return;
+
+      nodes.forEach(n => n.classList.remove("active"));
+      node.classList.add("active");
+
+      modalEyebrow.textContent = data.eyebrow;
+      modalTitle.textContent = data.title;
+      modalDescription.textContent = data.description;
+      modalSection.textContent = data.section;
+      modalLogic.textContent = data.logic;
+
+      overlay.classList.add("open");
+      overlay.setAttribute("aria-hidden", "false");
+    }
+
+    function closeModal() {
+      overlay.classList.remove("open");
+      overlay.setAttribute("aria-hidden", "true");
+      nodes.forEach(n => n.classList.remove("active"));
+    }
+
+    nodes.forEach(node => {
+      node.addEventListener("click", (e) => {
+        e.stopPropagation();
+        openModal(node.dataset.id, node);
+      });
+    });
+
+    closeBtn.addEventListener("click", closeModal);
+    overlay.addEventListener("click", (e) => {
+      if (e.target === overlay) closeModal();
+    });
+
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape") closeModal();
+    });
+  </script>
+</body>
+</html>
