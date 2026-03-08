@@ -6,6 +6,7 @@
     "displayOrder": 1,
     "status": "Live",
     "programHtml": "assets/programs/loyalty/onboarding-existing-customers.html"
+    "programCardPreview": "assets/programs/loyalty/onboarding-existing-customers-cover.html"
   },
   {
     "id": "upgrade-journey",
@@ -14,6 +15,7 @@
     "displayOrder": 2,
     "status": "Live",
     "programHtml": "assets/programs/loyalty/upgrade-journey.html"
+    "programCardPreview": "assets/programs/loyalty/previews/upgrade-journey-cover.html"
   },
   {
     "id": "spend-to-next",
@@ -22,6 +24,7 @@
     "displayOrder": 3,
     "status": "Live",
     "programHtml": "assets/programs/loyalty/spend-to-next.html"
+    "programCardPreview": "assets/programs/loyalty/spend-to-next-cover.html"
   },
   {
     "id": "birthday-series",
@@ -30,6 +33,7 @@
     "displayOrder": 4,
     "status": "Live",
     "programHtml": "assets/programs/loyalty/birthday-series.html"
+    "programCardPreview": "assets/programs/loyalty/birthday-series-cover.html"
   },
   {
     "id": "birthday-capture",
@@ -38,6 +42,7 @@
     "displayOrder": 5,
     "status": "Live",
     "programHtml": "assets/programs/loyalty/birthday-capture.html"
+    "programCardPreview": "assets/programs/loyalty/birthday-capture-cover.html"
   },
   {
     "id": "loyalty-anniversary",
@@ -46,6 +51,7 @@
     "displayOrder": 6,
     "status": "Live",
     "programHtml": "assets/programs/loyalty/loyalty-anniversary.html"
+    "programCardPreview": "assets/programs/loyalty/loyalty-anniversary-cover.html"
   },
   {
     "id": "adhoc-rewards",
@@ -54,6 +60,8 @@
     "displayOrder": 7,
     "status": "Live",
     "programHtml": "assets/programs/loyalty/adhoc-rewards.html"
+    "programCardPreview": "assets/programs/loyalty/adhoc-rewards-cover.html"
+    
   },
   {
     "id": "spend-to-maintain",
@@ -62,5 +70,6 @@
     "displayOrder": 8,
     "status": "Live",
     "programHtml": "assets/programs/loyalty/Spend-to-Maintain-Demotion.html"
+    "programCardPreview": "assets/programs/loyalty/Spend-to-Maintain-Demotion-cover.html"
   }
 ]
