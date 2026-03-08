@@ -3,1214 +3,1061 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Spend to Maintain / Demotion & Maintained Flow</title>
+  <title>Spend to Maintain, Demotion & Maintained Flow</title>
   <style>
-    :root {
-      --bg: #FFF5ED;
-      --surface: #fffaf6;
-      --text: #0A0D0A;
-      --muted: #543312;
-      --line: #543312;
+    :root{
+      --bg:#FFF5ED;
+      --panel:#FFFAF6;
+      --panel-border:rgba(90,58,27,.14);
+      --grid:rgba(90,58,27,.06);
 
-      --lavender: #E8DEF5;
-      --dark-olive: #383317;
-      --light-blue: #CFF0FF;
-      --deep-burgundy: #570A05;
-      --dark-brown: #331700;
-      --pale-yellow: #EDE8BA;
-      --chocolate: #543312;
-      --dusty-rose: #DBA6A1;
+      --text:#0A0D0A;
+      --body:#543312;
+      --line:#5A3A1B;
 
-      --wait-blue: #CFF0FF;
-      --wait-blue-border: #5ca9d6;
+      --trigger-fill:#CFF0FF;
+      --trigger-stroke:#67CDD7;
 
-      --shadow-soft: 0 12px 30px rgba(56, 51, 23, 0.08);
-      --shadow-strong: 0 24px 60px rgba(56, 51, 23, 0.18);
+      --email-fill:#E8DEF5;
+      --email-stroke:#BDA9FF;
+
+      --split-fill:#EDE8BA;
+      --split-stroke:#E2A400;
+
+      --wait-fill:#D9EEFF;
+      --wait-stroke:#67B7EF;
+
+      --finish-fill:#4A3F12;
+      --finish-stroke:#6A5A1D;
+      --finish-text:#FFF5ED;
+
+      --shadow:0 18px 44px rgba(74,63,18,.08);
+      --shadow-hover:0 18px 34px rgba(74,63,18,.14);
     }
 
-    * { box-sizing: border-box; }
-
-    html, body {
-      margin: 0;
-      background: var(--bg);
-      color: var(--text);
-      font-family: Inter, Arial, Helvetica, sans-serif;
-    }
-
-    body {
-      min-width: 1860px;
-    }
-
-    .page {
-      padding: 42px 40px 60px;
-      overflow-x: auto;
-    }
-
-    .shell {
-      max-width: 1960px;
-      margin: 0 auto;
-    }
-
-    .brand {
-      font-family: "Times New Roman", Georgia, serif;
-      font-size: 24px;
-      letter-spacing: 0.08em;
-      color: var(--dark-olive);
-      margin-bottom: 18px;
-    }
-
-    .hero {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-      gap: 24px;
-      margin-bottom: 28px;
-    }
-
-    .hero h1 {
-      margin: 0;
-      font-family: "Times New Roman", Georgia, serif;
-      font-size: 58px;
-      line-height: 0.98;
-      font-weight: 600;
-      color: var(--dark-brown);
-    }
-
-    .hero p {
-      margin: 14px 0 0;
-      max-width: 980px;
-      font-size: 20px;
-      line-height: 1.5;
-      color: var(--chocolate);
-    }
-
-    .legend {
-      display: flex;
-      gap: 14px;
-      align-items: center;
-      flex-wrap: wrap;
-      background: rgba(255,255,255,0.55);
-      border: 1px solid rgba(84, 51, 18, 0.12);
-      border-radius: 999px;
-      padding: 14px 18px;
-      box-shadow: var(--shadow-soft);
-      margin-top: 8px;
-    }
-
-    .legend-item {
-      display: inline-flex;
-      align-items: center;
-      gap: 10px;
-      font-size: 14px;
-      color: var(--dark-olive);
-      font-weight: 600;
-      white-space: nowrap;
-    }
-
-    .legend-swatch {
-      width: 16px;
-      height: 16px;
-      border-radius: 5px;
-      border: 1.5px solid rgba(56, 51, 23, 0.28);
-      flex: 0 0 auto;
-    }
-
-    .sw-trigger { background: var(--light-blue); }
-    .sw-email { background: var(--lavender); }
-    .sw-split { background: var(--pale-yellow); }
-    .sw-wait { background: var(--wait-blue); border-color: var(--wait-blue-border); }
-    .sw-finish { background: var(--dark-olive); border-color: var(--dark-olive); }
-
-    .board {
-      position: relative;
-      width: 1880px;
-      min-height: 1780px;
+    *{box-sizing:border-box}
+    html,body{margin:0;padding:0;background:var(--bg);color:var(--text);}
+    body{
+      font-family:Arial, Helvetica, sans-serif;
       background:
-        radial-gradient(circle at top right, rgba(232,222,245,0.35), transparent 24%),
-        radial-gradient(circle at bottom left, rgba(207,240,255,0.30), transparent 22%),
-        var(--surface);
-      border: 1px solid rgba(84, 51, 18, 0.08);
-      border-radius: 32px;
-      box-shadow: var(--shadow-soft);
-      padding: 34px 34px 50px;
-      overflow: hidden;
+        linear-gradient(var(--grid) 1px, transparent 1px),
+        linear-gradient(90deg, var(--grid) 1px, transparent 1px),
+        var(--bg);
+      background-size:32px 32px,32px 32px,auto;
     }
 
-    .board::before,
-    .board::after {
-      content: "";
-      position: absolute;
-      pointer-events: none;
-      border: 1px solid rgba(219,166,161,0.28);
-      border-radius: 999px;
+    .page{
+      min-height:100vh;
+      padding:28px;
     }
 
-    .board::before {
-      width: 300px;
-      height: 300px;
-      top: -150px;
-      right: -100px;
+    .shell{
+      max-width:1780px;
+      margin:0 auto;
+      background:var(--panel);
+      border:1px solid var(--panel-border);
+      border-radius:28px;
+      box-shadow:var(--shadow);
+      overflow:hidden;
     }
 
-    .board::after {
-      width: 240px;
-      height: 240px;
-      bottom: -110px;
-      left: -90px;
+    .top{
+      padding:26px 28px 18px;
+      border-bottom:1px solid rgba(90,58,27,.08);
+      display:flex;
+      justify-content:space-between;
+      align-items:flex-start;
+      gap:24px;
     }
 
-    .section {
-      position: relative;
-      border-radius: 26px;
-      padding: 28px 24px 36px;
-      background: rgba(255,255,255,0.45);
-      border: 1px solid rgba(84, 51, 18, 0.07);
+    .eyebrow{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      font-size:11px;
+      letter-spacing:.16em;
+      text-transform:uppercase;
+      color:var(--body);
+      border:1px solid rgba(90,58,27,.14);
+      border-radius:999px;
+      padding:8px 12px;
+      background:rgba(255,255,255,.55);
+      margin-bottom:14px;
     }
 
-    .section-header {
-      margin-bottom: 18px;
+    h1{
+      margin:0;
+      font-family:"Times New Roman", Georgia, serif;
+      font-weight:600;
+      font-size:42px;
+      line-height:1.06;
+      letter-spacing:.01em;
     }
 
-    .section-kicker {
-      font-size: 12px;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      color: var(--deep-burgundy);
-      font-weight: 700;
-      margin-bottom: 10px;
+    .subcopy{
+      max-width:900px;
+      margin-top:12px;
+      font-size:14px;
+      line-height:1.65;
+      color:var(--body);
     }
 
-    .section-title {
-      margin: 0;
-      font-family: "Times New Roman", Georgia, serif;
-      font-size: 34px;
-      line-height: 1.1;
-      color: var(--dark-brown);
-      font-weight: 600;
+    .legend{
+      display:flex;
+      flex-wrap:wrap;
+      justify-content:flex-end;
+      gap:10px;
+      max-width:420px;
+      padding-top:4px;
     }
 
-    .section-subtitle {
-      margin: 10px 0 0;
-      color: var(--chocolate);
-      font-size: 16px;
-      line-height: 1.55;
-      max-width: 1180px;
+    .legend-item{
+      display:flex;
+      align-items:center;
+      gap:8px;
+      padding:8px 10px;
+      border-radius:999px;
+      border:1px solid rgba(90,58,27,.12);
+      background:rgba(255,255,255,.52);
+      color:var(--body);
+      font-size:10px;
+      letter-spacing:.14em;
+      text-transform:uppercase;
+      white-space:nowrap;
     }
 
-    .flow {
-      position: relative;
-      min-height: 1500px;
-      padding-top: 10px;
+    .swatch{
+      width:14px;
+      height:14px;
+      flex:0 0 auto;
+      border:1.5px solid transparent;
+      border-radius:4px;
+    }
+    .sw-trigger{background:var(--trigger-fill);border-color:var(--trigger-stroke);}
+    .sw-email{background:var(--email-fill);border-color:var(--email-stroke);}
+    .sw-split{background:var(--split-fill);border-color:var(--split-stroke);transform:rotate(45deg);border-radius:3px;}
+    .sw-wait{
+      background:var(--wait-fill);
+      border-color:var(--wait-stroke);
+      clip-path:polygon(24% 0,76% 0,100% 24%,100% 76%,76% 100%,24% 100%,0 76%,0 24%);
+      border-radius:0;
+    }
+    .sw-finish{
+      background:var(--finish-fill);
+      border-color:var(--finish-stroke);
+      clip-path:polygon(0 0,84% 0,100% 50%,84% 100%,0 100%);
+      border-radius:0;
     }
 
-    svg.connector-layer {
-      position: absolute;
-      inset: 0;
-      width: 100%;
-      height: 100%;
-      overflow: visible;
-      pointer-events: none;
-      z-index: 0;
+    .canvas-wrap{
+      overflow:auto;
+      padding:18px 18px 24px;
     }
 
-    .lane-label {
-      position: absolute;
-      left: 18px;
-      z-index: 2;
-      display: inline-flex;
-      align-items: center;
-      gap: 10px;
-      background: rgba(255,245,237,0.9);
-      border: 1px solid rgba(84,51,18,0.10);
-      border-radius: 999px;
-      padding: 10px 14px;
-      font-size: 14px;
-      color: var(--dark-brown);
-      font-weight: 700;
-      box-shadow: var(--shadow-soft);
+    .flow{
+      position:relative;
+      width:1720px;
+      height:840px;
+      border-radius:24px;
+      border:1px solid rgba(90,58,27,.09);
+      background:
+        linear-gradient(rgba(90,58,27,.05) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(90,58,27,.05) 1px, transparent 1px),
+        linear-gradient(180deg, rgba(255,255,255,.45), rgba(255,255,255,.18)),
+        var(--panel);
+      background-size:32px 32px,32px 32px,auto,auto;
     }
 
-    .lane-dot {
-      width: 10px;
-      height: 10px;
-      border-radius: 999px;
-      background: var(--deep-burgundy);
-      flex: 0 0 auto;
+    .lane-band{
+      position:absolute;
+      left:150px;
+      width:1420px;
+      height:106px;
+      border:1px solid rgba(90,58,27,.08);
+      border-radius:18px;
+      background:rgba(255,255,255,.18);
+    }
+    .lane-l2{top:62px;}
+    .lane-l3{top:270px;}
+    .lane-l4{top:478px;}
+
+    .lane-label,
+    .section-label{
+      position:absolute;
+      font-size:11px;
+      letter-spacing:.18em;
+      text-transform:uppercase;
+      color:rgba(84,51,18,.74);
+    }
+    .label-l2{left:172px; top:74px;}
+    .label-l3{left:172px; top:282px;}
+    .label-l4{left:172px; top:490px;}
+    .label-maintained{left:995px; top:777px;}
+    .label-finish{left:1506px; top:74px;}
+
+    .helper-note{
+      position:absolute;
+      left:26px;
+      top:118px;
+      width:108px;
+      font-size:12px;
+      line-height:1.55;
+      color:var(--body);
+    }
+    .helper-note strong{
+      display:block;
+      margin-bottom:8px;
+      font-size:11px;
+      letter-spacing:.18em;
+      text-transform:uppercase;
+      color:var(--text);
     }
 
-    .node {
-      position: absolute;
-      z-index: 2;
-      border: 0;
-      padding: 0;
-      background: transparent;
-      cursor: pointer;
-      text-align: left;
-      transition: transform 0.18s ease, box-shadow 0.18s ease, filter 0.18s ease;
-      border-radius: 24px;
+    .node{
+      position:absolute;
+      width:114px;
+      min-height:60px;
+      border-radius:16px;
+      border:1.5px solid;
+      background:#fff;
+      padding:10px 9px;
+      text-align:center;
+      display:flex;
+      flex-direction:column;
+      justify-content:center;
+      align-items:center;
+      cursor:pointer;
+      z-index:2;
+      transition:transform .18s ease, box-shadow .18s ease, filter .18s ease;
+      box-shadow:0 8px 18px rgba(74,63,18,.05);
+    }
+    .node:hover{
+      transform:translateY(-3px);
+      box-shadow:var(--shadow-hover);
+      filter:brightness(1.02);
     }
 
-    .node:hover {
-      transform: translateY(-3px);
-      filter: brightness(1.01);
+    .kicker{
+      font-size:8px;
+      line-height:1.1;
+      letter-spacing:.16em;
+      text-transform:uppercase;
+      color:rgba(10,13,10,.64);
+      font-weight:700;
+      margin-bottom:5px;
+    }
+    .title{
+      font-size:12.5px;
+      line-height:1.2;
+      font-weight:700;
+      margin-bottom:3px;
+      color:var(--text);
+    }
+    .desc{
+      font-size:9px;
+      line-height:1.3;
+      color:var(--body);
     }
 
-    .node.active {
-      box-shadow: 0 0 0 4px rgba(87,10,5,0.09), 0 0 0 9px rgba(232,222,245,0.55);
-      transform: translateY(-2px);
+    .trigger{
+      width:110px;
+      min-height:68px;
+      background:var(--trigger-fill);
+      border-color:var(--trigger-stroke);
+      border-radius:16px;
     }
 
-    .card {
-      width: 232px;
-      min-height: 118px;
-      padding: 18px 18px 16px;
-      border-radius: 22px;
-      box-shadow: var(--shadow-soft);
-      border: 1.5px solid rgba(84, 51, 18, 0.14);
-      background: white;
+    .email{
+      background:var(--email-fill);
+      border-color:var(--email-stroke);
+    }
+    .email:before{
+      content:"";
+      position:absolute;
+      top:12px;
+      left:18px;
+      right:18px;
+      height:0;
+      border-top:1.4px solid rgba(112,78,231,.82);
+      pointer-events:none;
+    }
+    .email:before,
+.email:after{
+  display:none;
+}
+
+.email .kicker{
+  margin-top:0;
+}
+    .email .kicker{margin-top:11px;}
+
+    .split{
+      width:90px;
+      min-height:90px;
+      padding:0;
+      border:none;
+      background:transparent;
+      box-shadow:none;
+      border-radius:0;
+    }
+    .split .diamond{
+      position:absolute;
+      inset:12px;
+      background:var(--split-fill);
+      border:1.5px solid var(--split-stroke);
+      transform:rotate(45deg);
+      border-radius:16px;
+      box-shadow:0 6px 16px rgba(226,164,0,.08);
+    }
+    .split .content{
+      position:relative;
+      z-index:1;
+      width:100%;
+      height:100%;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      justify-content:center;
+      padding:10px 8px;
+    }
+    .split .kicker{font-size:7px; margin-bottom:3px;}
+    .split .title{font-size:11.5px; max-width:58px;}
+    .split .desc{font-size:8px; max-width:64px;}
+
+    .wait{
+      width:92px;
+      min-height:80px;
+      background:var(--wait-fill);
+      border-color:var(--wait-stroke);
+      clip-path:polygon(24% 0,76% 0,100% 24%,100% 76%,76% 100%,24% 100%,0 76%,0 24%);
+      border-radius:0;
+      box-shadow:none;
+      padding:10px 8px;
     }
 
-    .card.trigger {
-      background: linear-gradient(180deg, rgba(207,240,255,0.92), rgba(207,240,255,0.72));
-      border-color: rgba(56,51,23,0.15);
+    .finish{
+      width:108px;
+      min-height:58px;
+      background:var(--finish-fill);
+      border-color:var(--finish-stroke);
+      color:var(--finish-text);
+      clip-path:polygon(0 0,84% 0,100% 50%,84% 100%,0 100%);
+      border-radius:0;
+      box-shadow:none;
+      padding:10px 12px;
+    }
+    .finish .kicker,.finish .desc{color:rgba(255,245,237,.8)}
+    .finish .title{color:var(--finish-text)}
+
+    .mini-tag{
+      position:absolute;
+      padding:3px 7px 4px;
+      border-radius:999px;
+      border:1px solid rgba(90,58,27,.10);
+      background:rgba(255,255,255,.78);
+      color:var(--body);
+      font-size:8.5px;
+      line-height:1;
+      font-weight:700;
+      z-index:3;
     }
 
-    .card.email {
-      background: linear-gradient(180deg, rgba(232,222,245,0.98), rgba(232,222,245,0.82));
-      border-color: rgba(116,80,255,0.22);
+    svg.connectors{
+      position:absolute;
+      inset:0;
+      width:100%;
+      height:100%;
+      overflow:visible;
+      z-index:1;
+      pointer-events:none;
+    }
+    .line{
+      fill:none;
+      stroke:var(--line);
+      stroke-width:1.8;
+      stroke-linecap:round;
+      stroke-linejoin:round;
+      marker-end:url(#arrow);
+      opacity:.92;
+    }
+    .line.dashed{
+      stroke-dasharray:6 6;
+    }
+    .line.soft{
+      opacity:.72;
     }
 
-    .card.finish {
-      background: var(--dark-olive);
-      border-color: var(--dark-olive);
-      color: var(--bg);
-      min-height: 96px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
+    .modal{
+      position:fixed;
+      inset:0;
+      display:none;
+      align-items:center;
+      justify-content:center;
+      padding:24px;
+      background:rgba(42,32,18,.26);
+      backdrop-filter:blur(4px);
+      z-index:99;
     }
+    .modal.open{display:flex;}
 
-    .card.finish .node-type,
-    .card.finish .node-title,
-    .card.finish .node-copy {
-      color: var(--bg);
+    .modal-card{
+      width:min(760px,100%);
+      background:var(--panel);
+      border:1px solid rgba(90,58,27,.14);
+      border-radius:24px;
+      box-shadow:0 28px 80px rgba(74,63,18,.18);
+      overflow:hidden;
     }
-
-    .node-type {
-      font-size: 12px;
-      letter-spacing: 0.10em;
-      text-transform: uppercase;
-      font-weight: 700;
-      color: var(--deep-burgundy);
-      margin-bottom: 10px;
-      display: flex;
-      align-items: center;
-      gap: 10px;
+    .modal-head{
+      padding:22px 24px 18px;
+      border-bottom:1px solid rgba(90,58,27,.10);
+      display:flex;
+      justify-content:space-between;
+      gap:20px;
+      align-items:flex-start;
+      background:linear-gradient(180deg, rgba(255,255,255,.5), rgba(255,255,255,.14));
     }
-
-    .node-icon {
-      width: 22px;
-      height: 22px;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      border-radius: 999px;
-      background: rgba(56,51,23,0.08);
-      color: var(--dark-olive);
-      font-size: 13px;
-      flex: 0 0 auto;
+    .modal-eyebrow{
+      font-size:10px;
+      letter-spacing:.16em;
+      text-transform:uppercase;
+      color:var(--body);
+      margin-bottom:10px;
     }
-
-    .node-title {
-      font-size: 17px;
-      line-height: 1.25;
-      font-weight: 700;
-      color: var(--text);
-      margin: 0 0 6px;
+    .modal-title{
+      margin:0;
+      font-family:"Times New Roman", Georgia, serif;
+      font-size:28px;
+      line-height:1.08;
+      font-weight:600;
+      color:var(--text);
     }
-
-    .node-copy {
-      font-size: 14px;
-      line-height: 1.45;
-      color: var(--chocolate);
-      margin: 0;
+    .close-btn{
+      appearance:none;
+      border:none;
+      width:40px;
+      height:40px;
+      border-radius:999px;
+      background:rgba(90,58,27,.08);
+      color:var(--body);
+      font-size:22px;
+      cursor:pointer;
     }
-
-    .diamond {
-      width: 170px;
-      height: 170px;
-      transform: rotate(45deg);
-      background: linear-gradient(180deg, rgba(237,232,186,0.96), rgba(255,245,237,0.95));
-      border: 1.8px solid rgba(56,51,23,0.24);
-      border-radius: 26px;
-      box-shadow: var(--shadow-soft);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      position: relative;
+    .modal-body{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:16px;
+      padding:22px 24px 26px;
     }
-
-    .diamond-inner {
-      width: 118px;
-      transform: rotate(-45deg);
-      text-align: center;
+    .info-card{
+      padding:16px;
+      border:1px solid rgba(90,58,27,.12);
+      border-radius:18px;
+      background:rgba(255,255,255,.46);
     }
-
-    .diamond .node-type {
-      justify-content: center;
-      margin-bottom: 8px;
-      font-size: 11px;
-      letter-spacing: 0.10em;
+    .info-card.full{grid-column:1 / -1;}
+    .info-label{
+      font-size:10px;
+      letter-spacing:.14em;
+      text-transform:uppercase;
+      color:var(--body);
+      margin-bottom:8px;
     }
-
-    .diamond .node-title {
-      font-size: 16px;
-      margin-bottom: 4px;
+    .info-value{
+      font-size:14px;
+      line-height:1.6;
+      color:var(--text);
     }
+    .muted{color:var(--body);}
 
-    .diamond .node-copy {
-      font-size: 13px;
-      line-height: 1.35;
-    }
-
-    .wait-shape {
-      width: 136px;
-      height: 136px;
-      background: linear-gradient(180deg, rgba(207,240,255,0.96), rgba(207,240,255,0.82));
-      border: 2px solid var(--wait-blue-border);
-      clip-path: polygon(28% 0, 72% 0, 100% 28%, 100% 72%, 72% 100%, 28% 100%, 0 72%, 0 28%);
-      box-shadow: var(--shadow-soft);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-      padding: 16px;
-      border-radius: 22px;
-    }
-
-    .wait-shape .node-type {
-      justify-content: center;
-      margin-bottom: 8px;
-      font-size: 11px;
-    }
-
-    .wait-shape .node-title {
-      font-size: 18px;
-      margin-bottom: 2px;
-    }
-
-    .wait-inner {
-      max-width: 88px;
-    }
-
-    .route-label {
-      position: absolute;
-      z-index: 1;
-      font-size: 13px;
-      color: var(--chocolate);
-      background: rgba(255,245,237,0.9);
-      padding: 3px 8px;
-      border-radius: 999px;
-      border: 1px solid rgba(84,51,18,0.08);
-    }
-
-    .overlay {
-      position: fixed;
-      inset: 0;
-      background: rgba(10, 13, 10, 0.38);
-      display: none;
-      align-items: center;
-      justify-content: center;
-      padding: 26px;
-      z-index: 30;
-      backdrop-filter: blur(2px);
-    }
-
-    .overlay.open { display: flex; }
-
-    .modal {
-      width: min(760px, 100%);
-      background: rgba(255,250,246,0.98);
-      border: 1px solid rgba(84,51,18,0.12);
-      border-radius: 28px;
-      box-shadow: var(--shadow-strong);
-      overflow: hidden;
-    }
-
-    .modal-header {
-      padding: 24px 26px 18px;
-      border-bottom: 1px solid rgba(84,51,18,0.08);
-      display: flex;
-      align-items: flex-start;
-      justify-content: space-between;
-      gap: 20px;
-    }
-
-    .modal-kicker {
-      font-size: 11px;
-      letter-spacing: 0.14em;
-      text-transform: uppercase;
-      color: var(--deep-burgundy);
-      font-weight: 700;
-      margin-bottom: 8px;
-    }
-
-    .modal-title {
-      margin: 0;
-      font-family: "Times New Roman", Georgia, serif;
-      font-size: 34px;
-      line-height: 1.05;
-      color: var(--dark-brown);
-      font-weight: 600;
-    }
-
-    .close-btn {
-      width: 42px;
-      height: 42px;
-      border-radius: 999px;
-      border: 0;
-      cursor: pointer;
-      background: rgba(84,51,18,0.07);
-      color: var(--dark-brown);
-      font-size: 22px;
-      line-height: 1;
-      flex: 0 0 auto;
-    }
-
-    .modal-body {
-      padding: 24px 26px 28px;
-    }
-
-    .modal-body p {
-      margin: 0 0 18px;
-      font-size: 16px;
-      line-height: 1.65;
-      color: var(--chocolate);
-    }
-
-    .meta-grid {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 14px;
-      margin-top: 18px;
-    }
-
-    .meta-card {
-      background: rgba(255,255,255,0.78);
-      border: 1px solid rgba(84,51,18,0.08);
-      border-radius: 18px;
-      padding: 16px;
-    }
-
-    .meta-card h4 {
-      margin: 0 0 8px;
-      font-size: 12px;
-      letter-spacing: 0.10em;
-      text-transform: uppercase;
-      color: var(--deep-burgundy);
-    }
-
-    .meta-card p {
-      margin: 0;
-      font-size: 14px;
-      line-height: 1.55;
+    @media (max-width:1180px){
+      .top{flex-direction:column;}
+      .legend{justify-content:flex-start;max-width:none;}
     }
   </style>
 </head>
 <body>
   <div class="page">
     <div class="shell">
-      <div class="brand">IKOU</div>
-
-      <div class="hero">
+      <div class="top">
         <div>
-          <h1>Spend to Maintain,<br>Demotion & Maintained Flow</h1>
-          <p>
-            Retention and downgrade-prevention journey for customers at Levels 2, 3, and 4. Each branch reminds the customer
-            of the spend needed to maintain status, checks whether they remain eligible, then either confirms maintained level
-            or waits before sending a demotion notice.
-          </p>
+          <div class="eyebrow">IKOU CRM · Loyalty Documentation</div>
+          <h1>Spend to Maintain, Demotion &amp; Maintained Flow</h1>
+          <div class="subcopy">
+            Internal IKOU CRM documentation for loyalty maintenance messaging. The journey routes customers into the appropriate level lane, then progresses through reminder and final-check logic until the customer either maintains their tier or exits through demotion and shared completion.
+          </div>
         </div>
 
         <div class="legend">
-          <span class="legend-item"><span class="legend-swatch sw-trigger"></span>Trigger</span>
-          <span class="legend-item"><span class="legend-swatch sw-split"></span>Conditional Split</span>
-          <span class="legend-item"><span class="legend-swatch sw-email"></span>Email</span>
-          <span class="legend-item"><span class="legend-swatch sw-wait"></span>Wait</span>
-          <span class="legend-item"><span class="legend-swatch sw-finish"></span>Finish</span>
+          <div class="legend-item"><span class="swatch sw-trigger"></span> Trigger</div>
+          <div class="legend-item"><span class="swatch sw-split"></span> Conditional Split</div>
+          <div class="legend-item"><span class="swatch sw-email"></span> Send Email</div>
+          <div class="legend-item"><span class="swatch sw-wait"></span> Wait</div>
+          <div class="legend-item"><span class="swatch sw-finish"></span> Finish</div>
         </div>
       </div>
 
-      <div class="board">
-        <section class="section">
-          <div class="section-header">
-            <div class="section-kicker">Retention & downgrade logic</div>
-            <h2 class="section-title">Maintain status, confirm retention, or trigger demotion notice</h2>
-            <p class="section-subtitle">
-              Customers are routed by level, sent maintain-status reminders, and checked against the required-spend threshold.
-              If the customer qualifies in time, the flow sends a maintained-level confirmation. If not, the flow waits and then sends a demotion email before closing.
-            </p>
+      <div class="canvas-wrap">
+        <div class="flow">
+          <div class="helper-note">
+            <strong>Flow Logic</strong>
+            One entry trigger routes customers into the correct level lane. Each lane follows the same pattern so the logic is readable, comparable, and easy to explain.
           </div>
 
-          <div class="flow">
-            <svg class="connector-layer" viewBox="0 0 1810 1500" aria-hidden="true">
-              <defs>
-                <marker id="arrowM" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto">
-                  <path d="M0,0 L10,5 L0,10 z" fill="#543312"></path>
-                </marker>
-              </defs>
+          <div class="lane-band lane-l2"></div>
+          <div class="lane-band lane-l3"></div>
+          <div class="lane-band lane-l4"></div>
 
-              <!-- trigger to split1 -->
-              <path d="M270 250 H 360" stroke="#543312" stroke-width="2.5" fill="none" marker-end="url(#arrowM)"/>
+          <div class="lane-label label-l2">Level 2 Lane</div>
+          <div class="lane-label label-l3">Level 3 Lane</div>
+          <div class="lane-label label-l4">Level 4 Lane</div>
+          <div class="lane-label label-maintained">Maintained Confirmation Rail</div>
+          <div class="lane-label label-finish">Shared Finish</div>
 
-              <!-- split1 yes to lane1 -->
-              <path d="M525 250 H 620" stroke="#543312" stroke-width="2.5" fill="none" marker-end="url(#arrowM)"/>
+          <!-- ENTRY / ROUTING -->
+          <button class="node trigger"
+            style="left:34px; top:322px;"
+            data-section="Trigger"
+            data-title="Spend to Maintain Trigger"
+            data-description="Entry point for customers who are being evaluated for tier maintenance."
+            data-logic="The flow begins here, then checks the customer’s current loyalty level to route them into Level 2, Level 3, or Level 4 messaging.">
+            <div class="kicker">Trigger</div>
+            <div class="title">Spend to Maintain</div>
+            <div class="desc">Entry profile filter</div>
+          </button>
 
-              <!-- split1 no to split2 -->
-              <path d="M445 335 V 530 H 500" stroke="#543312" stroke-width="2.5" fill="none" stroke-dasharray="8 8" marker-end="url(#arrowM)"/>
+          <button class="node split"
+            style="left:164px; top:312px;"
+            data-section="Routing"
+            data-title="Level = 2?"
+            data-description="First routing check to identify whether the customer is currently in Level 2."
+            data-logic="Yes routes upward into the Level 2 lane. No continues to the next routing step.">
+            <div class="diamond"></div>
+            <div class="content">
+              <div class="kicker">Conditional Split</div>
+              <div class="title">Level = 2?</div>
+              <div class="desc">Route by current tier</div>
+            </div>
+          </button>
 
-              <!-- split2 yes to lane2 -->
-              <path d="M665 530 H 760" stroke="#543312" stroke-width="2.5" fill="none" marker-end="url(#arrowM)"/>
+          <button class="node split"
+            style="left:294px; top:312px;"
+            data-section="Routing"
+            data-title="Level = 3?"
+            data-description="Second routing check for customers who were not routed to Level 2."
+            data-logic="Yes routes into the Level 3 lane. No continues downward into the Level 4 routing check.">
+            <div class="diamond"></div>
+            <div class="content">
+              <div class="kicker">Conditional Split</div>
+              <div class="title">Level = 3?</div>
+              <div class="desc">Route by current tier</div>
+            </div>
+          </button>
 
-              <!-- split2 no to split3 -->
-              <path d="M585 615 V 900 H 640" stroke="#543312" stroke-width="2.5" fill="none" stroke-dasharray="8 8" marker-end="url(#arrowM)"/>
+          <button class="node split"
+            style="left:294px; top:520px;"
+            data-section="Routing"
+            data-title="Level = 4?"
+            data-description="Final routing check for customers continuing past the Level 3 decision."
+            data-logic="Yes routes into the Level 4 lane. This keeps all routing logic consolidated on the left side of the canvas.">
+            <div class="diamond"></div>
+            <div class="content">
+              <div class="kicker">Conditional Split</div>
+              <div class="title">Level = 4?</div>
+              <div class="desc">Final tier routing</div>
+            </div>
+          </button>
 
-              <!-- split3 yes to lane3 -->
-              <path d="M805 900 H 900" stroke="#543312" stroke-width="2.5" fill="none" marker-end="url(#arrowM)"/>
+          <!-- L2 -->
+          <button class="node email"
+            style="left:500px; top:86px;"
+            data-section="Level 2"
+            data-title="L2 Email #1"
+            data-description="First maintenance email for Level 2 customers. Message = You're X away from another year of Level 2"
+            data-logic="Introduces the spend-to-maintain requirement and gives the customer the first chance to qualify before reminder logic begins.">
+            <div class="kicker">Send Email</div>
+            <div class="title">L2 Email #1</div>
+            <div class="desc">Maintain your Level 2 status</div>
+          </button>
 
-              <!-- lane1 -->
-              <path d="M852 250 H 940" stroke="#543312" stroke-width="2.5" fill="none" marker-end="url(#arrowM)"/>
-              <path d="M1110 250 H 1200" stroke="#543312" stroke-width="2.5" fill="none" marker-end="url(#arrowM)"/>
-              <path d="M1370 250 H 1460" stroke="#543312" stroke-width="2.5" fill="none" marker-end="url(#arrowM)"/>
-              <path d="M1610 250 H 1690" stroke="#543312" stroke-width="2.5" fill="none" marker-end="url(#arrowM)"/>
-              <path d="M1818 250 H 1860" stroke="#543312" stroke-width="2.5" fill="none" marker-end="url(#arrowM)"/>
+          <button class="node split"
+            style="left:648px; top:72px;"
+            data-section="Level 2"
+            data-title="pr_maintain spend = 0"
+            data-description="Checks whether the customer completed the required action after the first Level 2 email."
+            data-logic="Yes exits to maintained confirmation. No continues to the reminder message in the same lane.">
+            <div class="diamond"></div>
+            <div class="content">
+              <div class="kicker">Conditional Split</div>
+              <div class="title">pr_maintain spend = 0</div>
+              <div class="desc">After Email #1</div>
+            </div>
+          </button>
 
-              <!-- lane1 yes maintained -->
-              <path d="M1025 335 V 420 H 1540 V 470" stroke="#543312" stroke-width="2.5" fill="none" stroke-dasharray="8 8"/>
-              <path d="M1285 335 V 420 H 1540 V 470" stroke="#543312" stroke-width="2.5" fill="none" stroke-dasharray="8 8"/>
-              <path d="M1545 335 V 420 H 1540 V 470" stroke="#543312" stroke-width="2.5" fill="none" stroke-dasharray="8 8" marker-end="url(#arrowM)"/>
+          <button class="node email"
+            style="left:790px; top:86px;"
+            data-section="Level 2"
+            data-title="L2 Reminder"
+            data-description="Reminder email for unresolved Level 2 customers."
+            data-logic="Only customers who did not qualify after the first email continue to this reminder.">
+            <div class="kicker">Send Email</div>
+            <div class="title">L2 Reminder</div>
+            <div class="desc">Continue toward maintain status</div>
+          </button>
 
-              <!-- lane2 -->
-              <path d="M992 530 H 1080" stroke="#543312" stroke-width="2.5" fill="none" marker-end="url(#arrowM)"/>
-              <path d="M1250 530 H 1340" stroke="#543312" stroke-width="2.5" fill="none" marker-end="url(#arrowM)"/>
-              <path d="M1510 530 H 1600" stroke="#543312" stroke-width="2.5" fill="none" marker-end="url(#arrowM)"/>
-              <path d="M1750 530 H 1830" stroke="#543312" stroke-width="2.5" fill="none" marker-end="url(#arrowM)"/>
-              <path d="M1958 530 H 1860" stroke="#543312" stroke-width="2.5" fill="none" marker-end="url(#arrowM)"/>
+          <button class="node split"
+            style="left:938px; top:72px;"
+            data-section="Level 2"
+            data-title="pr_maintain spend = 0"
+            data-description="Second qualification check after the reminder message."
+            data-logic="Yes exits to maintained confirmation. No continues to the final last-chance send.">
+            <div class="diamond"></div>
+            <div class="content">
+              <div class="kicker">Conditional Split</div>
+              <div class="title">pr_maintain spend = 0</div>
+              <div class="desc">After reminder</div>
+            </div>
+          </button>
 
-              <!-- lane2 yes maintained -->
-              <path d="M1165 615 V 720 H 1560 V 760" stroke="#543312" stroke-width="2.5" fill="none" stroke-dasharray="8 8"/>
-              <path d="M1425 615 V 720 H 1560 V 760" stroke="#543312" stroke-width="2.5" fill="none" stroke-dasharray="8 8"/>
-              <path d="M1685 615 V 720 H 1560 V 760" stroke="#543312" stroke-width="2.5" fill="none" stroke-dasharray="8 8" marker-end="url(#arrowM)"/>
+          <button class="node email"
+            style="left:1080px; top:86px;"
+            data-section="Level 2"
+            data-title="L2 Last Chance"
+            data-description="Final reminder before the last maintenance decision."
+            data-logic="This is the final proactive message inside the Level 2 lane before the outcome check.">
+            <div class="kicker">Send Email</div>
+            <div class="title">L2 Last Chance</div>
+            <div class="desc">Final call to maintain Level 2</div>
+          </button>
 
-              <!-- lane3 -->
-              <path d="M1132 900 H 1220" stroke="#543312" stroke-width="2.5" fill="none" marker-end="url(#arrowM)"/>
-              <path d="M1390 900 H 1480" stroke="#543312" stroke-width="2.5" fill="none" marker-end="url(#arrowM)"/>
-              <path d="M1650 900 H 1740" stroke="#543312" stroke-width="2.5" fill="none" marker-end="url(#arrowM)"/>
-              <path d="M1910 900 H 1990" stroke="#543312" stroke-width="2.5" fill="none" marker-end="url(#arrowM)"/>
-              <path d="M2118 900 H 1860" stroke="#543312" stroke-width="2.5" fill="none" marker-end="url(#arrowM)"/>
+          <button class="node split"
+            style="left:1228px; top:72px;"
+            data-section="Level 2"
+            data-title="Maintained?"
+            data-description="Final check to confirm whether the customer kept their Level 2 tier."
+            data-logic="Yes exits downward into the maintained confirmation rail. No continues to wait and demotion.">
+            <div class="diamond"></div>
+            <div class="content">
+              <div class="kicker">Conditional Split</div>
+              <div class="title">Maintained?</div>
+              <div class="desc">Final check</div>
+            </div>
+          </button>
 
-              <!-- lane3 yes maintained -->
-              <path d="M1305 985 V 1120 H 1710 V 1180" stroke="#543312" stroke-width="2.5" fill="none" stroke-dasharray="8 8"/>
-              <path d="M1565 985 V 1120 H 1710 V 1180" stroke="#543312" stroke-width="2.5" fill="none" stroke-dasharray="8 8"/>
-              <path d="M1825 985 V 1120 H 1710 V 1180" stroke="#543312" stroke-width="2.5" fill="none" stroke-dasharray="8 8" marker-end="url(#arrowM)"/>
+          <button class="node wait"
+            style="left:1368px; top:91px;"
+            data-section="Level 2"
+            data-title="Wait 5 Days"
+            data-description="Grace period before the status-change email is sent."
+            data-logic="Introduces a pause between the last qualification check and the demotion message.">
+            <div class="kicker">Wait</div>
+            <div class="title">5 Days</div>
+            <div class="desc">Grace period</div>
+          </button>
 
-              <!-- maintained joins -->
-              <path d="M1772 510 H 1860 V 530" stroke="#543312" stroke-width="2.5" fill="none"/>
-              <path d="M1792 800 H 1860 V 530" stroke="#543312" stroke-width="2.5" fill="none"/>
-              <path d="M1942 1220 H 1860 V 530" stroke="#543312" stroke-width="2.5" fill="none"/>
+          <button class="node email"
+            style="left:1496px; top:86px;"
+            data-section="Level 2"
+            data-title="L2 Demotion"
+            data-description="Demotion message sent when the customer did not maintain Level 2."
+            data-logic="This path leads directly into the shared finish endpoint.">
+            <div class="kicker">Send Email</div>
+            <div class="title">Demotion</div>
+            <div class="desc">Down from Level 2</div>
+          </button>
 
-              <!-- demotion wait paths -->
-              <path d="M1758 250 H 1830" stroke="#543312" stroke-width="2.5" fill="none" marker-end="url(#arrowM)"/>
-              <path d="M1948 250 H 2038" stroke="#543312" stroke-width="2.5" fill="none" marker-end="url(#arrowM)"/>
+          <!-- L3 -->
+          <button class="node email"
+            style="left:500px; top:294px;"
+            data-section="Level 3"
+            data-title="L3 Email #1"
+            data-description="First maintenance email for Level 3 customers."
+            data-logic="Begins the Level 3 lane and explains what is required to retain the tier.">
+            <div class="kicker">Send Email</div>
+            <div class="title">L3 Email #1</div>
+            <div class="desc">Maintain your Level 3 status</div>
+          </button>
 
-              <path d="M1898 530 H 1970" stroke="#543312" stroke-width="2.5" fill="none" marker-end="url(#arrowM)"/>
-              <path d="M2088 530 H 2178" stroke="#543312" stroke-width="2.5" fill="none" marker-end="url(#arrowM)"/>
+          <button class="node split"
+            style="left:648px; top:280px;"
+            data-section="Level 3"
+            data-title="pr_maintain spend = 0"
+            data-description="Checks whether the customer qualified after the first Level 3 email."
+            data-logic="Yes exits down to maintained confirmation. No continues to reminder messaging.">
+            <div class="diamond"></div>
+            <div class="content">
+              <div class="kicker">Conditional Split</div>
+              <div class="title">pr_maintain spend = 0</div>
+              <div class="desc">After Email #1</div>
+            </div>
+          </button>
 
-              <path d="M2058 900 H 2130" stroke="#543312" stroke-width="2.5" fill="none" marker-end="url(#arrowM)"/>
-              <path d="M2248 900 H 2338" stroke="#543312" stroke-width="2.5" fill="none" marker-end="url(#arrowM)"/>
-            </svg>
+          <button class="node email"
+            style="left:790px; top:294px;"
+            data-section="Level 3"
+            data-title="L3 Reminder"
+            data-description="Reminder email for Level 3 customers still at risk."
+            data-logic="This mirrors the same cadence used in the Level 2 lane for clarity and consistency.">
+            <div class="kicker">Send Email</div>
+            <div class="title">L3 Reminder</div>
+            <div class="desc">Prompt to keep Level 3</div>
+          </button>
 
-            <div class="lane-label" style="top: 198px;"><span class="lane-dot"></span>Level 2 maintain / demotion path</div>
-            <div class="lane-label" style="top: 478px;"><span class="lane-dot"></span>Level 3 maintain / demotion path</div>
-            <div class="lane-label" style="top: 848px;"><span class="lane-dot"></span>Level 4 maintain / demotion path</div>
+          <button class="node split"
+            style="left:938px; top:280px;"
+            data-section="Level 3"
+            data-title="pr_maintain spend = 0"
+            data-description="Second qualification check after the Level 3 reminder."
+            data-logic="Yes exits to maintained confirmation. No continues to the last-chance email.">
+            <div class="diamond"></div>
+            <div class="content">
+              <div class="kicker">Conditional Split</div>
+              <div class="title">pr_maintain spend = 0</div>
+              <div class="desc">After reminder</div>
+            </div>
+          </button>
 
-            <div class="route-label" style="left: 540px; top: 232px;">Yes</div>
-            <div class="route-label" style="left: 418px; top: 430px;">No</div>
-            <div class="route-label" style="left: 682px; top: 512px;">Yes</div>
-            <div class="route-label" style="left: 560px; top: 800px;">No</div>
-            <div class="route-label" style="left: 822px; top: 882px;">Yes</div>
+          <button class="node email"
+            style="left:1080px; top:294px;"
+            data-section="Level 3"
+            data-title="L3 Last Chance"
+            data-description="Final proactive send before the last maintenance outcome is decided."
+            data-logic="This is the final retention attempt for Level 3 customers.">
+            <div class="kicker">Send Email</div>
+            <div class="title">L3 Last Chance</div>
+            <div class="desc">Final call to maintain Level 3</div>
+          </button>
 
-            <div class="route-label" style="left: 1070px; top: 232px;">No</div>
-            <div class="route-label" style="left: 1330px; top: 232px;">No</div>
-            <div class="route-label" style="left: 1590px; top: 232px;">No</div>
-            <div class="route-label" style="left: 1050px; top: 372px;">Yes</div>
-            <div class="route-label" style="left: 1310px; top: 372px;">Yes</div>
-            <div class="route-label" style="left: 1570px; top: 372px;">Yes</div>
+          <button class="node split"
+            style="left:1228px; top:280px;"
+            data-section="Level 3"
+            data-title="Maintained?"
+            data-description="Final decision point for the Level 3 lane."
+            data-logic="Yes routes down to maintained confirmation. No continues right to wait and demotion.">
+            <div class="diamond"></div>
+            <div class="content">
+              <div class="kicker">Conditional Split</div>
+              <div class="title">Maintained?</div>
+              <div class="desc">Final check</div>
+            </div>
+          </button>
 
-            <div class="route-label" style="left: 1210px; top: 512px;">No</div>
-            <div class="route-label" style="left: 1470px; top: 512px;">No</div>
-            <div class="route-label" style="left: 1730px; top: 512px;">No</div>
-            <div class="route-label" style="left: 1190px; top: 652px;">Yes</div>
-            <div class="route-label" style="left: 1450px; top: 652px;">Yes</div>
-            <div class="route-label" style="left: 1710px; top: 652px;">Yes</div>
+          <button class="node wait"
+            style="left:1368px; top:299px;"
+            data-section="Level 3"
+            data-title="Wait 5 Days"
+            data-description="Grace period before demotion confirmation is sent."
+            data-logic="Keeps the messaging cadence soft and editorial rather than abrupt.">
+            <div class="kicker">Wait</div>
+            <div class="title">5 Days</div>
+            <div class="desc">Grace period</div>
+          </button>
 
-            <div class="route-label" style="left: 1350px; top: 882px;">No</div>
-            <div class="route-label" style="left: 1610px; top: 882px;">No</div>
-            <div class="route-label" style="left: 1870px; top: 882px;">No</div>
-            <div class="route-label" style="left: 1330px; top: 1022px;">Yes</div>
-            <div class="route-label" style="left: 1590px; top: 1022px;">Yes</div>
-            <div class="route-label" style="left: 1850px; top: 1022px;">Yes</div>
+          <button class="node email"
+            style="left:1496px; top:294px;"
+            data-section="Level 3"
+            data-title="L3 Demotion"
+            data-description="Demotion communication for customers who did not maintain Level 3."
+            data-logic="Routes into the shared finish endpoint.">
+            <div class="kicker">Send Email</div>
+            <div class="title">Demotion</div>
+            <div class="desc">Down from Level 3</div>
+          </button>
 
-            <!-- trigger -->
-            <button class="node" style="left: 40px; top: 190px;" data-id="trigger-maintain">
-              <div class="card trigger">
-                <div class="node-type"><span class="node-icon">⚡</span>Trigger</div>
-                <h3 class="node-title">Maintain / Demotion Review</h3>
-                <p class="node-copy">Entry point for customers approaching retention review and possible demotion logic.</p>
-              </div>
-            </button>
+          <!-- L4 -->
+          <button class="node email"
+            style="left:500px; top:502px;"
+            data-section="Level 4"
+            data-title="L4 Email #1"
+            data-description="First maintenance email for Level 4 customers."
+            data-logic="Begins the Level 4 lane and presents the spend needed to keep the tier.">
+            <div class="kicker">Send Email</div>
+            <div class="title">L4 Email #1</div>
+            <div class="desc">Maintain your Level 4 status</div>
+          </button>
 
-            <!-- routing -->
-            <button class="node" style="left: 360px; top: 165px;" data-id="split-level2-route">
-              <div class="diamond">
-                <div class="diamond-inner">
-                  <div class="node-type"><span class="node-icon">◇</span>Split</div>
-                  <div class="node-title">Loyalty Level = 2?</div>
-                  <div class="node-copy">Route level path</div>
-                </div>
-              </div>
-            </button>
+          <button class="node split"
+            style="left:648px; top:488px;"
+            data-section="Level 4"
+            data-title="pr_maintain spend = 0"
+            data-description="Checks qualification after the first Level 4 email."
+            data-logic="Yes exits to maintained confirmation. No continues to the reminder step.">
+            <div class="diamond"></div>
+            <div class="content">
+              <div class="kicker">Conditional Split</div>
+              <div class="title">pr_maintain spend = 0</div>
+              <div class="desc">After Email #1</div>
+            </div>
+          </button>
 
-            <button class="node" style="left: 500px; top: 445px;" data-id="split-level3-route">
-              <div class="diamond">
-                <div class="diamond-inner">
-                  <div class="node-type"><span class="node-icon">◇</span>Split</div>
-                  <div class="node-title">Loyalty Level = 3?</div>
-                  <div class="node-copy">Route level path</div>
-                </div>
-              </div>
-            </button>
+          <button class="node email"
+            style="left:790px; top:502px;"
+            data-section="Level 4"
+            data-title="L4 Reminder"
+            data-description="Reminder email for unresolved Level 4 customers."
+            data-logic="Maintains consistency with the same messaging rhythm used in other lanes.">
+            <div class="kicker">Send Email</div>
+            <div class="title">L4 Reminder</div>
+            <div class="desc">Prompt to keep Level 4</div>
+          </button>
 
-            <button class="node" style="left: 640px; top: 815px;" data-id="split-level4-route">
-              <div class="diamond">
-                <div class="diamond-inner">
-                  <div class="node-type"><span class="node-icon">◇</span>Split</div>
-                  <div class="node-title">Loyalty Level = 4?</div>
-                  <div class="node-copy">Route level path</div>
-                </div>
-              </div>
-            </button>
+          <button class="node split"
+            style="left:938px; top:488px;"
+            data-section="Level 4"
+            data-title="pr_maintain spend = 0"
+            data-description="Second check after the Level 4 reminder."
+            data-logic="Yes exits downward into maintained confirmation. No continues to last chance.">
+            <div class="diamond"></div>
+            <div class="content">
+              <div class="kicker">Conditional Split</div>
+              <div class="title">pr_maintain spend = 0</div>
+              <div class="desc">After reminder</div>
+            </div>
+          </button>
 
-            <!-- Level 2 -->
-            <button class="node" style="left: 620px; top: 190px;" data-id="l2-email1">
-              <div class="card email">
-                <div class="node-type"><span class="node-icon">✉</span>Send email</div>
-                <h3 class="node-title">L2 STM Email #1</h3>
-                <p class="node-copy">You’re X away from another year of Level 2.</p>
-              </div>
-            </button>
+          <button class="node email"
+            style="left:1080px; top:502px;"
+            data-section="Level 4"
+            data-title="L4 Last Chance"
+            data-description="Final reminder before the last tier maintenance check."
+            data-logic="This is the final attempt to prevent demotion in the Level 4 lane.">
+            <div class="kicker">Send Email</div>
+            <div class="title">L4 Last Chance</div>
+            <div class="desc">Final call to maintain Level 4</div>
+          </button>
 
-            <button class="node" style="left: 940px; top: 165px;" data-id="l2-split1">
-              <div class="diamond">
-                <div class="diamond-inner">
-                  <div class="node-type"><span class="node-icon">◇</span>Split</div>
-                  <div class="node-title">Required spend met?</div>
-                  <div class="node-copy">Equals threshold</div>
-                </div>
-              </div>
-            </button>
+          <button class="node split"
+            style="left:1228px; top:488px;"
+            data-section="Level 4"
+            data-title="Maintained?"
+            data-description="Final outcome check for the Level 4 lane."
+            data-logic="Yes routes to maintained confirmation. No continues right into wait and demotion.">
+            <div class="diamond"></div>
+            <div class="content">
+              <div class="kicker">Conditional Split</div>
+              <div class="title">Maintained?</div>
+              <div class="desc">Final check</div>
+            </div>
+          </button>
 
-            <button class="node" style="left: 1200px; top: 190px;" data-id="l2-email2">
-              <div class="card email">
-                <div class="node-type"><span class="node-icon">✉</span>Send email</div>
-                <h3 class="node-title">L2 STM Email #2</h3>
-                <p class="node-copy">Don’t forget you’re X away from another year of Level 2.</p>
-              </div>
-            </button>
+          <button class="node wait"
+            style="left:1368px; top:507px;"
+            data-section="Level 4"
+            data-title="Wait 5 Days"
+            data-description="Grace period before the demotion message for unresolved Level 4 customers."
+            data-logic="This keeps the status-change sequence aligned with the other lanes.">
+            <div class="kicker">Wait</div>
+            <div class="title">5 Days</div>
+            <div class="desc">Grace period</div>
+          </button>
 
-            <button class="node" style="left: 1460px; top: 165px;" data-id="l2-split2">
-              <div class="diamond">
-                <div class="diamond-inner">
-                  <div class="node-type"><span class="node-icon">◇</span>Split</div>
-                  <div class="node-title">Required spend met?</div>
-                  <div class="node-copy">Second check</div>
-                </div>
-              </div>
-            </button>
+          <button class="node email"
+            style="left:1496px; top:502px;"
+            data-section="Level 4"
+            data-title="L4 Demotion"
+            data-description="Demotion email for customers who did not maintain Level 4."
+            data-logic="Routes to the same shared finish endpoint used by all demotion outcomes.">
+            <div class="kicker">Send Email</div>
+            <div class="title">Demotion</div>
+            <div class="desc">Down from Level 4</div>
+          </button>
 
-            <button class="node" style="left: 1720px; top: 190px;" data-id="l2-email3">
-              <div class="card email">
-                <div class="node-type"><span class="node-icon">✉</span>Send email</div>
-                <h3 class="node-title">L2 STM Email #3</h3>
-                <p class="node-copy">Last chance to spend X for another year of Level 2.</p>
-              </div>
-            </button>
+          <!-- MAINTAINED RAIL -->
+          <button class="node email"
+            style="left:1112px; top:672px;"
+            data-section="Maintained Rail"
+            data-title="Maintained Confirmation"
+            data-description="Confirmation email for customers who successfully retained their level."
+            data-logic="All successful qualification branches converge here before the flow ends at the shared finish endpoint.">
+            <div class="kicker">Send Email</div>
+            <div class="title">Maintained</div>
+            <div class="desc">Tier retained confirmation</div>
+          </button>
 
-            <button class="node" style="left: 1540px; top: 450px;" data-id="l2-maintained">
-              <div class="card email">
-                <div class="node-type"><span class="node-icon">✉</span>Send email</div>
-                <h3 class="node-title">Maintained Level</h3>
-                <p class="node-copy">Another year of Level 2 confirmed.</p>
-              </div>
-            </button>
+          <!-- FINISH -->
+          <button class="node finish"
+            style="left:1626px; top:384px;"
+            data-section="Completion"
+            data-title="Finish"
+            data-description="Shared completion endpoint for maintained and demoted outcomes."
+            data-logic="All branches resolve here so the diagram remains clean and avoids scattered end states.">
+            <div class="kicker">Finish</div>
+            <div class="title">Complete</div>
+            <div class="desc">Shared exit endpoint</div>
+          </button>
 
-            <button class="node" style="left: 1830px; top: 150px;" data-id="l2-wait">
-              <div class="wait-shape">
-                <div class="wait-inner">
-                  <div class="node-type">Wait</div>
-                  <div class="node-title">5 days</div>
-                </div>
-              </div>
-            </button>
+          <!-- tiny tags -->
+          <div class="mini-tag" style="left:245px; top:327px;">Yes → L2</div>
+          <div class="mini-tag" style="left:378px; top:327px;">Yes → L3</div>
+          <div class="mini-tag" style="left:565px; top:207px;">Yes → Maintained Email #1</div>
+          <div class="mini-tag" style="left:565px; top:407px;">Yes → Maintained Email #1</div>
+          <div class="mini-tag" style="left:565px; top:655px;">Yes → Maintained Email #1</div>
+          <div class="mini-tag" style="left:855px; top:207px;">Yes → Maintained Email #1</div>
+          <div class="mini-tag" style="left:855px; top:407px;">Yes → Maintained Email #1</div>
+          <div class="mini-tag" style="left:855px; top:655px;">Yes → Maintained Email #1</div>
+          <div class="mini-tag" style="left:1145px; top:207px;">Yes → Maintained Email #1</div>
+          <div class="mini-tag" style="left:1145px; top:407px;">Yes → Maintained Email #1</div>
+           <div class="mini-tag" style="left:745px; top:90px;">No</div>
+          <div class="mini-tag" style="left:1025px; top:90px;">No</div>
+          <div class="mini-tag" style="left:1310px; top:90px;">No</div>
+          <div class="mini-tag" style="left:745px; top:305px;">No</div>
+          <div class="mini-tag" style="left:745px; top:500px;">No</div>
+          <div class="mini-tag" style="left:1025px; top:500px;">No</div>
+          <div class="mini-tag" style="left:1310px; top:500px;">No</div>
+          <div class="mini-tag" style="left:1310px; top:295px;">No</div>
+          <div class="mini-tag" style="left:1025px; top:305px;">No</div>
+          
+          <div class="mini-tag" style="left:1145px; top:635px;">Yes → Maintained Email #1</div>
+          <div class="mini-tag" style="left:348px; top:495px;">No → L4</div>
 
-            <button class="node" style="left: 2040px; top: 190px;" data-id="l2-demotion">
-              <div class="card email">
-                <div class="node-type"><span class="node-icon">✉</span>Send email</div>
-                <h3 class="node-title">Demotion from Level 2</h3>
-                <p class="node-copy">Downgrade notification after review window closes.</p>
-              </div>
-            </button>
+          <!-- CONNECTORS -->
+          <svg class="connectors" viewBox="0 0 1720 840" preserveAspectRatio="none" aria-hidden="true">
+            <defs>
+              <marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto" markerUnits="strokeWidth">
+                <path d="M0,0 L8,4 L0,8 Z" fill="#5A3A1B"></path>
+              </marker>
+            </defs>
 
-            <!-- Level 3 -->
-            <button class="node" style="left: 760px; top: 470px;" data-id="l3-email1">
-              <div class="card email">
-                <div class="node-type"><span class="node-icon">✉</span>Send email</div>
-                <h3 class="node-title">L3 STM Email #1</h3>
-                <p class="node-copy">You’re X away from another year of Level 3.</p>
-              </div>
-            </button>
+            <!-- trigger to routing -->
+            <path class="line" d="M144 356 H164"></path>
+            <path class="line dashed" d="M254 356 H294"></path>
 
-            <button class="node" style="left: 1080px; top: 445px;" data-id="l3-split1">
-              <div class="diamond">
-                <div class="diamond-inner">
-                  <div class="node-type"><span class="node-icon">◇</span>Split</div>
-                  <div class="node-title">Required spend met?</div>
-                  <div class="node-copy">Equals threshold</div>
-                </div>
-              </div>
-            </button>
+            <!-- route to L2 -->
+            <path class="line dashed" d="M209 312 V117 H500"></path>
 
-            <button class="node" style="left: 1340px; top: 470px;" data-id="l3-email2">
-              <div class="card email">
-                <div class="node-type"><span class="node-icon">✉</span>Send email</div>
-                <h3 class="node-title">L3 STM Email #2</h3>
-                <p class="node-copy">Don’t forget you’re X away from another year of Level 3.</p>
-              </div>
-            </button>
+            <!-- route to L3 -->
+            <path class="line dashed" d="M339 356 H500"></path>
 
-            <button class="node" style="left: 1600px; top: 445px;" data-id="l3-split2">
-              <div class="diamond">
-                <div class="diamond-inner">
-                  <div class="node-type"><span class="node-icon">◇</span>Split</div>
-                  <div class="node-title">Required spend met?</div>
-                  <div class="node-copy">Second check</div>
-                </div>
-              </div>
-            </button>
+            <!-- route to L4 -->
+            <path class="line dashed" d="M339 356 V565"></path>
+            <path class="line dashed" d="M339 565 H500"></path>
 
-            <button class="node" style="left: 1860px; top: 470px;" data-id="l3-email3">
-              <div class="card email">
-                <div class="node-type"><span class="node-icon">✉</span>Send email</div>
-                <h3 class="node-title">L3 STM Email #3</h3>
-                <p class="node-copy">Last chance to spend X for another year of Level 3.</p>
-              </div>
-            </button>
+            <!-- L2 horizontal -->
+            <path class="line" d="M614 117 H648"></path>
+            <path class="line dashed" d="M693 117 H790"></path>
+            <path class="line" d="M904 117 H938"></path>
+            <path class="line dashed" d="M983 117 H1080"></path>
+            <path class="line" d="M1194 117 H1228"></path>
+            <path class="line dashed" d="M1273 117 H1368"></path>
+            <path class="line" d="M1460 131 H1496"></path>
 
-            <button class="node" style="left: 1560px; top: 740px;" data-id="l3-maintained">
-              <div class="card email">
-                <div class="node-type"><span class="node-icon">✉</span>Send email</div>
-                <h3 class="node-title">Maintained Level</h3>
-                <p class="node-copy">Another year of Level 3 confirmed.</p>
-              </div>
-            </button>
+            <!-- L3 horizontal -->
+            <path class="line" d="M614 325 H648"></path>
+            <path class="line" d="M738 325 H790"></path>
+            <path class="line" d="M904 325 H938"></path>
+            <path class="line" d="M983 325 H1080"></path>
+            <path class="line" d="M1194 325 H1228"></path>
+            <path class="line dashed" d="M1273 325 H1368"></path>
+            <path class="line" d="M1460 339 H1496"></path>
 
-            <button class="node" style="left: 1970px; top: 430px;" data-id="l3-wait">
-              <div class="wait-shape">
-                <div class="wait-inner">
-                  <div class="node-type">Wait</div>
-                  <div class="node-title">5 days</div>
-                </div>
-              </div>
-            </button>
+            <!-- L4 horizontal -->
+            <path class="line" d="M614 533 H648"></path>
+            <path class="line dashed" d="M693 533 H790"></path>
+            <path class="line" d="M904 533 H938"></path>
+            <path class="line dashed" d="M983 533 H1080"></path>
+            <path class="line" d="M1194 533 H1228"></path>
+            <path class="line dashed" d="M1273 533 H1368"></path>
+            <path class="line" d="M1460 547 H1496"></path>
 
-            <button class="node" style="left: 2180px; top: 470px;" data-id="l3-demotion">
-              <div class="card email">
-                <div class="node-type"><span class="node-icon">✉</span>Send email</div>
-                <h3 class="node-title">Demotion from Level 3</h3>
-                <p class="node-copy">Downgrade notification after review window closes.</p>
-              </div>
-            </button>
+            <!-- yes branches to maintained rail -->
+            <path class="line dashed" d="M693 162 V701 H1112"></path>
+            <path class="line dashed" d="M983 162 V701 H1112"></path>
+            <path class="line dashed" d="M1273 162 V701 H1112"></path>
 
-            <!-- Level 4 -->
-            <button class="node" style="left: 900px; top: 840px;" data-id="l4-email1">
-              <div class="card email">
-                <div class="node-type"><span class="node-icon">✉</span>Send email</div>
-                <h3 class="node-title">L4 STM Email #1</h3>
-                <p class="node-copy">You’re X away from another year of Level 4.</p>
-              </div>
-            </button>
+            <path class="line dashed" d="M693 370 V701 H1112"></path>
+            <path class="line dashed" d="M983 370 V701 H1112"></path>
+            <path class="line dashed" d="M1273 370 V701 H1112"></path>
 
-            <button class="node" style="left: 1220px; top: 815px;" data-id="l4-split1">
-              <div class="diamond">
-                <div class="diamond-inner">
-                  <div class="node-type"><span class="node-icon">◇</span>Split</div>
-                  <div class="node-title">Required spend met?</div>
-                  <div class="node-copy">Equals threshold</div>
-                </div>
-              </div>
-            </button>
+            <path class="line dashed" d="M693 578 V701 H1112"></path>
+            <path class="line dashed" d="M983 578 V701 H1112"></path>
+            <path class="line dashed" d="M1273 578 V701 H1112"></path>
 
-            <button class="node" style="left: 1480px; top: 840px;" data-id="l4-email2">
-              <div class="card email">
-                <div class="node-type"><span class="node-icon">✉</span>Send email</div>
-                <h3 class="node-title">L4 STM Email #2</h3>
-                <p class="node-copy">Don’t forget you’re X away from another year of Level 4.</p>
-              </div>
-            </button>
-
-            <button class="node" style="left: 1740px; top: 815px;" data-id="l4-split2">
-              <div class="diamond">
-                <div class="diamond-inner">
-                  <div class="node-type"><span class="node-icon">◇</span>Split</div>
-                  <div class="node-title">Required spend met?</div>
-                  <div class="node-copy">Second check</div>
-                </div>
-              </div>
-            </button>
-
-            <button class="node" style="left: 2000px; top: 840px;" data-id="l4-email3">
-              <div class="card email">
-                <div class="node-type"><span class="node-icon">✉</span>Send email</div>
-                <h3 class="node-title">L4 STM Email #3</h3>
-                <p class="node-copy">Last chance to spend X for another year of Level 4.</p>
-              </div>
-            </button>
-
-            <button class="node" style="left: 1710px; top: 1160px;" data-id="l4-maintained">
-              <div class="card email">
-                <div class="node-type"><span class="node-icon">✉</span>Send email</div>
-                <h3 class="node-title">Maintained Level</h3>
-                <p class="node-copy">Another year of Level 4 confirmed.</p>
-              </div>
-            </button>
-
-            <button class="node" style="left: 2110px; top: 800px;" data-id="l4-wait">
-              <div class="wait-shape">
-                <div class="wait-inner">
-                  <div class="node-type">Wait</div>
-                  <div class="node-title">5 days</div>
-                </div>
-              </div>
-            </button>
-
-            <button class="node" style="left: 2320px; top: 840px;" data-id="l4-demotion">
-              <div class="card email">
-                <div class="node-type"><span class="node-icon">✉</span>Send email</div>
-                <h3 class="node-title">Demotion from Level 4</h3>
-                <p class="node-copy">Downgrade notification after review window closes.</p>
-              </div>
-            </button>
-
-            <!-- finish -->
-            <button class="node" style="left: 1860px; top: 500px;" data-id="finish-maintain">
-              <div class="card finish">
-                <div>
-                  <div class="node-type">Finish</div>
-                  <div class="node-title">Review flow complete</div>
-                </div>
-              </div>
-            </button>
-          </div>
-        </section>
+<!-- demotion routes to finish -->
+<path class="line" d="M1610 117 H1668 V405"></path>
+<path class="line" d="M1610 325 H1668"></path>
+<path class="line" d="M1610 533 H1668 V405"></path>
+<path class="line" d="M1210 733 H1668 V435"></path>
+          </svg>
+        </div>
       </div>
     </div>
   </div>
 
-  <div class="overlay" id="overlay" aria-hidden="true">
-    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
-      <div class="modal-header">
+  <div class="modal" id="nodeModal" aria-hidden="true">
+    <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+      <div class="modal-head">
         <div>
-          <div class="modal-kicker" id="modalEyebrow">Node details</div>
-          <h2 class="modal-title" id="modalTitle">Title</h2>
+          <div class="modal-eyebrow" id="modalSectionTop">Section</div>
+          <h2 class="modal-title" id="modalTitle">Node title</h2>
         </div>
-        <button class="close-btn" id="closeBtn" aria-label="Close">×</button>
+        <button class="close-btn" id="closeModal" aria-label="Close">×</button>
       </div>
-
       <div class="modal-body">
-        <p id="modalDescription"></p>
-        <div class="meta-grid">
-          <div class="meta-card">
-            <h4>Section</h4>
-            <p id="modalSection"></p>
-          </div>
-          <div class="meta-card">
-            <h4>Flow Logic</h4>
-            <p id="modalLogic"></p>
-          </div>
+        <div class="info-card">
+          <div class="info-label">Section Name</div>
+          <div class="info-value" id="modalSection">—</div>
+        </div>
+        <div class="info-card">
+          <div class="info-label">Node Title</div>
+          <div class="info-value" id="modalNodeTitle">—</div>
+        </div>
+        <div class="info-card full">
+          <div class="info-label">Description</div>
+          <div class="info-value muted" id="modalDescription">—</div>
+        </div>
+        <div class="info-card full">
+          <div class="info-label">Flow Logic</div>
+          <div class="info-value" id="modalLogic">—</div>
         </div>
       </div>
     </div>
   </div>
 
   <script>
-    const tokenData = {
-      "trigger-maintain": {
-        eyebrow: "Maintain / demotion flow",
-        title: "Trigger — Maintain / Demotion Review",
-        description: "Starts the yearly maintain-or-demotion review process for customers in retention-sensitive tiers.",
-        section: "Entry",
-        logic: "Profiles enter here before being routed to their current level-specific branch."
-      },
+    const modal = document.getElementById('nodeModal');
+    const closeModalBtn = document.getElementById('closeModal');
 
-      "split-level2-route": {
-        eyebrow: "Routing",
-        title: "Conditional Split — Loyalty Level = 2?",
-        description: "Checks whether the customer belongs to Level 2 and should enter the Level 2 maintain/demotion path.",
-        section: "Routing",
-        logic: "Yes routes to Level 2. No continues to the Level 3 routing split."
-      },
-      "split-level3-route": {
-        eyebrow: "Routing",
-        title: "Conditional Split — Loyalty Level = 3?",
-        description: "Checks whether the customer belongs to Level 3 and should enter the Level 3 maintain/demotion path.",
-        section: "Routing",
-        logic: "Yes routes to Level 3. No continues to the Level 4 routing split."
-      },
-      "split-level4-route": {
-        eyebrow: "Routing",
-        title: "Conditional Split — Loyalty Level = 4?",
-        description: "Checks whether the customer belongs to Level 4 and should enter the Level 4 maintain/demotion path.",
-        section: "Routing",
-        logic: "Yes routes to Level 4."
-      },
+    const modalSectionTop = document.getElementById('modalSectionTop');
+    const modalTitle = document.getElementById('modalTitle');
+    const modalSection = document.getElementById('modalSection');
+    const modalNodeTitle = document.getElementById('modalNodeTitle');
+    const modalDescription = document.getElementById('modalDescription');
+    const modalLogic = document.getElementById('modalLogic');
 
-      "l2-email1": {
-        eyebrow: "Level 2 path",
-        title: "L2 STM Email #1",
-        description: "Initial maintain-status reminder telling the customer how much more they need to spend for another year of Level 2.",
-        section: "Level 2",
-        logic: "First reminder in the Level 2 retention path."
-      },
-      "l2-split1": {
-        eyebrow: "Level 2 path",
-        title: "Conditional Split — Required spend met?",
-        description: "Checks if the customer has met the spend threshold after the first reminder.",
-        section: "Level 2",
-        logic: "Yes sends maintained-level confirmation. No continues to the second reminder."
-      },
-      "l2-email2": {
-        eyebrow: "Level 2 path",
-        title: "L2 STM Email #2",
-        description: "Second reminder for customers still short of the required spend for another year of Level 2.",
-        section: "Level 2",
-        logic: "Keeps maintain-status urgency active."
-      },
-      "l2-split2": {
-        eyebrow: "Level 2 path",
-        title: "Conditional Split — Required spend met? Second check",
-        description: "Checks again whether the spend threshold has now been met after the second reminder.",
-        section: "Level 2",
-        logic: "Yes sends maintained-level confirmation. No continues to the final reminder."
-      },
-      "l2-email3": {
-        eyebrow: "Level 2 path",
-        title: "L2 STM Email #3",
-        description: "Final last-chance reminder for maintaining Level 2.",
-        section: "Level 2",
-        logic: "Creates urgency before review window closes."
-      },
-      "l2-maintained": {
-        eyebrow: "Level 2 path",
-        title: "Maintained Level — Level 2",
-        description: "Confirmation email telling the customer they retained Level 2 for another year.",
-        section: "Level 2",
-        logic: "Sent when required spend is met in time."
-      },
-      "l2-wait": {
-        eyebrow: "Level 2 path",
-        title: "Wait — 5 days",
-        description: "Short holding window before demotion notification is sent if maintain threshold is not achieved.",
-        section: "Level 2",
-        logic: "Creates a final review gap before downgrade messaging."
-      },
-      "l2-demotion": {
-        eyebrow: "Level 2 path",
-        title: "Demotion from Level 2",
-        description: "Downgrade notification email sent when the customer does not meet the maintain criteria.",
-        section: "Level 2",
-        logic: "Demotion message after retention window expires."
-      },
+    document.querySelectorAll('.node').forEach(node => {
+      node.addEventListener('click', () => {
+        const section = node.dataset.section || 'Flow';
+        const title = node.dataset.title || 'Untitled Node';
+        const description = node.dataset.description || 'No description provided.';
+        const logic = node.dataset.logic || 'No flow logic provided.';
 
-      "l3-email1": {
-        eyebrow: "Level 3 path",
-        title: "L3 STM Email #1",
-        description: "Initial maintain-status reminder telling the customer how much more they need to spend for another year of Level 3.",
-        section: "Level 3",
-        logic: "First reminder in the Level 3 retention path."
-      },
-      "l3-split1": {
-        eyebrow: "Level 3 path",
-        title: "Conditional Split — Required spend met?",
-        description: "Checks if the customer has met the spend threshold after the first Level 3 reminder.",
-        section: "Level 3",
-        logic: "Yes sends maintained-level confirmation. No continues to the second reminder."
-      },
-      "l3-email2": {
-        eyebrow: "Level 3 path",
-        title: "L3 STM Email #2",
-        description: "Second reminder for customers still short of the required spend for another year of Level 3.",
-        section: "Level 3",
-        logic: "Keeps maintain-status urgency active."
-      },
-      "l3-split2": {
-        eyebrow: "Level 3 path",
-        title: "Conditional Split — Required spend met? Second check",
-        description: "Checks again whether the spend threshold has now been met after the second reminder.",
-        section: "Level 3",
-        logic: "Yes sends maintained-level confirmation. No continues to the final reminder."
-      },
-      "l3-email3": {
-        eyebrow: "Level 3 path",
-        title: "L3 STM Email #3",
-        description: "Final last-chance reminder for maintaining Level 3.",
-        section: "Level 3",
-        logic: "Creates urgency before review window closes."
-      },
-      "l3-maintained": {
-        eyebrow: "Level 3 path",
-        title: "Maintained Level — Level 3",
-        description: "Confirmation email telling the customer they retained Level 3 for another year.",
-        section: "Level 3",
-        logic: "Sent when required spend is met in time."
-      },
-      "l3-wait": {
-        eyebrow: "Level 3 path",
-        title: "Wait — 5 days",
-        description: "Short holding window before demotion notification is sent if maintain threshold is not achieved.",
-        section: "Level 3",
-        logic: "Creates a final review gap before downgrade messaging."
-      },
-      "l3-demotion": {
-        eyebrow: "Level 3 path",
-        title: "Demotion from Level 3",
-        description: "Downgrade notification email sent when the customer does not meet the maintain criteria.",
-        section: "Level 3",
-        logic: "Demotion message after retention window expires."
-      },
+        modalSectionTop.textContent = section;
+        modalTitle.textContent = title;
+        modalSection.textContent = section;
+        modalNodeTitle.textContent = title;
+        modalDescription.textContent = description;
+        modalLogic.textContent = logic;
 
-      "l4-email1": {
-        eyebrow: "Level 4 path",
-        title: "L4 STM Email #1",
-        description: "Initial maintain-status reminder telling the customer how much more they need to spend for another year of Level 4.",
-        section: "Level 4",
-        logic: "First reminder in the Level 4 retention path."
-      },
-      "l4-split1": {
-        eyebrow: "Level 4 path",
-        title: "Conditional Split — Required spend met?",
-        description: "Checks if the customer has met the spend threshold after the first Level 4 reminder.",
-        section: "Level 4",
-        logic: "Yes sends maintained-level confirmation. No continues to the second reminder."
-      },
-      "l4-email2": {
-        eyebrow: "Level 4 path",
-        title: "L4 STM Email #2",
-        description: "Second reminder for customers still short of the required spend for another year of Level 4.",
-        section: "Level 4",
-        logic: "Keeps maintain-status urgency active."
-      },
-      "l4-split2": {
-        eyebrow: "Level 4 path",
-        title: "Conditional Split — Required spend met? Second check",
-        description: "Checks again whether the spend threshold has now been met after the second reminder.",
-        section: "Level 4",
-        logic: "Yes sends maintained-level confirmation. No continues to the final reminder."
-      },
-      "l4-email3": {
-        eyebrow: "Level 4 path",
-        title: "L4 STM Email #3",
-        description: "Final last-chance reminder for maintaining Level 4.",
-        section: "Level 4",
-        logic: "Creates urgency before review window closes."
-      },
-      "l4-maintained": {
-        eyebrow: "Level 4 path",
-        title: "Maintained Level — Level 4",
-        description: "Confirmation email telling the customer they retained Level 4 for another year.",
-        section: "Level 4",
-        logic: "Sent when required spend is met in time."
-      },
-      "l4-wait": {
-        eyebrow: "Level 4 path",
-        title: "Wait — 5 days",
-        description: "Short holding window before demotion notification is sent if maintain threshold is not achieved.",
-        section: "Level 4",
-        logic: "Creates a final review gap before downgrade messaging."
-      },
-      "l4-demotion": {
-        eyebrow: "Level 4 path",
-        title: "Demotion from Level 4",
-        description: "Downgrade notification email sent when the customer does not meet the maintain criteria.",
-        section: "Level 4",
-        logic: "Demotion message after retention window expires."
-      },
-
-      "finish-maintain": {
-        eyebrow: "Maintain / demotion flow",
-        title: "Finish — Review flow complete",
-        description: "End state for all maintain, maintained, and demotion branches.",
-        section: "Completion",
-        logic: "All customers exit here after confirmation or downgrade messaging is completed."
-      }
-    };
-
-    const overlay = document.getElementById("overlay");
-    const closeBtn = document.getElementById("closeBtn");
-    const modalEyebrow = document.getElementById("modalEyebrow");
-    const modalTitle = document.getElementById("modalTitle");
-    const modalDescription = document.getElementById("modalDescription");
-    const modalSection = document.getElementById("modalSection");
-    const modalLogic = document.getElementById("modalLogic");
-    const nodes = document.querySelectorAll(".node");
-
-    function openModal(id, node) {
-      const data = tokenData[id];
-      if (!data) return;
-
-      nodes.forEach(n => n.classList.remove("active"));
-      node.classList.add("active");
-
-      modalEyebrow.textContent = data.eyebrow;
-      modalTitle.textContent = data.title;
-      modalDescription.textContent = data.description;
-      modalSection.textContent = data.section;
-      modalLogic.textContent = data.logic;
-
-      overlay.classList.add("open");
-      overlay.setAttribute("aria-hidden", "false");
-    }
-
-    function closeModal() {
-      overlay.classList.remove("open");
-      overlay.setAttribute("aria-hidden", "true");
-      nodes.forEach(n => n.classList.remove("active"));
-    }
-
-    nodes.forEach(node => {
-      node.addEventListener("click", (e) => {
-        e.stopPropagation();
-        openModal(node.dataset.id, node);
+        modal.classList.add('open');
+        modal.setAttribute('aria-hidden', 'false');
       });
     });
 
-    closeBtn.addEventListener("click", closeModal);
-    overlay.addEventListener("click", (e) => {
-      if (e.target === overlay) closeModal();
+    function closeModal() {
+      modal.classList.remove('open');
+      modal.setAttribute('aria-hidden', 'true');
+    }
+
+    closeModalBtn.addEventListener('click', closeModal);
+
+    modal.addEventListener('click', (e) => {
+      if (e.target === modal) closeModal();
     });
 
-    document.addEventListener("keydown", (e) => {
-      if (e.key === "Escape") closeModal();
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && modal.classList.contains('open')) {
+        closeModal();
+      }
     });
   </script>
 </body>
