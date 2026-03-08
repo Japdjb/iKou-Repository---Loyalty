@@ -5,8 +5,8 @@
     "phase": "01-welcome",
     "displayOrder": 1,
     "status": "Live",
-    "programHtml": "assets/programs/loyalty/onboarding-existing-customers.html"
-    "programCardPreview": "assets/programs/loyalty/onboarding-existing-customers-cover.html"
+    "programHtml": "assets/programs/loyalty/onboarding-existing-customers.html",
+    "programCardPreview": "assets/programs/previews/onboarding-existing-customers-cover.html"
   },
   {
     "id": "upgrade-journey",
@@ -14,8 +14,8 @@
     "phase": "03-tier-progression",
     "displayOrder": 2,
     "status": "Live",
-    "programHtml": "assets/programs/loyalty/upgrade-journey.html"
-    "programCardPreview": "assets/programs/loyalty/previews/upgrade-journey-cover.html"
+    "programHtml": "assets/programs/loyalty/upgrade-journey.html",
+    "programCardPreview": "assets/programs/previews/upgrade-journey-cover.html"
   },
   {
     "id": "spend-to-next",
@@ -23,8 +23,8 @@
     "phase": "03-tier-progression",
     "displayOrder": 3,
     "status": "Live",
-    "programHtml": "assets/programs/loyalty/spend-to-next.html"
-    "programCardPreview": "assets/programs/loyalty/spend-to-next-cover.html"
+    "programHtml": "assets/programs/loyalty/spend-to-next.html",
+    "programCardPreview": "assets/programs/previews/spend-to-next-cover.html"
   },
   {
     "id": "birthday-series",
@@ -32,8 +32,8 @@
     "phase": "02-lifecycle",
     "displayOrder": 4,
     "status": "Live",
-    "programHtml": "assets/programs/loyalty/birthday-series.html"
-    "programCardPreview": "assets/programs/loyalty/birthday-series-cover.html"
+    "programHtml": "assets/programs/loyalty/birthday-series.html",
+    "programCardPreview": "assets/programs/previews/birthday-series-cover.html"
   },
   {
     "id": "birthday-capture",
@@ -41,8 +41,8 @@
     "phase": "02-lifecycle",
     "displayOrder": 5,
     "status": "Live",
-    "programHtml": "assets/programs/loyalty/birthday-capture.html"
-    "programCardPreview": "assets/programs/loyalty/birthday-capture-cover.html"
+    "programHtml": "assets/programs/loyalty/birthday-capture.html",
+    "programCardPreview": "assets/programs/previews/birthday-capture-cover.html"
   },
   {
     "id": "loyalty-anniversary",
@@ -50,8 +50,8 @@
     "phase": "02-lifecycle",
     "displayOrder": 6,
     "status": "Live",
-    "programHtml": "assets/programs/loyalty/loyalty-anniversary.html"
-    "programCardPreview": "assets/programs/loyalty/loyalty-anniversary-cover.html"
+    "programHtml": "assets/programs/loyalty/loyalty-anniversary.html",
+    "programCardPreview": "assets/programs/previews/loyalty-anniversary-cover.html"
   },
   {
     "id": "adhoc-rewards",
@@ -59,9 +59,8 @@
     "phase": "02-lifecycle",
     "displayOrder": 7,
     "status": "Live",
-    "programHtml": "assets/programs/loyalty/adhoc-rewards.html"
-    "programCardPreview": "assets/programs/loyalty/adhoc-rewards-cover.html"
-    
+    "programHtml": "assets/programs/loyalty/adhoc-rewards.html",
+    "programCardPreview": "assets/programs/previews/adhoc-rewards-cover.html"
   },
   {
     "id": "spend-to-maintain",
@@ -69,7 +68,7 @@
     "phase": "04-retention-risk",
     "displayOrder": 8,
     "status": "Live",
-    "programHtml": "assets/programs/loyalty/Spend-to-Maintain-Demotion.html"
-    "programCardPreview": "assets/programs/loyalty/Spend-to-Maintain-Demotion-cover.html"
+    "programHtml": "assets/programs/loyalty/Spend-to-Maintain-Demotion.html",
+    "programCardPreview": "assets/programs/previews/spend-to-maintain-demotion-cover.html"
   }
 ]
