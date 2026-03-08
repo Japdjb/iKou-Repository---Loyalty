@@ -96,6 +96,9 @@
       transition: transform .16s ease, box-shadow .16s ease, filter .16s ease;
       z-index: 2;
       user-select: none;
+      background: transparent;
+      border: 0;
+      padding: 0;
     }
 
     .node:hover {
@@ -175,6 +178,9 @@
       font-size: 16px;
       font-weight: 400;
       color: #2f6c2f;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
 
     .shape-trigger {
@@ -373,10 +379,8 @@
           </marker>
         </defs>
 
-        <!-- prelaunch connector -->
         <path d="M123 155 H 240" stroke="#2f2f2f" stroke-width="3" fill="none" marker-end="url(#arrow)" />
 
-        <!-- row 1 -->
         <path d="M106 365 H 206" stroke="#2f2f2f" stroke-width="3" fill="none" marker-end="url(#arrow)" />
         <path d="M300 365 H 430" stroke="#2f2f2f" stroke-width="3" fill="none" marker-end="url(#arrow)" />
         <path d="M522 365 H 612" stroke="#2f2f2f" stroke-width="3" fill="none" marker-end="url(#arrow)" />
@@ -387,7 +391,6 @@
         <path d="M476 412 V 620 H 505 H 1205 V 505" stroke="#2f2f2f" stroke-width="3" fill="none" />
         <path d="M864 412 V 620" stroke="#2f2f2f" stroke-width="3" fill="none" />
 
-        <!-- row 2 -->
         <path d="M106 780 H 206" stroke="#2f2f2f" stroke-width="3" fill="none" marker-end="url(#arrow)" />
         <path d="M300 780 H 430" stroke="#2f2f2f" stroke-width="3" fill="none" marker-end="url(#arrow)" />
         <path d="M522 780 H 612" stroke="#2f2f2f" stroke-width="3" fill="none" marker-end="url(#arrow)" />
@@ -401,7 +404,6 @@
         <path d="M1088 826 V 1046" stroke="#2f2f2f" stroke-width="3" fill="none" />
       </svg>
 
-      <!-- top teaser -->
       <button class="node" style="left: 34px; top: 126px;" data-id="bau-campaign">
         <div class="shape-paper-plane"></div>
         <div class="node-label">BAU CAMPAIGN SENDS<span class="desc">Regular business as usual sends where teaser message is included in ALL emails</span></div>
@@ -412,7 +414,6 @@
         <div class="node-label">DYNAMIC CONTENT<span class="desc">Loyalty teasers appear to engaged segments only. Allows customers to opt out of program.</span></div>
       </button>
 
-      <!-- middle row -->
       <button class="node" style="left: 34px; top: 328px;" data-id="trigger-recent">
         <div class="shape-trigger"></div>
         <div class="node-label">TRIGGER<span class="desc">When someone is first customer who have purchased in the last 12 months</span></div>
@@ -445,7 +446,6 @@
         <div class="shape-finish">Finish</div>
       </button>
 
-      <!-- bottom row -->
       <button class="node" style="left: 34px; top: 742px;" data-id="trigger-lapsed">
         <div class="shape-trigger"></div>
         <div class="node-label">TRIGGER<span class="desc">When someone "Placed Order"</span></div>
