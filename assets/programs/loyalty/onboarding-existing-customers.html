@@ -6,217 +6,194 @@
   <title>Onboarding Comms – Existing Customers</title>
   <style>
     :root {
-      --bg: #FFF5ED;
-      --surface: #fffaf6;
-      --text: #0A0D0A;
-      --muted: #543312;
-      --line: #543312;
+      --bg: #f4eee7;
+      --panel: #f8f4ef;
+      --panel-border: #e2d6ca;
+      --text: #2f1d14;
+      --muted: #6b564b;
+      --line: #6c4b2c;
+      --shadow: 0 18px 40px rgba(58, 35, 22, 0.08);
 
-      --lavender: #E8DEF5;
-      --dark-olive: #383317;
-      --light-blue: #CFF0FF;
-      --deep-burgundy: #570A05;
-      --dark-brown: #331700;
-      --pale-yellow: #EDE8BA;
-      --chocolate: #543312;
-      --dusty-rose: #DBA6A1;
+      --blue-fill: #cfe9f7;
+      --blue-stroke: #9bc9df;
 
-      --shadow-soft: 0 12px 30px rgba(56, 51, 23, 0.08);
-      --shadow-strong: 0 24px 60px rgba(56, 51, 23, 0.18);
+      --purple-fill: #ddd6fb;
+      --purple-stroke: #bcaeea;
+
+      --diamond-fill: #efe5b7;
+      --diamond-stroke: #d2bf72;
+
+      --finish-fill: #493310;
+      --finish-text: #fff7ea;
+
+      --peach-fill: #f3ddd5;
+      --peach-stroke: #d7b6a9;
+
+      --tag-bg: #fff9f2;
+      --tag-border: #e0d2c4;
     }
 
-    * { box-sizing: border-box; }
-
-    html, body {
-      margin: 0;
-      background: var(--bg);
-      color: var(--text);
-      font-family: Inter, Arial, Helvetica, sans-serif;
+    * {
+      box-sizing: border-box;
     }
 
     body {
-      min-width: 0;
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: Arial, Helvetica, sans-serif;
     }
 
     .page {
-      padding: 30px 24px 44px;
+      width: 100%;
+      padding: 18px 16px 28px;
     }
 
     .shell {
-      max-width: 1280px;
+      max-width: 1440px;
       margin: 0 auto;
     }
 
-    .brand {
-      font-family: "Times New Roman", Georgia, serif;
-      font-size: 20px;
-      letter-spacing: 0.08em;
-      color: var(--dark-olive);
+    .header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 18px;
       margin-bottom: 12px;
     }
 
-    .hero {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-      gap: 20px;
-      margin-bottom: 20px;
-      flex-wrap: wrap;
-    }
-
-    .hero h1 {
-      margin: 0;
-      font-family: "Times New Roman", Georgia, serif;
-      font-size: 42px;
-      line-height: 0.98;
-      font-weight: 600;
-      color: var(--dark-brown);
-    }
-
-    .hero p {
-      margin: 10px 0 0;
-      max-width: 720px;
+    .brand {
       font-size: 14px;
-      line-height: 1.55;
-      color: var(--chocolate);
+      letter-spacing: 0.06em;
+      margin-bottom: 6px;
+      color: var(--text);
+    }
+
+    h1 {
+      margin: 0;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(34px, 4vw, 54px);
+      line-height: 0.95;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+    }
+
+    .subcopy {
+      margin-top: 12px;
+      max-width: 760px;
+      font-size: 13px;
+      line-height: 1.45;
+      color: var(--muted);
     }
 
     .legend {
       display: flex;
-      gap: 10px;
-      align-items: center;
       flex-wrap: wrap;
-      background: rgba(255,255,255,0.55);
-      border: 1px solid rgba(84, 51, 18, 0.12);
-      border-radius: 999px;
-      padding: 10px 12px;
-      box-shadow: var(--shadow-soft);
-      margin-top: 2px;
+      gap: 8px;
+      align-items: center;
+      justify-content: flex-end;
+      padding-top: 10px;
     }
 
-    .legend-item {
+    .legend-pill {
       display: inline-flex;
       align-items: center;
-      gap: 6px;
+      gap: 7px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      border: 1px solid var(--tag-border);
+      background: var(--tag-bg);
       font-size: 11px;
-      color: var(--dark-olive);
-      font-weight: 600;
+      color: var(--text);
       white-space: nowrap;
+      box-shadow: 0 2px 8px rgba(58, 35, 22, 0.04);
     }
 
     .legend-swatch {
-      width: 11px;
-      height: 11px;
-      border-radius: 4px;
-      border: 1.2px solid rgba(56, 51, 23, 0.28);
+      width: 10px;
+      height: 10px;
+      border-radius: 3px;
+      border: 1px solid rgba(0,0,0,0.08);
       flex: 0 0 auto;
     }
 
-    .sw-trigger { background: var(--light-blue); }
-    .sw-email { background: var(--lavender); }
-    .sw-split { background: var(--pale-yellow); }
-    .sw-action { background: var(--dusty-rose); }
-    .sw-finish { background: var(--dark-olive); border-color: var(--dark-olive); }
-
-    .board {
+    .section-card {
       position: relative;
-      width: 100%;
-      background:
-        radial-gradient(circle at top right, rgba(232,222,245,0.35), transparent 24%),
-        radial-gradient(circle at bottom left, rgba(207,240,255,0.30), transparent 22%),
-        var(--surface);
-      border: 1px solid rgba(84, 51, 18, 0.08);
-      border-radius: 28px;
-      box-shadow: var(--shadow-soft);
-      padding: 18px;
+      background: var(--panel);
+      border: 1px solid var(--panel-border);
+      border-radius: 22px;
+      box-shadow: var(--shadow);
+      padding: 14px 16px 18px;
+      margin-top: 14px;
       overflow: hidden;
-      margin: 0 auto;
     }
 
-    .board::before,
-    .board::after {
+    .section-card::after {
       content: "";
       position: absolute;
+      top: 0;
+      right: 0;
+      width: 86px;
+      height: 86px;
+      border-top-right-radius: 22px;
+      border-left: 1px solid rgba(201, 181, 164, 0.45);
+      border-bottom: 1px solid rgba(201, 181, 164, 0.45);
+      border-bottom-left-radius: 86px;
+      opacity: 0.65;
       pointer-events: none;
-      border: 1px solid rgba(219,166,161,0.28);
-      border-radius: 999px;
     }
 
-    .board::before {
-      width: 180px;
-      height: 180px;
-      top: -90px;
-      right: -60px;
-    }
-
-    .board::after {
-      width: 150px;
-      height: 150px;
-      bottom: -70px;
-      left: -60px;
-    }
-
-    .section {
-      position: relative;
-      border-radius: 18px;
-      padding: 16px 16px 14px;
-      background: rgba(255,255,255,0.45);
-      border: 1px solid rgba(84, 51, 18, 0.07);
-      margin-bottom: 14px;
-    }
-
-    .section:last-child { margin-bottom: 0; }
-
-    .section-header {
-      margin-bottom: 12px;
-    }
-
-    .section-kicker {
-      font-size: 9px;
+    .eyebrow {
+      font-size: 10px;
       letter-spacing: 0.12em;
-      text-transform: uppercase;
-      color: var(--deep-burgundy);
       font-weight: 700;
-      margin-bottom: 8px;
+      text-transform: uppercase;
+      margin-bottom: 6px;
+      color: var(--text);
     }
 
     .section-title {
       margin: 0;
-      font-family: "Times New Roman", Georgia, serif;
-      font-size: 19px;
-      line-height: 1.15;
-      color: var(--dark-brown);
-      font-weight: 600;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(22px, 2.1vw, 36px);
+      line-height: 1.1;
+      font-weight: 700;
+      color: var(--text);
     }
 
-    .section-subtitle {
-      margin: 6px 0 0;
-      color: var(--chocolate);
-      font-size: 11px;
-      line-height: 1.55;
-      max-width: 850px;
+    .section-desc {
+      margin-top: 8px;
+      font-size: 12px;
+      line-height: 1.45;
+      color: var(--muted);
+      max-width: 980px;
     }
 
-    .flow {
+    .flow-wrap {
       position: relative;
-      width: 1120px;
+      margin-top: 18px;
+      width: 100%;
+      overflow-x: auto;
+      overflow-y: hidden;
+      padding-bottom: 8px;
+    }
+
+    .flow-board {
+      position: relative;
+      min-width: 1180px;
+      width: 1180px;
       margin: 0 auto;
-      transform-origin: top center;
     }
 
-    .flow.section-1 {
-      height: 135px;
+    .flow-board.teaser {
+      height: 170px;
     }
 
-    .flow.section-2 {
-      height: 255px;
-    }
-
-    .flow.section-3 {
+    .flow-board.medium {
       height: 290px;
     }
 
-    svg.connector-layer {
+    .flow-svg {
       position: absolute;
       inset: 0;
       width: 100%;
@@ -228,313 +205,280 @@
 
     .node {
       position: absolute;
-      z-index: 2;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
       border: 0;
       padding: 0;
       background: transparent;
-      cursor: pointer;
-      text-align: left;
-      transition: transform 0.18s ease, box-shadow 0.18s ease, filter 0.18s ease;
-      border-radius: 18px;
+      z-index: 2;
+      transition: transform 0.16s ease, box-shadow 0.16s ease, filter 0.16s ease;
     }
 
     .node:hover {
-      transform: translateY(-2px);
-      filter: brightness(1.01);
+      transform: translateY(-3px);
+      filter: brightness(1.02);
     }
 
     .node.active {
-      box-shadow: 0 0 0 3px rgba(87,10,5,0.08), 0 0 0 7px rgba(232,222,245,0.50);
-      transform: translateY(-1px);
+      transform: translateY(-3px);
+      box-shadow: 0 0 0 5px rgba(73, 51, 16, 0.08);
+      border-radius: 18px;
     }
 
-    .card {
-      width: 150px;
-      min-height: 82px;
-      padding: 11px 11px 10px;
-      border-radius: 16px;
-      box-shadow: var(--shadow-soft);
-      border: 1.2px solid rgba(84, 51, 18, 0.14);
-      background: white;
-    }
-
-    .card.trigger {
-      background: linear-gradient(180deg, rgba(207,240,255,0.92), rgba(207,240,255,0.72));
-      border-color: rgba(56,51,23,0.15);
-    }
-
-    .card.email {
-      background: linear-gradient(180deg, rgba(232,222,245,0.98), rgba(232,222,245,0.82));
-      border-color: rgba(116,80,255,0.22);
-    }
-
-    .card.action {
-      background: linear-gradient(180deg, rgba(219,166,161,0.32), rgba(255,245,237,0.95));
-      border-color: rgba(87,10,5,0.20);
-    }
-
-    .card.finish {
-      width: 118px;
-      min-height: 68px;
-      background: var(--dark-olive);
-      border-color: var(--dark-olive);
-      color: var(--bg);
+    .token {
+      position: relative;
       display: flex;
       align-items: center;
       justify-content: center;
-      text-align: center;
+      text-align: left;
+      padding: 10px 12px;
+      box-shadow: 0 8px 18px rgba(58, 35, 22, 0.06);
     }
 
-    .card.finish .node-type,
-    .card.finish .node-title,
-    .card.finish .node-copy {
-      color: var(--bg);
+    .token-copy {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      justify-content: center;
+      gap: 2px;
     }
 
-    .node-type {
+    .token-kicker {
       font-size: 8px;
-      letter-spacing: 0.10em;
+      line-height: 1;
       text-transform: uppercase;
+      letter-spacing: 0.12em;
       font-weight: 700;
-      color: var(--deep-burgundy);
-      margin-bottom: 6px;
-      display: flex;
-      align-items: center;
-      gap: 6px;
+      color: #7a5343;
     }
 
-    .node-icon {
-      width: 14px;
-      height: 14px;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      border-radius: 999px;
-      background: rgba(56,51,23,0.08);
-      color: var(--dark-olive);
-      font-size: 9px;
-      flex: 0 0 auto;
+    .token-title {
+      font-size: 16px;
+      line-height: 1.05;
+      font-weight: 700;
+      color: #120f0d;
     }
 
-    .node-title {
-      font-size: 12px;
+    .token-sub {
+      font-size: 10px;
       line-height: 1.2;
-      font-weight: 700;
-      color: var(--text);
-      margin: 0 0 4px;
+      color: #8b6d5d;
     }
 
-    .node-copy {
-      font-size: 9px;
-      line-height: 1.35;
-      color: var(--chocolate);
-      margin: 0;
+    .token.trigger {
+      width: 132px;
+      height: 74px;
+      border-radius: 10px;
+      background: var(--blue-fill);
+      border: 1.5px solid var(--blue-stroke);
     }
 
-    .diamond-node {
-      width: 110px;
-      height: 110px;
+    .token.email {
+      width: 146px;
+      height: 74px;
+      border-radius: 10px;
+      background: var(--purple-fill);
+      border: 1.5px solid var(--purple-stroke);
+    }
+
+    .token.dynamic {
+      width: 142px;
+      height: 74px;
+      border-radius: 14px;
+      background: #f5ede6;
+      border: 1.5px solid var(--peach-stroke);
+    }
+
+    .token.campaign {
+      width: 154px;
+      height: 80px;
+      border-radius: 14px;
+      background: var(--peach-fill);
+      border: 1.5px solid var(--peach-stroke);
     }
 
     .diamond {
-      width: 110px;
-      height: 110px;
-      margin: 0 auto;
+      width: 104px;
+      height: 104px;
       transform: rotate(45deg);
-      transform-origin: center center;
-      background: linear-gradient(180deg, rgba(237,232,186,0.96), rgba(255,245,237,0.95));
-      border: 1.4px solid rgba(56,51,23,0.24);
-      border-radius: 18px;
-      box-shadow: var(--shadow-soft);
+      border-radius: 2px;
+      background: var(--diamond-fill);
+      border: 1.5px solid var(--diamond-stroke);
       display: flex;
       align-items: center;
       justify-content: center;
-      position: relative;
+      box-shadow: 0 8px 18px rgba(58, 35, 22, 0.06);
     }
 
-    .diamond-inner {
+    .diamond-copy {
       width: 78px;
-      transform: rotate(-45deg) translateY(-1px);
+      transform: rotate(-45deg);
       text-align: center;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
     }
 
-    .diamond .node-type {
-      justify-content: center;
-      margin-bottom: 5px;
-      font-size: 7px;
-      letter-spacing: 0.10em;
-      line-height: 1;
+    .diamond .token-kicker {
+      text-align: center;
+      color: #8a7131;
     }
 
-    .diamond .node-title {
+    .diamond .token-title {
+      font-size: 13px;
+      line-height: 1.05;
+      text-align: center;
+    }
+
+    .diamond .token-sub {
+      text-align: center;
       font-size: 10px;
-      line-height: 1.15;
-      margin: 0 0 3px;
     }
 
-    .diamond .node-copy {
-      font-size: 8px;
-      line-height: 1.2;
-      margin: 0;
-    }
-
-    .arrow-label {
-      position: absolute;
-      z-index: 1;
-      font-size: 9px;
-      color: var(--chocolate);
-      background: rgba(255,245,237,0.88);
-      padding: 2px 6px;
-      border-radius: 999px;
-      white-space: nowrap;
-    }
-
-    .mini-card {
-      width: 134px;
-      min-height: 70px;
-      padding: 11px;
+    .finish {
+      width: 124px;
+      height: 82px;
       border-radius: 14px;
-      background: linear-gradient(180deg, rgba(255,245,237,0.96), rgba(255,245,237,0.88));
-      border: 1.2px solid rgba(84, 51, 18, 0.12);
-      box-shadow: var(--shadow-soft);
+      background: var(--finish-fill);
+      color: var(--finish-text);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 12px;
+      box-shadow: 0 8px 18px rgba(58, 35, 22, 0.12);
     }
 
-    .mini-card .node-title {
-      font-size: 11px;
-      margin-bottom: 4px;
+    .finish .token-title {
+      color: var(--finish-text);
+      font-size: 15px;
+      text-align: center;
     }
 
-    .mini-card .node-copy {
-      font-size: 8px;
-      line-height: 1.3;
+    .branch-label {
+      position: absolute;
+      font-size: 10px;
+      font-weight: 700;
+      color: #6d522d;
+      z-index: 1;
+      pointer-events: none;
     }
 
     .overlay {
       position: fixed;
       inset: 0;
-      background: rgba(10, 13, 10, 0.38);
+      background: rgba(33, 22, 14, 0.48);
       display: none;
       align-items: center;
       justify-content: center;
-      padding: 20px;
-      z-index: 30;
-      backdrop-filter: blur(2px);
+      padding: 24px;
+      z-index: 20;
     }
 
-    .overlay.open { display: flex; }
+    .overlay.open {
+      display: flex;
+    }
 
     .modal {
       width: min(760px, 100%);
-      background: rgba(255,250,246,0.98);
-      border: 1px solid rgba(84,51,18,0.12);
-      border-radius: 24px;
-      box-shadow: var(--shadow-strong);
+      background: #fffaf5;
+      border: 1px solid #eaded0;
+      border-radius: 20px;
       overflow: hidden;
+      box-shadow: 0 24px 60px rgba(20, 12, 7, 0.24);
     }
 
     .modal-header {
-      padding: 20px 22px 14px;
-      border-bottom: 1px solid rgba(84,51,18,0.08);
       display: flex;
       align-items: flex-start;
       justify-content: space-between;
-      gap: 20px;
+      gap: 16px;
+      padding: 18px 22px 14px;
+      border-bottom: 1px solid #eee1d4;
     }
 
-    .modal-kicker {
-      font-size: 10px;
-      letter-spacing: 0.14em;
+    .modal-title-wrap {
+      min-width: 0;
+    }
+
+    .modal-eyebrow {
+      font-size: 11px;
+      letter-spacing: 0.12em;
       text-transform: uppercase;
-      color: var(--deep-burgundy);
       font-weight: 700;
-      margin-bottom: 8px;
+      color: #8b6d5d;
+      margin-bottom: 6px;
     }
 
     .modal-title {
       margin: 0;
-      font-family: "Times New Roman", Georgia, serif;
-      font-size: 28px;
-      line-height: 1.05;
-      color: var(--dark-brown);
-      font-weight: 600;
+      font-size: 24px;
+      line-height: 1.15;
+      color: var(--text);
     }
 
     .close-btn {
+      flex: 0 0 auto;
       width: 38px;
       height: 38px;
       border-radius: 999px;
       border: 0;
-      cursor: pointer;
-      background: rgba(84,51,18,0.07);
-      color: var(--dark-brown);
+      background: #f1e7dd;
+      color: var(--text);
       font-size: 22px;
-      line-height: 1;
-      flex: 0 0 auto;
+      cursor: pointer;
     }
 
     .modal-body {
-      padding: 20px 22px 24px;
+      padding: 22px;
     }
 
     .modal-body p {
-      margin: 0 0 16px;
+      margin: 0 0 14px;
       font-size: 15px;
-      line-height: 1.65;
-      color: var(--chocolate);
+      line-height: 1.6;
+      color: #4f3a2f;
     }
 
     .meta-grid {
       display: grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
       gap: 12px;
-      margin-top: 16px;
+      margin-top: 18px;
     }
 
     .meta-card {
-      background: rgba(255,255,255,0.78);
-      border: 1px solid rgba(84,51,18,0.08);
-      border-radius: 16px;
+      background: #f7efe6;
+      border: 1px solid #eaded0;
+      border-radius: 14px;
       padding: 14px;
     }
 
     .meta-card h4 {
-      margin: 0 0 8px;
-      font-size: 11px;
-      letter-spacing: 0.10em;
+      margin: 0 0 6px;
+      font-size: 12px;
       text-transform: uppercase;
-      color: var(--deep-burgundy);
+      letter-spacing: 0.08em;
+      color: #8b6d5d;
     }
 
     .meta-card p {
       margin: 0;
-      font-size: 13px;
+      font-size: 14px;
       line-height: 1.5;
     }
 
-    @media (max-width: 1180px) {
-      .flow {
-        width: 100%;
-      }
-    }
-
     @media (max-width: 980px) {
-      .page {
-        padding: 20px 14px 30px;
+      .header {
+        flex-direction: column;
       }
 
-      .hero h1 {
-        font-size: 34px;
+      .legend {
+        justify-content: flex-start;
+        padding-top: 0;
       }
 
-      .hero p {
-        font-size: 13px;
-      }
-
-      .section-title {
-        font-size: 17px;
+      .section-card {
+        padding: 14px 12px 16px;
       }
 
       .meta-grid {
@@ -546,291 +490,316 @@
 <body>
   <div class="page">
     <div class="shell">
-      <div class="brand">IKOU</div>
-
-      <div class="hero">
+      <div class="header">
         <div>
-          <h1>Onboarding Comms<br>Existing Customers</h1>
-          <p>
+          <div class="brand">IKOU</div>
+          <h1>Onboarding Comms<br />Existing Customers</h1>
+          <div class="subcopy">
             Loyalty onboarding structure for existing customers, including pre-launch teaser placement,
-            active-customer entry, and reactivated-customer entry. Click any node to review purpose and logic.
-          </p>
+            active-customer entry, and reactivated-customer entry. Hover or click any node to review
+            purpose and logic.
+          </div>
         </div>
 
-        <div class="legend">
-          <span class="legend-item"><span class="legend-swatch sw-trigger"></span>Trigger</span>
-          <span class="legend-item"><span class="legend-swatch sw-split"></span>Conditional Split</span>
-          <span class="legend-item"><span class="legend-swatch sw-email"></span>Email</span>
-          <span class="legend-item"><span class="legend-swatch sw-action"></span>Program Content</span>
-          <span class="legend-item"><span class="legend-swatch sw-finish"></span>Finish</span>
+        <div class="legend" aria-label="Legend">
+          <div class="legend-pill"><span class="legend-swatch" style="background:#cfe9f7;"></span>Trigger</div>
+          <div class="legend-pill"><span class="legend-swatch" style="background:#efe5b7;"></span>Conditional Split</div>
+          <div class="legend-pill"><span class="legend-swatch" style="background:#ddd6fb;"></span>Email</div>
+          <div class="legend-pill"><span class="legend-swatch" style="background:#f3ddd5;"></span>Program Content</div>
+          <div class="legend-pill"><span class="legend-swatch" style="background:#493310;"></span>Finish</div>
         </div>
       </div>
 
-      <div class="board">
-        <section class="section">
-          <div class="section-header">
-            <div class="section-kicker">Pre-launch teaser</div>
-            <h2 class="section-title">2 weeks before launch</h2>
-            <p class="section-subtitle">
-              Seed teaser messaging into every relevant campaign email for customers who have purchased in the last 12 months.
-              The teaser is delivered via conditional content rather than a standalone automation.
-            </p>
-          </div>
+      <!-- SECTION 1 -->
+      <section class="section-card">
+        <div class="eyebrow">Pre-launch teaser</div>
+        <h2 class="section-title">2 weeks before launch</h2>
+        <div class="section-desc">
+          Seed teaser messaging into every relevant campaign email for customers who have purchased in the last
+          12 months. The teaser is delivered via conditional content rather than a standalone automation.
+        </div>
 
-          <div class="flow section-1">
-            <svg class="connector-layer" viewBox="0 0 1120 135" aria-hidden="true">
+        <div class="flow-wrap">
+          <div class="flow-board teaser">
+            <svg class="flow-svg" viewBox="0 0 1180 170" aria-hidden="true">
               <defs>
-                <marker id="arrowA" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto">
-                  <path d="M0,0 L8,4 L0,8 z" fill="#543312"></path>
+                <marker id="arrowA" markerWidth="10" markerHeight="10" refX="9" refY="5" orient="auto">
+                  <path d="M0,0 L10,5 L0,10 z" fill="#6c4b2c"></path>
                 </marker>
               </defs>
-              <path d="M234 66 H 360" stroke="#543312" stroke-width="2" fill="none" marker-end="url(#arrowA)"/>
+              <path d="M382 78 H 502" stroke="#6c4b2c" stroke-width="3" fill="none" marker-end="url(#arrowA)" />
             </svg>
 
-            <button class="node" style="left: 70px; top: 24px;" data-id="bau-campaign" type="button">
-              <div class="card action">
-                <div class="node-type"><span class="node-icon">✦</span>Campaign placement</div>
-                <h3 class="node-title">BAU Campaign Sends</h3>
-                <p class="node-copy">Regular business-as-usual emails where teaser messaging is seeded into every relevant send.</p>
+            <button class="node" style="left:320px; top:38px;" data-id="bau-campaign">
+              <div class="token campaign">
+                <div class="token-copy">
+                  <div class="token-kicker">Campaign placement</div>
+                  <div class="token-title">BAU Campaign Sends</div>
+                  <div class="token-sub">Teaser seeded into relevant BAU emails</div>
+                </div>
               </div>
             </button>
 
-            <button class="node" style="left: 360px; top: 30px;" data-id="dynamic-content" type="button">
-              <div class="mini-card">
-                <div class="node-type"><span class="node-icon">≋</span>Dynamic content</div>
-                <h3 class="node-title">Loyalty teaser block</h3>
-                <p class="node-copy">Conditional teaser visible only to the intended eligible audience segment.</p>
+            <button class="node" style="left:522px; top:42px;" data-id="dynamic-content">
+              <div class="token dynamic">
+                <div class="token-copy">
+                  <div class="token-kicker">Dynamic content</div>
+                  <div class="token-title">Loyalty teaser block</div>
+                  <div class="token-sub">Targeted teaser visibility</div>
+                </div>
               </div>
             </button>
           </div>
-        </section>
+        </div>
+      </section>
 
-        <section class="section">
-          <div class="section-header">
-            <div class="section-kicker">Active customers</div>
-            <h2 class="section-title">One-off flow for customers who purchased in the last 12 months</h2>
-            <p class="section-subtitle">
-              Entry path for existing customers already active within the last 12 months. The sequence exits early if reward redemption occurs.
-            </p>
-          </div>
+      <!-- SECTION 2 -->
+      <section class="section-card">
+        <div class="eyebrow">Active customers</div>
+        <h2 class="section-title">One-off flow for customers who purchased in the last 12 months</h2>
+        <div class="section-desc">
+          Entry path for existing customers already active within the last 12 months. The sequence exits early if reward redemption occurs.
+        </div>
 
-          <div class="flow section-2">
-            <svg class="connector-layer" viewBox="0 0 1120 255" aria-hidden="true">
+        <div class="flow-wrap">
+          <div class="flow-board medium">
+            <svg class="flow-svg" viewBox="0 0 1180 290" aria-hidden="true">
               <defs>
-                <marker id="arrowB" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto">
-                  <path d="M0,0 L8,4 L0,8 z" fill="#543312"></path>
-                </marker>
-              </defs>
-
-              <path d="M166 64 H 250" stroke="#543312" stroke-width="2" fill="none" marker-end="url(#arrowB)"/>
-              <path d="M402 64 H 456" stroke="#543312" stroke-width="2" fill="none" marker-end="url(#arrowB)"/>
-              <path d="M602 64 H 686" stroke="#543312" stroke-width="2" fill="none" marker-end="url(#arrowB)"/>
-              <path d="M838 64 H 892" stroke="#543312" stroke-width="2" fill="none" marker-end="url(#arrowB)"/>
-
-              <path d="M511 119 V 188 H 1014 V 101" stroke="#543312" stroke-width="2" fill="none" stroke-dasharray="6 5"/>
-              <path d="M947 119 V 188 H 1014 V 101" stroke="#543312" stroke-width="2" fill="none" stroke-dasharray="6 5"/>
-            </svg>
-
-            <div class="arrow-label" style="left: 425px; top: 52px;">No</div>
-            <div class="arrow-label" style="left: 859px; top: 52px;">No</div>
-            <div class="arrow-label" style="left: 535px; top: 150px;">Yes</div>
-            <div class="arrow-label" style="left: 965px; top: 150px;">Yes</div>
-
-            <button class="node" style="left: 22px; top: 20px;" data-id="trigger-recent" type="button">
-              <div class="card trigger">
-                <div class="node-type"><span class="node-icon">⚡</span>Trigger</div>
-                <h3 class="node-title">Purchased in last 12 months</h3>
-                <p class="node-copy">Customer enters the welcome series because they are an existing active purchaser.</p>
-              </div>
-            </button>
-
-            <button class="node" style="left: 250px; top: 20px;" data-id="email1-recent" type="button">
-              <div class="card email">
-                <div class="node-type"><span class="node-icon">✉</span>Send email</div>
-                <h3 class="node-title">Welcome Existing Email #1</h3>
-                <p class="node-copy">Welcome to Loyalty, Loyalists.</p>
-              </div>
-            </button>
-
-            <button class="node diamond-node" style="left: 456px; top: 8px;" data-id="split1-recent" type="button">
-              <div class="diamond">
-                <div class="diamond-inner">
-                  <div class="node-type"><span class="node-icon">◇</span>Split</div>
-                  <div class="node-title">Redeemed Reward?</div>
-                  <div class="node-copy">Equals true</div>
-                </div>
-              </div>
-            </button>
-
-            <button class="node" style="left: 686px; top: 20px;" data-id="email2-recent" type="button">
-              <div class="card email">
-                <div class="node-type"><span class="node-icon">✉</span>Send email</div>
-                <h3 class="node-title">Welcome Existing Email #2</h3>
-                <p class="node-copy">Reward reminder for non-redeemers.</p>
-              </div>
-            </button>
-
-            <button class="node diamond-node" style="left: 892px; top: 8px;" data-id="split2-recent" type="button">
-              <div class="diamond">
-                <div class="diamond-inner">
-                  <div class="node-type"><span class="node-icon">◇</span>Split</div>
-                  <div class="node-title">Redeemed Reward?</div>
-                  <div class="node-copy">Equals true</div>
-                </div>
-              </div>
-            </button>
-
-            <button class="node" style="left: 760px; top: 150px;" data-id="email3-recent" type="button">
-              <div class="card email">
-                <div class="node-type"><span class="node-icon">✉</span>Send email</div>
-                <h3 class="node-title">Welcome Existing Email #3</h3>
-                <p class="node-copy">Reward last chance email.</p>
-              </div>
-            </button>
-
-            <button class="node" style="left: 1002px; top: 158px;" data-id="finish-recent" type="button">
-              <div class="card finish">
-                <div>
-                  <div class="node-type">Finish</div>
-                  <div class="node-title">Sequence complete</div>
-                </div>
-              </div>
-            </button>
-          </div>
-        </section>
-
-        <section class="section">
-          <div class="section-header">
-            <div class="section-kicker">Reactivated customers</div>
-            <h2 class="section-title">Data flow for existing customers who have not spent in the last 12 months</h2>
-            <p class="section-subtitle">
-              This branch activates after a placed order event, then filters out anyone already active in the prior 12 months.
-              Qualifying customers enter the same reminder structure and exit early if redemption occurs.
-            </p>
-          </div>
-
-          <div class="flow section-3">
-            <svg class="connector-layer" viewBox="0 0 1120 290" aria-hidden="true">
-              <defs>
-                <marker id="arrowC" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto">
-                  <path d="M0,0 L8,4 L0,8 z" fill="#543312"></path>
+                <marker id="arrowB" markerWidth="10" markerHeight="10" refX="9" refY="5" orient="auto">
+                  <path d="M0,0 L10,5 L0,10 z" fill="#6c4b2c"></path>
                 </marker>
               </defs>
 
-              <path d="M166 64 H 234" stroke="#543312" stroke-width="2" fill="none" marker-end="url(#arrowC)"/>
-              <path d="M344 64 H 430" stroke="#543312" stroke-width="2" fill="none" marker-end="url(#arrowC)"/>
-              <path d="M580 64 H 636" stroke="#543312" stroke-width="2" fill="none" marker-end="url(#arrowC)"/>
-              <path d="M786 64 H 870" stroke="#543312" stroke-width="2" fill="none" marker-end="url(#arrowC)"/>
-              <path d="M760 208 H 1006" stroke="#543312" stroke-width="2" fill="none" marker-end="url(#arrowC)"/>
+              <path d="M130 114 H 220" stroke="#6c4b2c" stroke-width="3" fill="none" marker-end="url(#arrowB)" />
+              <path d="M366 114 H 446" stroke="#6c4b2c" stroke-width="3" fill="none" marker-end="url(#arrowB)" />
+              <path d="M582 114 H 652" stroke="#6c4b2c" stroke-width="3" fill="none" marker-end="url(#arrowB)" />
+              <path d="M788 114 H 858" stroke="#6c4b2c" stroke-width="3" fill="none" marker-end="url(#arrowB)" />
+              <path d="M994 114 H 1038" stroke="#6c4b2c" stroke-width="3" fill="none" marker-end="url(#arrowB)" />
 
-              <path d="M289 119 V 236 H 1020 V 226" stroke="#543312" stroke-width="2" fill="none" stroke-dasharray="6 5"/>
-              <path d="M691 119 V 208 H 760" stroke="#543312" stroke-width="2" fill="none" stroke-dasharray="6 5"/>
-              <path d="M925 119 V 236 H 1020 V 226" stroke="#543312" stroke-width="2" fill="none" stroke-dasharray="6 5"/>
+              <path d="M498 164 V 228" stroke="#9a7958" stroke-width="2.4" stroke-dasharray="5 5" fill="none" />
+              <path d="M910 164 V 228" stroke="#9a7958" stroke-width="2.4" stroke-dasharray="5 5" fill="none" />
+
+              <path d="M498 228 H 690" stroke="#9a7958" stroke-width="2.4" stroke-dasharray="5 5" fill="none" />
+              <path d="M910 228 H 1042" stroke="#9a7958" stroke-width="2.4" stroke-dasharray="5 5" fill="none" />
+              <path d="M788 228 H 670" stroke="#9a7958" stroke-width="2.4" stroke-dasharray="5 5" fill="none" />
             </svg>
 
-            <div class="arrow-label" style="left: 300px; top: 52px;">No</div>
-            <div class="arrow-label" style="left: 342px; top: 178px;">Yes</div>
-            <div class="arrow-label" style="left: 605px; top: 52px;">No</div>
-            <div class="arrow-label" style="left: 642px; top: 158px;">Yes</div>
-            <div class="arrow-label" style="left: 804px; top: 52px;">No</div>
-            <div class="arrow-label" style="left: 930px; top: 178px;">Yes</div>
+            <div class="branch-label" style="left:468px; top:206px;">Yes</div>
+            <div class="branch-label" style="left:590px; top:98px;">No</div>
+            <div class="branch-label" style="left:880px; top:206px;">Yes</div>
+            <div class="branch-label" style="left:1000px; top:98px;">No</div>
 
-            <button class="node" style="left: 22px; top: 20px;" data-id="trigger-lapsed" type="button">
-              <div class="card trigger">
-                <div class="node-type"><span class="node-icon">⚡</span>Trigger</div>
-                <h3 class="node-title">Placed Order</h3>
-                <p class="node-copy">Entry event for customers who may be reactivated after a period of inactivity.</p>
-              </div>
-            </button>
-
-            <button class="node diamond-node" style="left: 234px; top: 8px;" data-id="split0-lapsed" type="button">
-              <div class="diamond">
-                <div class="diamond-inner">
-                  <div class="node-type"><span class="node-icon">◇</span>Split</div>
-                  <div class="node-title">Placed order in last 12 months?</div>
-                  <div class="node-copy">Filter active customers out</div>
+            <button class="node" style="left:20px; top:76px;" data-id="trigger-recent">
+              <div class="token trigger">
+                <div class="token-copy">
+                  <div class="token-kicker">Trigger</div>
+                  <div class="token-title">Purchased in last 12 months</div>
+                  <div class="token-sub">Active customer entry</div>
                 </div>
               </div>
             </button>
 
-            <button class="node" style="left: 430px; top: 20px;" data-id="email1-lapsed" type="button">
-              <div class="card email">
-                <div class="node-type"><span class="node-icon">✉</span>Send email</div>
-                <h3 class="node-title">Welcome Existing Email #1</h3>
-                <p class="node-copy">Welcome to Loyalty, Loyalists.</p>
-              </div>
-            </button>
-
-            <button class="node diamond-node" style="left: 636px; top: 8px;" data-id="split1-lapsed" type="button">
-              <div class="diamond">
-                <div class="diamond-inner">
-                  <div class="node-type"><span class="node-icon">◇</span>Split</div>
-                  <div class="node-title">Redeemed Reward?</div>
-                  <div class="node-copy">Equals true</div>
+            <button class="node" style="left:228px; top:76px;" data-id="email1-recent">
+              <div class="token email">
+                <div class="token-copy">
+                  <div class="token-kicker">Send email</div>
+                  <div class="token-title">Welcome Existing #1</div>
+                  <div class="token-sub">Loyalty introduction</div>
                 </div>
               </div>
             </button>
 
-            <button class="node" style="left: 870px; top: 20px;" data-id="email2-lapsed" type="button">
-              <div class="card email">
-                <div class="node-type"><span class="node-icon">✉</span>Send email</div>
-                <h3 class="node-title">Welcome Existing Email #2</h3>
-                <p class="node-copy">Reward reminder for non-redeemers.</p>
-              </div>
-            </button>
-
-            <button class="node" style="left: 760px; top: 178px;" data-id="email3-lapsed" type="button">
-              <div class="card email">
-                <div class="node-type"><span class="node-icon">✉</span>Send email</div>
-                <h3 class="node-title">Welcome Existing Email #3</h3>
-                <p class="node-copy">Reward last chance email.</p>
-              </div>
-            </button>
-
-            <button class="node diamond-node" style="left: 910px; top: 164px;" data-id="split2-lapsed" type="button">
+            <button class="node" style="left:446px; top:55px;" data-id="split1-recent">
               <div class="diamond">
-                <div class="diamond-inner">
-                  <div class="node-type"><span class="node-icon">◇</span>Split</div>
-                  <div class="node-title">Redeemed Reward?</div>
-                  <div class="node-copy">Final redemption check</div>
+                <div class="diamond-copy">
+                  <div class="token-kicker">Split</div>
+                  <div class="token-title">Redeemed Reward?</div>
+                  <div class="token-sub">True / False</div>
                 </div>
               </div>
             </button>
 
-            <button class="node" style="left: 1002px; top: 214px;" data-id="finish-lapsed" type="button">
-              <div class="card finish">
-                <div>
-                  <div class="node-type">Finish</div>
-                  <div class="node-title">Sequence complete</div>
+            <button class="node" style="left:654px; top:76px;" data-id="email2-recent">
+              <div class="token email">
+                <div class="token-copy">
+                  <div class="token-kicker">Send email</div>
+                  <div class="token-title">Welcome Existing #2</div>
+                  <div class="token-sub">Reward reminder</div>
+                </div>
+              </div>
+            </button>
+
+            <button class="node" style="left:858px; top:55px;" data-id="split2-recent">
+              <div class="diamond">
+                <div class="diamond-copy">
+                  <div class="token-kicker">Split</div>
+                  <div class="token-title">Redeemed Reward?</div>
+                  <div class="token-sub">True / False</div>
+                </div>
+              </div>
+            </button>
+
+            <button class="node" style="left:652px; top:190px;" data-id="email3-recent">
+              <div class="token email">
+                <div class="token-copy">
+                  <div class="token-kicker">Send email</div>
+                  <div class="token-title">Welcome Existing #3</div>
+                  <div class="token-sub">Last chance</div>
+                </div>
+              </div>
+            </button>
+
+            <button class="node" style="left:1044px; top:186px;" data-id="finish-recent">
+              <div class="finish">
+                <div class="token-copy" style="align-items:center;">
+                  <div class="token-title">Sequence complete</div>
                 </div>
               </div>
             </button>
           </div>
-        </section>
-      </div>
+        </div>
+      </section>
+
+      <!-- SECTION 3 -->
+      <section class="section-card">
+        <div class="eyebrow">Reactivated customers</div>
+        <h2 class="section-title">Data flow for existing customers who have not spent in the last 12 months</h2>
+        <div class="section-desc">
+          This branch activates after a placed order event, then filters out anyone already active in the prior 12 months.
+          Qualifying customers enter the same reminder structure and exit early if redemption occurs.
+        </div>
+
+        <div class="flow-wrap">
+          <div class="flow-board medium">
+            <svg class="flow-svg" viewBox="0 0 1180 290" aria-hidden="true">
+              <defs>
+                <marker id="arrowC" markerWidth="10" markerHeight="10" refX="9" refY="5" orient="auto">
+                  <path d="M0,0 L10,5 L0,10 z" fill="#6c4b2c"></path>
+                </marker>
+              </defs>
+
+              <path d="M132 114 H 186" stroke="#6c4b2c" stroke-width="3" fill="none" marker-end="url(#arrowC)" />
+              <path d="M320 114 H 392" stroke="#6c4b2c" stroke-width="3" fill="none" marker-end="url(#arrowC)" />
+              <path d="M528 114 H 598" stroke="#6c4b2c" stroke-width="3" fill="none" marker-end="url(#arrowC)" />
+              <path d="M734 114 H 804" stroke="#6c4b2c" stroke-width="3" fill="none" marker-end="url(#arrowC)" />
+              <path d="M940 114 H 1010" stroke="#6c4b2c" stroke-width="3" fill="none" marker-end="url(#arrowC)" />
+              <path d="M1146 114 H 1160" stroke="#6c4b2c" stroke-width="3" fill="none" marker-end="url(#arrowC)" />
+
+              <path d="M238 164 V 248 H 1106" stroke="#9a7958" stroke-width="2.4" stroke-dasharray="5 5" fill="none" />
+              <path d="M650 164 V 248" stroke="#9a7958" stroke-width="2.4" stroke-dasharray="5 5" fill="none" />
+              <path d="M1062 164 V 248" stroke="#9a7958" stroke-width="2.4" stroke-dasharray="5 5" fill="none" />
+            </svg>
+
+            <div class="branch-label" style="left:206px; top:98px;">No</div>
+            <div class="branch-label" style="left:210px; top:227px;">Yes</div>
+
+            <div class="branch-label" style="left:620px; top:227px;">Yes</div>
+            <div class="branch-label" style="left:742px; top:98px;">No</div>
+
+            <div class="branch-label" style="left:1030px; top:227px;">Yes</div>
+            <div class="branch-label" style="left:1148px; top:98px;">No</div>
+
+            <button class="node" style="left:20px; top:76px;" data-id="trigger-lapsed">
+              <div class="token trigger">
+                <div class="token-copy">
+                  <div class="token-kicker">Trigger</div>
+                  <div class="token-title">Placed Order</div>
+                  <div class="token-sub">Reactivated customer entry</div>
+                </div>
+              </div>
+            </button>
+
+            <button class="node" style="left:188px; top:55px;" data-id="split0-lapsed">
+              <div class="diamond">
+                <div class="diamond-copy">
+                  <div class="token-kicker">Split</div>
+                  <div class="token-title">Placed order in last 12 months?</div>
+                  <div class="token-sub">Filter active customers</div>
+                </div>
+              </div>
+            </button>
+
+            <button class="node" style="left:394px; top:76px;" data-id="email1-lapsed">
+              <div class="token email">
+                <div class="token-copy">
+                  <div class="token-kicker">Send email</div>
+                  <div class="token-title">Welcome Existing #1</div>
+                  <div class="token-sub">Loyalty introduction</div>
+                </div>
+              </div>
+            </button>
+
+            <button class="node" style="left:600px; top:55px;" data-id="split1-lapsed">
+              <div class="diamond">
+                <div class="diamond-copy">
+                  <div class="token-kicker">Split</div>
+                  <div class="token-title">Redeemed Reward?</div>
+                  <div class="token-sub">True / False</div>
+                </div>
+              </div>
+            </button>
+
+            <button class="node" style="left:806px; top:76px;" data-id="email2-lapsed">
+              <div class="token email">
+                <div class="token-copy">
+                  <div class="token-kicker">Send email</div>
+                  <div class="token-title">Welcome Existing #2</div>
+                  <div class="token-sub">Reward reminder</div>
+                </div>
+              </div>
+            </button>
+
+            <button class="node" style="left:1012px; top:55px;" data-id="split2-lapsed">
+              <div class="diamond">
+                <div class="diamond-copy">
+                  <div class="token-kicker">Split</div>
+                  <div class="token-title">Redeemed Reward?</div>
+                  <div class="token-sub">True / False</div>
+                </div>
+              </div>
+            </button>
+
+            <button class="node" style="left:806px; top:190px;" data-id="email3-lapsed">
+              <div class="token email">
+                <div class="token-copy">
+                  <div class="token-kicker">Send email</div>
+                  <div class="token-title">Welcome Existing #3</div>
+                  <div class="token-sub">Last chance</div>
+                </div>
+              </div>
+            </button>
+
+            <button class="node" style="left:1060px; top:186px;" data-id="finish-lapsed">
+              <div class="finish">
+                <div class="token-copy" style="align-items:center;">
+                  <div class="token-title">Sequence complete</div>
+                </div>
+              </div>
+            </button>
+          </div>
+        </div>
+      </section>
     </div>
   </div>
 
   <div class="overlay" id="overlay" aria-hidden="true">
     <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
       <div class="modal-header">
-        <div>
-          <div class="modal-kicker" id="modalEyebrow">Node details</div>
+        <div class="modal-title-wrap">
+          <div class="modal-eyebrow" id="modalEyebrow">Token details</div>
           <h2 class="modal-title" id="modalTitle">Title</h2>
         </div>
-        <button class="close-btn" id="closeBtn" aria-label="Close" type="button">×</button>
+        <button class="close-btn" id="closeBtn" aria-label="Close">×</button>
       </div>
-
       <div class="modal-body">
         <p id="modalDescription"></p>
-
         <div class="meta-grid">
           <div class="meta-card">
             <h4>Section</h4>
             <p id="modalSection"></p>
           </div>
           <div class="meta-card">
-            <h4>Flow Logic</h4>
+            <h4>Flow logic</h4>
             <p id="modalLogic"></p>
           </div>
         </div>
@@ -843,130 +812,128 @@
       "bau-campaign": {
         eyebrow: "Pre-launch teaser",
         title: "BAU Campaign Sends",
-        description: "Regular business-as-usual campaigns where loyalty teaser messaging is seeded into normal outbound email inventory for relevant existing customers.",
+        description: "Regular business-as-usual campaign sends where the teaser message is seeded into relevant emails going to customers who have purchased in the last 12 months.",
         section: "2 weeks before launch",
-        logic: "This is not a standalone triggered flow. It acts as the broad campaign distribution layer before the loyalty program formally launches."
+        logic: "Acts as the broad distribution layer for the teaser. The message is not yet a standalone flow; it is inserted into existing campaign inventory."
       },
       "dynamic-content": {
         eyebrow: "Pre-launch teaser",
-        title: "Dynamic Content",
-        description: "Conditional teaser content block that appears only for the intended audience. This allows teaser visibility to stay targeted instead of showing in every campaign to everyone.",
+        title: "Loyalty teaser block",
+        description: "Targeted dynamic content block that shows the teaser only to the intended audience segment.",
         section: "2 weeks before launch",
-        logic: "Functions as the segmentation and personalization layer within campaign templates."
+        logic: "Functions as the personalization layer. In production, this maps to conditional content rules within BAU campaigns."
       },
-
       "trigger-recent": {
-        eyebrow: "Active customers path",
+        eyebrow: "Active customers",
         title: "Trigger — Purchased in last 12 months",
-        description: "Starts the onboarding sequence for customers who are already existing purchasers within the last 12 months.",
+        description: "Starts the onboarding path for customers who are already active within the last 12 months.",
         section: "One-off flow for customers who purchased in the last 12 months",
-        logic: "This is the direct entry route for active customers eligible for loyalty onboarding."
+        logic: "Entry condition for the active-customer branch."
       },
       "email1-recent": {
-        eyebrow: "Active customers path",
-        title: "Welcome Existing Email #1",
-        description: "First email in the active-customer onboarding sequence. Introduces the loyalty program and frames the reward value.",
+        eyebrow: "Active customers",
+        title: "Send Email — Welcome Existing #1",
+        description: "First loyalty email introducing the program and reward value.",
         section: "One-off flow for customers who purchased in the last 12 months",
-        logic: "Sent immediately after entry to establish awareness and drive first redemption behavior."
+        logic: "Initial onboarding touchpoint after entry."
       },
       "split1-recent": {
-        eyebrow: "Active customers path",
-        title: "Conditional Split — Redeemed Reward = True",
-        description: "Checks whether the customer redeemed the loyalty reward after the first email.",
+        eyebrow: "Active customers",
+        title: "Conditional Split — Redeemed Reward?",
+        description: "Checks whether the customer has already redeemed the reward after Email #1.",
         section: "One-off flow for customers who purchased in the last 12 months",
-        logic: "Yes exits early. No continues to the reminder email."
+        logic: "Yes path exits the reminder sequence. No path continues to Email #2."
       },
       "email2-recent": {
-        eyebrow: "Active customers path",
-        title: "Welcome Existing Email #2",
-        description: "Reminder email for active customers who have not yet redeemed their reward.",
+        eyebrow: "Active customers",
+        title: "Send Email — Welcome Existing #2",
+        description: "Reminder email for customers who have not redeemed yet.",
         section: "One-off flow for customers who purchased in the last 12 months",
-        logic: "Second touchpoint focused on redemption encouragement."
+        logic: "Reminder stage intended to improve reward redemption."
       },
       "split2-recent": {
-        eyebrow: "Active customers path",
-        title: "Conditional Split — Redeemed Reward = True",
-        description: "Checks again whether the reward has been redeemed after the second email.",
+        eyebrow: "Active customers",
+        title: "Conditional Split — Redeemed Reward?",
+        description: "Checks again whether the customer has redeemed after Email #2.",
         section: "One-off flow for customers who purchased in the last 12 months",
-        logic: "Yes exits. No moves to the final last-chance message."
+        logic: "Yes path exits. No path continues to the final email."
       },
       "email3-recent": {
-        eyebrow: "Active customers path",
-        title: "Welcome Existing Email #3",
-        description: "Final last-chance message for customers who still have not redeemed.",
+        eyebrow: "Active customers",
+        title: "Send Email — Welcome Existing #3",
+        description: "Final last-chance message for those who still have not redeemed.",
         section: "One-off flow for customers who purchased in the last 12 months",
-        logic: "Creates urgency before the sequence ends."
+        logic: "Urgency-led final redemption push before completion."
       },
       "finish-recent": {
-        eyebrow: "Active customers path",
-        title: "Finish",
-        description: "The active-customer onboarding sequence ends here.",
+        eyebrow: "Active customers",
+        title: "Sequence complete",
+        description: "The active-customer sequence ends here.",
         section: "One-off flow for customers who purchased in the last 12 months",
-        logic: "Exit point for customers who redeemed earlier or completed the full reminder path."
+        logic: "Terminal step for redeemed users and those who completed the reminder path."
       },
-
       "trigger-lapsed": {
-        eyebrow: "Reactivated customers path",
+        eyebrow: "Reactivated customers",
         title: "Trigger — Placed Order",
-        description: "Begins the reactivation-based onboarding route when a customer places an order.",
-        section: "Data flow for customers not spent in the last 12 months",
-        logic: "This entry route captures customers returning after a longer inactive period."
+        description: "Starts the reactivated-customer path after a placed order event.",
+        section: "Data flow for existing customers who have not spent in the last 12 months",
+        logic: "Entry point for the reactivated/lapsed branch."
       },
       "split0-lapsed": {
-        eyebrow: "Reactivated customers path",
+        eyebrow: "Reactivated customers",
         title: "Conditional Split — Placed order in last 12 months?",
-        description: "Determines whether the customer has already been active within the prior 12 months.",
-        section: "Data flow for customers not spent in the last 12 months",
-        logic: "If yes, they do not belong in this reactivation branch. If no, they continue into the onboarding sequence."
+        description: "Filters out customers who are already active in the last 12 months.",
+        section: "Data flow for existing customers who have not spent in the last 12 months",
+        logic: "Yes path does not continue through this branch. No path enters the reactivation onboarding sequence."
       },
       "email1-lapsed": {
-        eyebrow: "Reactivated customers path",
-        title: "Welcome Existing Email #1",
-        description: "First onboarding email for customers re-entering after inactivity.",
-        section: "Data flow for customers not spent in the last 12 months",
-        logic: "Introduces the loyalty program and encourages first redemption."
+        eyebrow: "Reactivated customers",
+        title: "Send Email — Welcome Existing #1",
+        description: "First email introducing loyalty to reactivated or long-lapsed customers.",
+        section: "Data flow for existing customers who have not spent in the last 12 months",
+        logic: "Starts the loyalty reminder sequence after the lapsed-customer filter."
       },
       "split1-lapsed": {
-        eyebrow: "Reactivated customers path",
-        title: "Conditional Split — Redeemed Reward = True",
-        description: "Checks whether the customer redeemed the reward after the first reactivation email.",
-        section: "Data flow for customers not spent in the last 12 months",
-        logic: "Yes exits early. No continues to the reminder stage."
+        eyebrow: "Reactivated customers",
+        title: "Conditional Split — Redeemed Reward?",
+        description: "Checks if the reward has been redeemed after Email #1.",
+        section: "Data flow for existing customers who have not spent in the last 12 months",
+        logic: "Yes exits. No continues to Email #2."
       },
       "email2-lapsed": {
-        eyebrow: "Reactivated customers path",
-        title: "Welcome Existing Email #2",
-        description: "Reminder email for reactivated customers who still have not redeemed.",
-        section: "Data flow for customers not spent in the last 12 months",
-        logic: "Second touchpoint to encourage reward redemption."
-      },
-      "email3-lapsed": {
-        eyebrow: "Reactivated customers path",
-        title: "Welcome Existing Email #3",
-        description: "Last-chance email for customers in the reactivated route who still have not redeemed.",
-        section: "Data flow for customers not spent in the last 12 months",
-        logic: "Final urgency-led touchpoint in the sequence."
+        eyebrow: "Reactivated customers",
+        title: "Send Email — Welcome Existing #2",
+        description: "Reminder email for customers who still have not redeemed.",
+        section: "Data flow for existing customers who have not spent in the last 12 months",
+        logic: "Second reminder stage."
       },
       "split2-lapsed": {
-        eyebrow: "Reactivated customers path",
-        title: "Conditional Split — Redeemed Reward = True",
-        description: "Final check to confirm whether the customer redeemed after reminder messaging.",
-        section: "Data flow for customers not spent in the last 12 months",
-        logic: "Used to close the flow cleanly regardless of redemption outcome."
+        eyebrow: "Reactivated customers",
+        title: "Conditional Split — Redeemed Reward?",
+        description: "Checks again whether the reward has been redeemed before the final prompt.",
+        section: "Data flow for existing customers who have not spent in the last 12 months",
+        logic: "Yes exits. No continues to Email #3."
+      },
+      "email3-lapsed": {
+        eyebrow: "Reactivated customers",
+        title: "Send Email — Welcome Existing #3",
+        description: "Final last-chance message for remaining non-redeemers.",
+        section: "Data flow for existing customers who have not spent in the last 12 months",
+        logic: "Final urgency stage before completion."
       },
       "finish-lapsed": {
-        eyebrow: "Reactivated customers path",
-        title: "Finish",
-        description: "The reactivated-customer onboarding sequence ends here.",
-        section: "Data flow for customers not spent in the last 12 months",
-        logic: "Exit point for all customers in this branch."
+        eyebrow: "Reactivated customers",
+        title: "Sequence complete",
+        description: "The reactivated-customer sequence ends here.",
+        section: "Data flow for existing customers who have not spent in the last 12 months",
+        logic: "Terminal step for this branch."
       }
     };
 
     const overlay = document.getElementById("overlay");
     const closeBtn = document.getElementById("closeBtn");
-    const modalEyebrow = document.getElementById("modalEyebrow");
     const modalTitle = document.getElementById("modalTitle");
+    const modalEyebrow = document.getElementById("modalEyebrow");
     const modalDescription = document.getElementById("modalDescription");
     const modalSection = document.getElementById("modalSection");
     const modalLogic = document.getElementById("modalLogic");
@@ -977,7 +944,7 @@
       if (!data) return;
 
       nodes.forEach(n => n.classList.remove("active"));
-      node.classList.add("active");
+      if (node) node.classList.add("active");
 
       modalEyebrow.textContent = data.eyebrow;
       modalTitle.textContent = data.title;
