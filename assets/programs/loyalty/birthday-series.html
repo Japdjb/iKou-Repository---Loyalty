@@ -1,0 +1,1135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Birthday Series</title>
+  <style>
+    :root {
+      --bg: #FFF5ED;
+      --surface: #fffaf6;
+      --text: #0A0D0A;
+      --muted: #543312;
+      --line: #543312;
+
+      --lavender: #E8DEF5;
+      --dark-olive: #383317;
+      --light-blue: #CFF0FF;
+      --deep-burgundy: #570A05;
+      --dark-brown: #331700;
+      --pale-yellow: #EDE8BA;
+      --chocolate: #543312;
+      --dusty-rose: #DBA6A1;
+
+      --shadow-soft: 0 12px 30px rgba(56, 51, 23, 0.08);
+      --shadow-strong: 0 24px 60px rgba(56, 51, 23, 0.18);
+    }
+
+    * { box-sizing: border-box; }
+
+    html, body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: Inter, Arial, Helvetica, sans-serif;
+    }
+
+    body {
+      min-width: 1760px;
+    }
+
+    .page {
+      padding: 42px 40px 60px;
+      overflow-x: auto;
+    }
+
+    .shell {
+      max-width: 1860px;
+      margin: 0 auto;
+    }
+
+    .brand {
+      font-family: "Times New Roman", Georgia, serif;
+      font-size: 24px;
+      letter-spacing: 0.08em;
+      color: var(--dark-olive);
+      margin-bottom: 18px;
+    }
+
+    .hero {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 24px;
+      margin-bottom: 28px;
+    }
+
+    .hero h1 {
+      margin: 0;
+      font-family: "Times New Roman", Georgia, serif;
+      font-size: 64px;
+      line-height: 0.98;
+      font-weight: 600;
+      color: var(--dark-brown);
+    }
+
+    .hero p {
+      margin: 14px 0 0;
+      max-width: 930px;
+      font-size: 20px;
+      line-height: 1.5;
+      color: var(--chocolate);
+    }
+
+    .legend {
+      display: flex;
+      gap: 14px;
+      align-items: center;
+      flex-wrap: wrap;
+      background: rgba(255,255,255,0.55);
+      border: 1px solid rgba(84, 51, 18, 0.12);
+      border-radius: 999px;
+      padding: 14px 18px;
+      box-shadow: var(--shadow-soft);
+      margin-top: 8px;
+    }
+
+    .legend-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 14px;
+      color: var(--dark-olive);
+      font-weight: 600;
+      white-space: nowrap;
+    }
+
+    .legend-swatch {
+      width: 16px;
+      height: 16px;
+      border-radius: 5px;
+      border: 1.5px solid rgba(56, 51, 23, 0.28);
+      flex: 0 0 auto;
+    }
+
+    .sw-trigger { background: var(--light-blue); }
+    .sw-email { background: var(--lavender); }
+    .sw-split { background: var(--pale-yellow); }
+    .sw-finish { background: var(--dark-olive); border-color: var(--dark-olive); }
+
+    .board {
+      position: relative;
+      width: 1760px;
+      min-height: 1760px;
+      background:
+        radial-gradient(circle at top right, rgba(232,222,245,0.35), transparent 24%),
+        radial-gradient(circle at bottom left, rgba(207,240,255,0.30), transparent 22%),
+        var(--surface);
+      border: 1px solid rgba(84, 51, 18, 0.08);
+      border-radius: 32px;
+      box-shadow: var(--shadow-soft);
+      padding: 34px 34px 50px;
+      overflow: hidden;
+    }
+
+    .board::before,
+    .board::after {
+      content: "";
+      position: absolute;
+      pointer-events: none;
+      border: 1px solid rgba(219,166,161,0.28);
+      border-radius: 999px;
+    }
+
+    .board::before {
+      width: 280px;
+      height: 280px;
+      top: -140px;
+      right: -90px;
+    }
+
+    .board::after {
+      width: 240px;
+      height: 240px;
+      bottom: -100px;
+      left: -90px;
+    }
+
+    .section {
+      position: relative;
+      border-radius: 26px;
+      padding: 28px 24px 36px;
+      background: rgba(255,255,255,0.45);
+      border: 1px solid rgba(84, 51, 18, 0.07);
+    }
+
+    .section-header {
+      margin-bottom: 18px;
+    }
+
+    .section-kicker {
+      font-size: 12px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--deep-burgundy);
+      font-weight: 700;
+      margin-bottom: 10px;
+    }
+
+    .section-title {
+      margin: 0;
+      font-family: "Times New Roman", Georgia, serif;
+      font-size: 34px;
+      line-height: 1.1;
+      color: var(--dark-brown);
+      font-weight: 600;
+    }
+
+    .section-subtitle {
+      margin: 10px 0 0;
+      color: var(--chocolate);
+      font-size: 16px;
+      line-height: 1.55;
+      max-width: 1120px;
+    }
+
+    .flow {
+      position: relative;
+      min-height: 1480px;
+      padding-top: 10px;
+    }
+
+    svg.connector-layer {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      overflow: visible;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .lane-label {
+      position: absolute;
+      left: 18px;
+      z-index: 2;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      background: rgba(255,245,237,0.9);
+      border: 1px solid rgba(84,51,18,0.10);
+      border-radius: 999px;
+      padding: 10px 14px;
+      font-size: 14px;
+      color: var(--dark-brown);
+      font-weight: 700;
+      box-shadow: var(--shadow-soft);
+    }
+
+    .lane-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 999px;
+      background: var(--deep-burgundy);
+      flex: 0 0 auto;
+    }
+
+    .node {
+      position: absolute;
+      z-index: 2;
+      border: 0;
+      padding: 0;
+      background: transparent;
+      cursor: pointer;
+      text-align: left;
+      transition: transform 0.18s ease, box-shadow 0.18s ease, filter 0.18s ease;
+      border-radius: 24px;
+    }
+
+    .node:hover {
+      transform: translateY(-3px);
+      filter: brightness(1.01);
+    }
+
+    .node.active {
+      box-shadow: 0 0 0 4px rgba(87,10,5,0.09), 0 0 0 9px rgba(232,222,245,0.55);
+      transform: translateY(-2px);
+    }
+
+    .card {
+      width: 240px;
+      min-height: 118px;
+      padding: 18px 18px 16px;
+      border-radius: 22px;
+      box-shadow: var(--shadow-soft);
+      border: 1.5px solid rgba(84, 51, 18, 0.14);
+      background: white;
+    }
+
+    .card.trigger {
+      background: linear-gradient(180deg, rgba(207,240,255,0.92), rgba(207,240,255,0.72));
+      border-color: rgba(56,51,23,0.15);
+    }
+
+    .card.email {
+      background: linear-gradient(180deg, rgba(232,222,245,0.98), rgba(232,222,245,0.82));
+      border-color: rgba(116,80,255,0.22);
+    }
+
+    .card.finish {
+      background: var(--dark-olive);
+      border-color: var(--dark-olive);
+      color: var(--bg);
+      min-height: 96px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+    }
+
+    .card.finish .node-type,
+    .card.finish .node-title,
+    .card.finish .node-copy {
+      color: var(--bg);
+    }
+
+    .node-type {
+      font-size: 12px;
+      letter-spacing: 0.10em;
+      text-transform: uppercase;
+      font-weight: 700;
+      color: var(--deep-burgundy);
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .node-icon {
+      width: 22px;
+      height: 22px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 999px;
+      background: rgba(56,51,23,0.08);
+      color: var(--dark-olive);
+      font-size: 13px;
+      flex: 0 0 auto;
+    }
+
+    .node-title {
+      font-size: 17px;
+      line-height: 1.25;
+      font-weight: 700;
+      color: var(--text);
+      margin: 0 0 6px;
+    }
+
+    .node-copy {
+      font-size: 14px;
+      line-height: 1.45;
+      color: var(--chocolate);
+      margin: 0;
+    }
+
+    .diamond {
+      width: 170px;
+      height: 170px;
+      transform: rotate(45deg);
+      background: linear-gradient(180deg, rgba(237,232,186,0.96), rgba(255,245,237,0.95));
+      border: 1.8px solid rgba(56,51,23,0.24);
+      border-radius: 26px;
+      box-shadow: var(--shadow-soft);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+
+    .diamond-inner {
+      width: 118px;
+      transform: rotate(-45deg);
+      text-align: center;
+    }
+
+    .diamond .node-type {
+      justify-content: center;
+      margin-bottom: 8px;
+      font-size: 11px;
+      letter-spacing: 0.10em;
+    }
+
+    .diamond .node-title {
+      font-size: 16px;
+      margin-bottom: 4px;
+    }
+
+    .diamond .node-copy {
+      font-size: 13px;
+      line-height: 1.35;
+    }
+
+    .route-label {
+      position: absolute;
+      z-index: 1;
+      font-size: 13px;
+      color: var(--chocolate);
+      background: rgba(255,245,237,0.9);
+      padding: 3px 8px;
+      border-radius: 999px;
+      border: 1px solid rgba(84,51,18,0.08);
+    }
+
+    .overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(10, 13, 10, 0.38);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 26px;
+      z-index: 30;
+      backdrop-filter: blur(2px);
+    }
+
+    .overlay.open { display: flex; }
+
+    .modal {
+      width: min(760px, 100%);
+      background: rgba(255,250,246,0.98);
+      border: 1px solid rgba(84,51,18,0.12);
+      border-radius: 28px;
+      box-shadow: var(--shadow-strong);
+      overflow: hidden;
+    }
+
+    .modal-header {
+      padding: 24px 26px 18px;
+      border-bottom: 1px solid rgba(84,51,18,0.08);
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 20px;
+    }
+
+    .modal-kicker {
+      font-size: 11px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--deep-burgundy);
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    .modal-title {
+      margin: 0;
+      font-family: "Times New Roman", Georgia, serif;
+      font-size: 34px;
+      line-height: 1.05;
+      color: var(--dark-brown);
+      font-weight: 600;
+    }
+
+    .close-btn {
+      width: 42px;
+      height: 42px;
+      border-radius: 999px;
+      border: 0;
+      cursor: pointer;
+      background: rgba(84,51,18,0.07);
+      color: var(--dark-brown);
+      font-size: 22px;
+      line-height: 1;
+      flex: 0 0 auto;
+    }
+
+    .modal-body {
+      padding: 24px 26px 28px;
+    }
+
+    .modal-body p {
+      margin: 0 0 18px;
+      font-size: 16px;
+      line-height: 1.65;
+      color: var(--chocolate);
+    }
+
+    .meta-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+      margin-top: 18px;
+    }
+
+    .meta-card {
+      background: rgba(255,255,255,0.78);
+      border: 1px solid rgba(84,51,18,0.08);
+      border-radius: 18px;
+      padding: 16px;
+    }
+
+    .meta-card h4 {
+      margin: 0 0 8px;
+      font-size: 12px;
+      letter-spacing: 0.10em;
+      text-transform: uppercase;
+      color: var(--deep-burgundy);
+    }
+
+    .meta-card p {
+      margin: 0;
+      font-size: 14px;
+      line-height: 1.55;
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <div class="shell">
+      <div class="brand">IKOU</div>
+
+      <div class="hero">
+        <div>
+          <h1>Birthday<br>Series</h1>
+          <p>
+            Birthday reward automation routed by loyalty level. Customers are segmented into Level 1, Level 2,
+            Level 3, or Level 4 birthday branches, receive their birthday gift emails, and exit early if the birthday reward is redeemed.
+          </p>
+        </div>
+
+        <div class="legend">
+          <span class="legend-item"><span class="legend-swatch sw-trigger"></span>Trigger</span>
+          <span class="legend-item"><span class="legend-swatch sw-split"></span>Conditional Split</span>
+          <span class="legend-item"><span class="legend-swatch sw-email"></span>Email</span>
+          <span class="legend-item"><span class="legend-swatch sw-finish"></span>Finish</span>
+        </div>
+      </div>
+
+      <div class="board">
+        <section class="section">
+          <div class="section-header">
+            <div class="section-kicker">Birthday automation</div>
+            <h2 class="section-title">Level-based birthday reward messaging</h2>
+            <p class="section-subtitle">
+              When a customer enters the birthday trigger, the profile is routed to the correct loyalty tier branch.
+              Each branch sends a birthday gift email, checks whether the birthday reward has been redeemed,
+              then follows with reminder and last-chance messaging before the sequence ends.
+            </p>
+          </div>
+
+          <div class="flow">
+            <svg class="connector-layer" viewBox="0 0 1690 1480" aria-hidden="true">
+              <defs>
+                <marker id="arrowBday" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto">
+                  <path d="M0,0 L10,5 L0,10 z" fill="#543312"></path>
+                </marker>
+              </defs>
+
+              <!-- trigger to level1 -->
+              <path d="M270 250 H 360" stroke="#543312" stroke-width="2.5" fill="none" marker-end="url(#arrowBday)"/>
+
+              <!-- level1 yes to lane1 -->
+              <path d="M525 250 H 620" stroke="#543312" stroke-width="2.5" fill="none" marker-end="url(#arrowBday)"/>
+
+              <!-- level1 no to level2 -->
+              <path d="M445 335 V 510 H 500" stroke="#543312" stroke-width="2.5" fill="none" stroke-dasharray="8 8" marker-end="url(#arrowBday)"/>
+
+              <!-- level2 yes to lane2 -->
+              <path d="M665 510 H 760" stroke="#543312" stroke-width="2.5" fill="none" marker-end="url(#arrowBday)"/>
+
+              <!-- level2 no to level3 -->
+              <path d="M585 595 V 830 H 640" stroke="#543312" stroke-width="2.5" fill="none" stroke-dasharray="8 8" marker-end="url(#arrowBday)"/>
+
+              <!-- level3 yes to lane3 -->
+              <path d="M805 830 H 900" stroke="#543312" stroke-width="2.5" fill="none" marker-end="url(#arrowBday)"/>
+
+              <!-- level3 no to level4 -->
+              <path d="M725 915 V 1150 H 780" stroke="#543312" stroke-width="2.5" fill="none" stroke-dasharray="8 8" marker-end="url(#arrowBday)"/>
+
+              <!-- level4 yes to lane4 -->
+              <path d="M945 1150 H 1040" stroke="#543312" stroke-width="2.5" fill="none" marker-end="url(#arrowBday)"/>
+
+              <!-- lane1 -->
+              <path d="M860 250 H 950" stroke="#543312" stroke-width="2.5" fill="none" marker-end="url(#arrowBday)"/>
+              <path d="M1120 250 H 1215" stroke="#543312" stroke-width="2.5" fill="none" marker-end="url(#arrowBday)"/>
+              <path d="M1385 250 H 1475" stroke="#543312" stroke-width="2.5" fill="none" marker-end="url(#arrowBday)"/>
+
+              <!-- lane1 yes exits -->
+              <path d="M1035 335 V 430 H 1650 V 690" stroke="#543312" stroke-width="2.5" fill="none" stroke-dasharray="8 8"/>
+              <path d="M1300 335 V 430 H 1650 V 690" stroke="#543312" stroke-width="2.5" fill="none" stroke-dasharray="8 8"/>
+
+              <!-- lane2 -->
+              <path d="M1000 510 H 1090" stroke="#543312" stroke-width="2.5" fill="none" marker-end="url(#arrowBday)"/>
+              <path d="M1260 510 H 1355" stroke="#543312" stroke-width="2.5" fill="none" marker-end="url(#arrowBday)"/>
+              <path d="M1525 510 H 1615" stroke="#543312" stroke-width="2.5" fill="none" marker-end="url(#arrowBday)"/>
+
+              <!-- lane2 yes exits -->
+              <path d="M1175 595 V 690 H 1650 V 690" stroke="#543312" stroke-width="2.5" fill="none" stroke-dasharray="8 8"/>
+              <path d="M1440 595 V 690 H 1650 V 690" stroke="#543312" stroke-width="2.5" fill="none" stroke-dasharray="8 8"/>
+
+              <!-- lane3 -->
+              <path d="M1140 830 H 1230" stroke="#543312" stroke-width="2.5" fill="none" marker-end="url(#arrowBday)"/>
+              <path d="M1400 830 H 1495" stroke="#543312" stroke-width="2.5" fill="none" marker-end="url(#arrowBday)"/>
+              <path d="M1665 830 H 1755" stroke="#543312" stroke-width="2.5" fill="none" marker-end="url(#arrowBday)"/>
+
+              <!-- lane3 yes exits -->
+              <path d="M1315 915 V 1020 H 1650 V 690" stroke="#543312" stroke-width="2.5" fill="none" stroke-dasharray="8 8"/>
+              <path d="M1580 915 V 1020 H 1650 V 690" stroke="#543312" stroke-width="2.5" fill="none" stroke-dasharray="8 8"/>
+
+              <!-- lane4 -->
+              <path d="M1280 1150 H 1370" stroke="#543312" stroke-width="2.5" fill="none" marker-end="url(#arrowBday)"/>
+              <path d="M1540 1150 H 1635" stroke="#543312" stroke-width="2.5" fill="none" marker-end="url(#arrowBday)"/>
+              <path d="M1805 1150 H 1890" stroke="#543312" stroke-width="2.5" fill="none" marker-end="url(#arrowBday)"/>
+
+              <!-- lane4 yes exits -->
+              <path d="M1455 1235 V 1320 H 1650 V 690" stroke="#543312" stroke-width="2.5" fill="none" stroke-dasharray="8 8"/>
+              <path d="M1720 1235 V 1320 H 1650 V 690" stroke="#543312" stroke-width="2.5" fill="none" stroke-dasharray="8 8"/>
+            </svg>
+
+            <div class="lane-label" style="top: 198px;"><span class="lane-dot"></span>Level 1 birthday path</div>
+            <div class="lane-label" style="top: 458px;"><span class="lane-dot"></span>Level 2 birthday path</div>
+            <div class="lane-label" style="top: 778px;"><span class="lane-dot"></span>Level 3 birthday path</div>
+            <div class="lane-label" style="top: 1098px;"><span class="lane-dot"></span>Level 4 birthday path</div>
+
+            <div class="route-label" style="left: 540px; top: 232px;">Yes</div>
+            <div class="route-label" style="left: 418px; top: 420px;">No</div>
+            <div class="route-label" style="left: 682px; top: 492px;">Yes</div>
+            <div class="route-label" style="left: 560px; top: 728px;">No</div>
+            <div class="route-label" style="left: 822px; top: 812px;">Yes</div>
+            <div class="route-label" style="left: 700px; top: 1048px;">No</div>
+            <div class="route-label" style="left: 962px; top: 1132px;">Yes</div>
+
+            <div class="route-label" style="left: 1085px; top: 232px;">No</div>
+            <div class="route-label" style="left: 1352px; top: 232px;">No</div>
+            <div class="route-label" style="left: 1055px; top: 372px;">Yes</div>
+            <div class="route-label" style="left: 1322px; top: 372px;">Yes</div>
+
+            <div class="route-label" style="left: 1225px; top: 492px;">No</div>
+            <div class="route-label" style="left: 1492px; top: 492px;">No</div>
+            <div class="route-label" style="left: 1195px; top: 632px;">Yes</div>
+            <div class="route-label" style="left: 1462px; top: 632px;">Yes</div>
+
+            <div class="route-label" style="left: 1365px; top: 812px;">No</div>
+            <div class="route-label" style="left: 1632px; top: 812px;">No</div>
+            <div class="route-label" style="left: 1335px; top: 952px;">Yes</div>
+            <div class="route-label" style="left: 1602px; top: 952px;">Yes</div>
+
+            <div class="route-label" style="left: 1505px; top: 1132px;">No</div>
+            <div class="route-label" style="left: 1772px; top: 1132px;">No</div>
+            <div class="route-label" style="left: 1475px; top: 1272px;">Yes</div>
+            <div class="route-label" style="left: 1742px; top: 1272px;">Yes</div>
+
+            <!-- trigger -->
+            <button class="node" style="left: 40px; top: 190px;" data-id="trigger-birthday">
+              <div class="card trigger">
+                <div class="node-type"><span class="node-icon">⚡</span>Trigger</div>
+                <h3 class="node-title">Profile Birthday Today</h3>
+                <p class="node-copy">Customer enters the birthday series when the birthday trigger condition is met.</p>
+              </div>
+            </button>
+
+            <!-- routing -->
+            <button class="node" style="left: 360px; top: 165px;" data-id="split-level1">
+              <div class="diamond">
+                <div class="diamond-inner">
+                  <div class="node-type"><span class="node-icon">◇</span>Split</div>
+                  <div class="node-title">Loyalty Level = 1?</div>
+                  <div class="node-copy">Route to Level 1 path</div>
+                </div>
+              </div>
+            </button>
+
+            <button class="node" style="left: 500px; top: 425px;" data-id="split-level2">
+              <div class="diamond">
+                <div class="diamond-inner">
+                  <div class="node-type"><span class="node-icon">◇</span>Split</div>
+                  <div class="node-title">Loyalty Level = 2?</div>
+                  <div class="node-copy">Route to Level 2 path</div>
+                </div>
+              </div>
+            </button>
+
+            <button class="node" style="left: 640px; top: 745px;" data-id="split-level3">
+              <div class="diamond">
+                <div class="diamond-inner">
+                  <div class="node-type"><span class="node-icon">◇</span>Split</div>
+                  <div class="node-title">Loyalty Level = 3?</div>
+                  <div class="node-copy">Route to Level 3 path</div>
+                </div>
+              </div>
+            </button>
+
+            <button class="node" style="left: 780px; top: 1065px;" data-id="split-level4">
+              <div class="diamond">
+                <div class="diamond-inner">
+                  <div class="node-type"><span class="node-icon">◇</span>Split</div>
+                  <div class="node-title">Loyalty Level = 4?</div>
+                  <div class="node-copy">Route to Level 4 path</div>
+                </div>
+              </div>
+            </button>
+
+            <!-- level 1 -->
+            <button class="node" style="left: 620px; top: 190px;" data-id="l1-email1">
+              <div class="card email">
+                <div class="node-type"><span class="node-icon">✉</span>Send email</div>
+                <h3 class="node-title">L1 BDay Email #1</h3>
+                <p class="node-copy">Happy Birthday gift email.</p>
+              </div>
+            </button>
+
+            <button class="node" style="left: 950px; top: 165px;" data-id="l1-split1">
+              <div class="diamond">
+                <div class="diamond-inner">
+                  <div class="node-type"><span class="node-icon">◇</span>Split</div>
+                  <div class="node-title">Redeemed Birthday Reward?</div>
+                  <div class="node-copy">Equals true</div>
+                </div>
+              </div>
+            </button>
+
+            <button class="node" style="left: 1215px; top: 190px;" data-id="l1-email2">
+              <div class="card email">
+                <div class="node-type"><span class="node-icon">✉</span>Send email</div>
+                <h3 class="node-title">L1 BDay Email #2</h3>
+                <p class="node-copy">Reminder to redeem birthday gift.</p>
+              </div>
+            </button>
+
+            <button class="node" style="left: 1475px; top: 165px;" data-id="l1-split2">
+              <div class="diamond">
+                <div class="diamond-inner">
+                  <div class="node-type"><span class="node-icon">◇</span>Split</div>
+                  <div class="node-title">Redeemed Birthday Reward?</div>
+                  <div class="node-copy">Final check</div>
+                </div>
+              </div>
+            </button>
+
+            <button class="node" style="left: 1740px; top: 190px;" data-id="l1-email3">
+              <div class="card email">
+                <div class="node-type"><span class="node-icon">✉</span>Send email</div>
+                <h3 class="node-title">L1 BDay Email #3</h3>
+                <p class="node-copy">Last chance to redeem birthday gift.</p>
+              </div>
+            </button>
+
+            <!-- level 2 -->
+            <button class="node" style="left: 760px; top: 450px;" data-id="l2-email1">
+              <div class="card email">
+                <div class="node-type"><span class="node-icon">✉</span>Send email</div>
+                <h3 class="node-title">L2 BDay Email #1</h3>
+                <p class="node-copy">Happy Birthday gift email.</p>
+              </div>
+            </button>
+
+            <button class="node" style="left: 1090px; top: 425px;" data-id="l2-split1">
+              <div class="diamond">
+                <div class="diamond-inner">
+                  <div class="node-type"><span class="node-icon">◇</span>Split</div>
+                  <div class="node-title">Redeemed Birthday Reward?</div>
+                  <div class="node-copy">Equals true</div>
+                </div>
+              </div>
+            </button>
+
+            <button class="node" style="left: 1355px; top: 450px;" data-id="l2-email2">
+              <div class="card email">
+                <div class="node-type"><span class="node-icon">✉</span>Send email</div>
+                <h3 class="node-title">L2 BDay Email #2</h3>
+                <p class="node-copy">Reminder to redeem birthday gift.</p>
+              </div>
+            </button>
+
+            <button class="node" style="left: 1615px; top: 425px;" data-id="l2-split2">
+              <div class="diamond">
+                <div class="diamond-inner">
+                  <div class="node-type"><span class="node-icon">◇</span>Split</div>
+                  <div class="node-title">Redeemed Birthday Reward?</div>
+                  <div class="node-copy">Final check</div>
+                </div>
+              </div>
+            </button>
+
+            <button class="node" style="left: 1880px; top: 450px;" data-id="l2-email3">
+              <div class="card email">
+                <div class="node-type"><span class="node-icon">✉</span>Send email</div>
+                <h3 class="node-title">L2 BDay Email #3</h3>
+                <p class="node-copy">Last chance to redeem birthday gift.</p>
+              </div>
+            </button>
+
+            <!-- level 3 -->
+            <button class="node" style="left: 900px; top: 770px;" data-id="l3-email1">
+              <div class="card email">
+                <div class="node-type"><span class="node-icon">✉</span>Send email</div>
+                <h3 class="node-title">L3 BDay Email #1</h3>
+                <p class="node-copy">Happy Birthday gift email.</p>
+              </div>
+            </button>
+
+            <button class="node" style="left: 1230px; top: 745px;" data-id="l3-split1">
+              <div class="diamond">
+                <div class="diamond-inner">
+                  <div class="node-type"><span class="node-icon">◇</span>Split</div>
+                  <div class="node-title">Redeemed Birthday Reward?</div>
+                  <div class="node-copy">Equals true</div>
+                </div>
+              </div>
+            </button>
+
+            <button class="node" style="left: 1495px; top: 770px;" data-id="l3-email2">
+              <div class="card email">
+                <div class="node-type"><span class="node-icon">✉</span>Send email</div>
+                <h3 class="node-title">L3 BDay Email #2</h3>
+                <p class="node-copy">Reminder to redeem birthday gift.</p>
+              </div>
+            </button>
+
+            <button class="node" style="left: 1755px; top: 745px;" data-id="l3-split2">
+              <div class="diamond">
+                <div class="diamond-inner">
+                  <div class="node-type"><span class="node-icon">◇</span>Split</div>
+                  <div class="node-title">Redeemed Birthday Reward?</div>
+                  <div class="node-copy">Final check</div>
+                </div>
+              </div>
+            </button>
+
+            <button class="node" style="left: 2020px; top: 770px;" data-id="l3-email3">
+              <div class="card email">
+                <div class="node-type"><span class="node-icon">✉</span>Send email</div>
+                <h3 class="node-title">L3 BDay Email #3</h3>
+                <p class="node-copy">Last chance to redeem birthday gift.</p>
+              </div>
+            </button>
+
+            <!-- level 4 -->
+            <button class="node" style="left: 1040px; top: 1090px;" data-id="l4-email1">
+              <div class="card email">
+                <div class="node-type"><span class="node-icon">✉</span>Send email</div>
+                <h3 class="node-title">L4 BDay Email #1</h3>
+                <p class="node-copy">Happy Birthday gift email.</p>
+              </div>
+            </button>
+
+            <button class="node" style="left: 1370px; top: 1065px;" data-id="l4-split1">
+              <div class="diamond">
+                <div class="diamond-inner">
+                  <div class="node-type"><span class="node-icon">◇</span>Split</div>
+                  <div class="node-title">Redeemed Birthday Reward?</div>
+                  <div class="node-copy">Equals true</div>
+                </div>
+              </div>
+            </button>
+
+            <button class="node" style="left: 1635px; top: 1090px;" data-id="l4-email2">
+              <div class="card email">
+                <div class="node-type"><span class="node-icon">✉</span>Send email</div>
+                <h3 class="node-title">L4 BDay Email #2</h3>
+                <p class="node-copy">Reminder to redeem birthday gift.</p>
+              </div>
+            </button>
+
+            <button class="node" style="left: 1890px; top: 1065px;" data-id="l4-split2">
+              <div class="diamond">
+                <div class="diamond-inner">
+                  <div class="node-type"><span class="node-icon">◇</span>Split</div>
+                  <div class="node-title">Redeemed Birthday Reward?</div>
+                  <div class="node-copy">Final check</div>
+                </div>
+              </div>
+            </button>
+
+            <button class="node" style="left: 2155px; top: 1090px;" data-id="l4-email3">
+              <div class="card email">
+                <div class="node-type"><span class="node-icon">✉</span>Send email</div>
+                <h3 class="node-title">L4 BDay Email #3</h3>
+                <p class="node-copy">Last chance to redeem birthday gift.</p>
+              </div>
+            </button>
+
+            <!-- finish -->
+            <button class="node" style="left: 1600px; top: 640px;" data-id="finish-birthday">
+              <div class="card finish">
+                <div>
+                  <div class="node-type">Finish</div>
+                  <div class="node-title">Birthday flow complete</div>
+                </div>
+              </div>
+            </button>
+          </div>
+        </section>
+      </div>
+    </div>
+  </div>
+
+  <div class="overlay" id="overlay" aria-hidden="true">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+      <div class="modal-header">
+        <div>
+          <div class="modal-kicker" id="modalEyebrow">Node details</div>
+          <h2 class="modal-title" id="modalTitle">Title</h2>
+        </div>
+        <button class="close-btn" id="closeBtn" aria-label="Close">×</button>
+      </div>
+
+      <div class="modal-body">
+        <p id="modalDescription"></p>
+        <div class="meta-grid">
+          <div class="meta-card">
+            <h4>Section</h4>
+            <p id="modalSection"></p>
+          </div>
+          <div class="meta-card">
+            <h4>Flow Logic</h4>
+            <p id="modalLogic"></p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const tokenData = {
+      "trigger-birthday": {
+        eyebrow: "Birthday series",
+        title: "Trigger — Profile Birthday Today",
+        description: "Entry point for the birthday automation when the customer’s birthday trigger condition is met.",
+        section: "Entry",
+        logic: "The profile enters here before routing by loyalty level."
+      },
+
+      "split-level1": {
+        eyebrow: "Routing",
+        title: "Conditional Split — Loyalty Level = 1?",
+        description: "Checks whether the customer belongs to Level 1 and should enter the Level 1 birthday path.",
+        section: "Routing",
+        logic: "Yes routes into Level 1 birthday messaging. No continues to the next loyalty-level split."
+      },
+      "split-level2": {
+        eyebrow: "Routing",
+        title: "Conditional Split — Loyalty Level = 2?",
+        description: "Checks whether the customer belongs to Level 2 and should enter the Level 2 birthday path.",
+        section: "Routing",
+        logic: "Yes routes into Level 2 birthday messaging. No continues to the next loyalty-level split."
+      },
+      "split-level3": {
+        eyebrow: "Routing",
+        title: "Conditional Split — Loyalty Level = 3?",
+        description: "Checks whether the customer belongs to Level 3 and should enter the Level 3 birthday path.",
+        section: "Routing",
+        logic: "Yes routes into Level 3 birthday messaging. No continues to the final loyalty-level split."
+      },
+      "split-level4": {
+        eyebrow: "Routing",
+        title: "Conditional Split — Loyalty Level = 4?",
+        description: "Checks whether the customer belongs to Level 4 and should enter the Level 4 birthday path.",
+        section: "Routing",
+        logic: "Yes routes into Level 4 birthday messaging."
+      },
+
+      "l1-email1": {
+        eyebrow: "Level 1 birthday path",
+        title: "L1 BDay Email #1",
+        description: "Initial birthday email for Level 1 customers, delivering the birthday gift communication.",
+        section: "Level 1",
+        logic: "First send in the Level 1 birthday sequence."
+      },
+      "l1-split1": {
+        eyebrow: "Level 1 birthday path",
+        title: "Conditional Split — Redeemed Birthday Reward?",
+        description: "Checks whether the birthday reward has been redeemed after the initial Level 1 birthday email.",
+        section: "Level 1",
+        logic: "Yes exits early. No continues to the reminder email."
+      },
+      "l1-email2": {
+        eyebrow: "Level 1 birthday path",
+        title: "L1 BDay Email #2",
+        description: "Reminder email for Level 1 customers who have not redeemed the birthday gift yet.",
+        section: "Level 1",
+        logic: "Second send focused on reward redemption."
+      },
+      "l1-split2": {
+        eyebrow: "Level 1 birthday path",
+        title: "Conditional Split — Redeemed Birthday Reward? Final check",
+        description: "Checks again whether the birthday reward has been redeemed after reminder messaging.",
+        section: "Level 1",
+        logic: "Yes exits. No continues to the final last-chance email."
+      },
+      "l1-email3": {
+        eyebrow: "Level 1 birthday path",
+        title: "L1 BDay Email #3",
+        description: "Final last-chance message for Level 1 customers who have not redeemed the birthday reward.",
+        section: "Level 1",
+        logic: "Creates urgency before branch completion."
+      },
+
+      "l2-email1": {
+        eyebrow: "Level 2 birthday path",
+        title: "L2 BDay Email #1",
+        description: "Initial birthday email for Level 2 customers, delivering the birthday gift communication.",
+        section: "Level 2",
+        logic: "First send in the Level 2 birthday sequence."
+      },
+      "l2-split1": {
+        eyebrow: "Level 2 birthday path",
+        title: "Conditional Split — Redeemed Birthday Reward?",
+        description: "Checks whether the birthday reward has been redeemed after the initial Level 2 birthday email.",
+        section: "Level 2",
+        logic: "Yes exits early. No continues to the reminder email."
+      },
+      "l2-email2": {
+        eyebrow: "Level 2 birthday path",
+        title: "L2 BDay Email #2",
+        description: "Reminder email for Level 2 customers who have not redeemed the birthday gift yet.",
+        section: "Level 2",
+        logic: "Second send focused on reward redemption."
+      },
+      "l2-split2": {
+        eyebrow: "Level 2 birthday path",
+        title: "Conditional Split — Redeemed Birthday Reward? Final check",
+        description: "Checks again whether the birthday reward has been redeemed after reminder messaging.",
+        section: "Level 2",
+        logic: "Yes exits. No continues to the final last-chance email."
+      },
+      "l2-email3": {
+        eyebrow: "Level 2 birthday path",
+        title: "L2 BDay Email #3",
+        description: "Final last-chance message for Level 2 customers who have not redeemed the birthday reward.",
+        section: "Level 2",
+        logic: "Creates urgency before branch completion."
+      },
+
+      "l3-email1": {
+        eyebrow: "Level 3 birthday path",
+        title: "L3 BDay Email #1",
+        description: "Initial birthday email for Level 3 customers, delivering the birthday gift communication.",
+        section: "Level 3",
+        logic: "First send in the Level 3 birthday sequence."
+      },
+      "l3-split1": {
+        eyebrow: "Level 3 birthday path",
+        title: "Conditional Split — Redeemed Birthday Reward?",
+        description: "Checks whether the birthday reward has been redeemed after the initial Level 3 birthday email.",
+        section: "Level 3",
+        logic: "Yes exits early. No continues to the reminder email."
+      },
+      "l3-email2": {
+        eyebrow: "Level 3 birthday path",
+        title: "L3 BDay Email #2",
+        description: "Reminder email for Level 3 customers who have not redeemed the birthday gift yet.",
+        section: "Level 3",
+        logic: "Second send focused on reward redemption."
+      },
+      "l3-split2": {
+        eyebrow: "Level 3 birthday path",
+        title: "Conditional Split — Redeemed Birthday Reward? Final check",
+        description: "Checks again whether the birthday reward has been redeemed after reminder messaging.",
+        section: "Level 3",
+        logic: "Yes exits. No continues to the final last-chance email."
+      },
+      "l3-email3": {
+        eyebrow: "Level 3 birthday path",
+        title: "L3 BDay Email #3",
+        description: "Final last-chance message for Level 3 customers who have not redeemed the birthday reward.",
+        section: "Level 3",
+        logic: "Creates urgency before branch completion."
+      },
+
+      "l4-email1": {
+        eyebrow: "Level 4 birthday path",
+        title: "L4 BDay Email #1",
+        description: "Initial birthday email for Level 4 customers, delivering the birthday gift communication.",
+        section: "Level 4",
+        logic: "First send in the Level 4 birthday sequence."
+      },
+      "l4-split1": {
+        eyebrow: "Level 4 birthday path",
+        title: "Conditional Split — Redeemed Birthday Reward?",
+        description: "Checks whether the birthday reward has been redeemed after the initial Level 4 birthday email.",
+        section: "Level 4",
+        logic: "Yes exits early. No continues to the reminder email."
+      },
+      "l4-email2": {
+        eyebrow: "Level 4 birthday path",
+        title: "L4 BDay Email #2",
+        description: "Reminder email for Level 4 customers who have not redeemed the birthday gift yet.",
+        section: "Level 4",
+        logic: "Second send focused on reward redemption."
+      },
+      "l4-split2": {
+        eyebrow: "Level 4 birthday path",
+        title: "Conditional Split — Redeemed Birthday Reward? Final check",
+        description: "Checks again whether the birthday reward has been redeemed after reminder messaging.",
+        section: "Level 4",
+        logic: "Yes exits. No continues to the final last-chance email."
+      },
+      "l4-email3": {
+        eyebrow: "Level 4 birthday path",
+        title: "L4 BDay Email #3",
+        description: "Final last-chance message for Level 4 customers who have not redeemed the birthday reward.",
+        section: "Level 4",
+        logic: "Creates urgency before branch completion."
+      },
+
+      "finish-birthday": {
+        eyebrow: "Birthday series",
+        title: "Finish — Birthday flow complete",
+        description: "End state for all birthday branches.",
+        section: "Completion",
+        logic: "Customers exit here after redeeming or completing the full reminder path."
+      }
+    };
+
+    const overlay = document.getElementById("overlay");
+    const closeBtn = document.getElementById("closeBtn");
+    const modalEyebrow = document.getElementById("modalEyebrow");
+    const modalTitle = document.getElementById("modalTitle");
+    const modalDescription = document.getElementById("modalDescription");
+    const modalSection = document.getElementById("modalSection");
+    const modalLogic = document.getElementById("modalLogic");
+    const nodes = document.querySelectorAll(".node");
+
+    function openModal(id, node) {
+      const data = tokenData[id];
+      if (!data) return;
+
+      nodes.forEach(n => n.classList.remove("active"));
+      node.classList.add("active");
+
+      modalEyebrow.textContent = data.eyebrow;
+      modalTitle.textContent = data.title;
+      modalDescription.textContent = data.description;
+      modalSection.textContent = data.section;
+      modalLogic.textContent = data.logic;
+
+      overlay.classList.add("open");
+      overlay.setAttribute("aria-hidden", "false");
+    }
+
+    function closeModal() {
+      overlay.classList.remove("open");
+      overlay.setAttribute("aria-hidden", "true");
+      nodes.forEach(n => n.classList.remove("active"));
+    }
+
+    nodes.forEach(node => {
+      node.addEventListener("click", (e) => {
+        e.stopPropagation();
+        openModal(node.dataset.id, node);
+      });
+    });
+
+    closeBtn.addEventListener("click", closeModal);
+    overlay.addEventListener("click", (e) => {
+      if (e.target === overlay) closeModal();
+    });
+
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape") closeModal();
+    });
+  </script>
+</body>
+</html>
