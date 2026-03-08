@@ -835,12 +835,14 @@
       el("prog-desc").textContent  = p.description || "";
       el("prog-meta").textContent  = `${phaseLabel(p.phase)} • ${p.status || "Draft"}`;
 
-      const previewPath = getProgramPreviewPath(p);
-      const frame = el("prog-html");
-      if(previewPath){
-        frame.src = previewPath;
-      }else{
-        frame.removeAttribute("src");
+     const frame = el("prog-html");
+
+if(p.programHtml){
+  frame.src = p.programHtml;
+}else if(p.programScreenshot){
+  frame.src = p.programScreenshot;
+}else{
+  frame.removeAttribute("src");
       }
 
       const openInNewTabBtn = el("open-program-new-tab");
