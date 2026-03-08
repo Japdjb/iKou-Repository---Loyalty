@@ -1,0 +1,695 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Adhoc Rewards</title>
+  <style>
+    :root {
+      --bg: #FFF5ED;
+      --surface: #fffaf6;
+      --text: #0A0D0A;
+      --muted: #543312;
+      --line: #543312;
+
+      --lavender: #E8DEF5;
+      --dark-olive: #383317;
+      --light-blue: #CFF0FF;
+      --deep-burgundy: #570A05;
+      --dark-brown: #331700;
+      --pale-yellow: #EDE8BA;
+      --chocolate: #543312;
+      --dusty-rose: #DBA6A1;
+
+      --accent-pink: #ff62c7;
+      --accent-pink-soft: #ffe2f4;
+      --accent-orange: #ff5a1f;
+      --accent-orange-soft: #fff1e8;
+
+      --shadow-soft: 0 12px 30px rgba(56, 51, 23, 0.08);
+      --shadow-strong: 0 24px 60px rgba(56, 51, 23, 0.18);
+    }
+
+    * { box-sizing: border-box; }
+
+    html, body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: Inter, Arial, Helvetica, sans-serif;
+    }
+
+    body {
+      min-width: 1520px;
+    }
+
+    .page {
+      padding: 42px 40px 60px;
+      overflow-x: auto;
+    }
+
+    .shell {
+      max-width: 1620px;
+      margin: 0 auto;
+    }
+
+    .brand {
+      font-family: "Times New Roman", Georgia, serif;
+      font-size: 24px;
+      letter-spacing: 0.08em;
+      color: var(--dark-olive);
+      margin-bottom: 18px;
+    }
+
+    .hero {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 24px;
+      margin-bottom: 28px;
+    }
+
+    .hero h1 {
+      margin: 0;
+      font-family: "Times New Roman", Georgia, serif;
+      font-size: 60px;
+      line-height: 0.98;
+      font-weight: 600;
+      color: var(--dark-brown);
+    }
+
+    .hero p {
+      margin: 14px 0 0;
+      max-width: 960px;
+      font-size: 20px;
+      line-height: 1.5;
+      color: var(--chocolate);
+    }
+
+    .legend {
+      display: flex;
+      gap: 14px;
+      align-items: center;
+      flex-wrap: wrap;
+      background: rgba(255,255,255,0.55);
+      border: 1px solid rgba(84, 51, 18, 0.12);
+      border-radius: 999px;
+      padding: 14px 18px;
+      box-shadow: var(--shadow-soft);
+      margin-top: 8px;
+    }
+
+    .legend-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 14px;
+      color: var(--dark-olive);
+      font-weight: 600;
+      white-space: nowrap;
+    }
+
+    .legend-swatch {
+      width: 16px;
+      height: 16px;
+      border-radius: 5px;
+      border: 1.5px solid rgba(56, 51, 23, 0.28);
+      flex: 0 0 auto;
+    }
+
+    .sw-campaign { background: var(--accent-pink-soft); border-color: rgba(255,98,199,0.48); }
+    .sw-content { background: var(--accent-orange-soft); border-color: rgba(255,90,31,0.55); }
+
+    .board {
+      position: relative;
+      width: 1500px;
+      min-height: 860px;
+      background:
+        radial-gradient(circle at top right, rgba(232,222,245,0.25), transparent 24%),
+        radial-gradient(circle at bottom left, rgba(207,240,255,0.22), transparent 22%),
+        var(--surface);
+      border: 1px solid rgba(84, 51, 18, 0.08);
+      border-radius: 32px;
+      box-shadow: var(--shadow-soft);
+      padding: 34px 34px 50px;
+      overflow: hidden;
+    }
+
+    .board::before,
+    .board::after {
+      content: "";
+      position: absolute;
+      pointer-events: none;
+      border: 1px solid rgba(219,166,161,0.28);
+      border-radius: 999px;
+    }
+
+    .board::before {
+      width: 260px;
+      height: 260px;
+      top: -120px;
+      right: -80px;
+    }
+
+    .board::after {
+      width: 220px;
+      height: 220px;
+      bottom: -90px;
+      left: -80px;
+    }
+
+    .section {
+      position: relative;
+      border-radius: 26px;
+      padding: 28px 24px 36px;
+      background: rgba(255,255,255,0.45);
+      border: 1px solid rgba(84, 51, 18, 0.07);
+      min-height: 710px;
+    }
+
+    .section-header {
+      margin-bottom: 24px;
+    }
+
+    .section-kicker {
+      font-size: 12px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--deep-burgundy);
+      font-weight: 700;
+      margin-bottom: 10px;
+    }
+
+    .section-title {
+      margin: 0;
+      font-family: "Times New Roman", Georgia, serif;
+      font-size: 34px;
+      line-height: 1.1;
+      color: var(--dark-brown);
+      font-weight: 600;
+    }
+
+    .section-subtitle {
+      margin: 10px 0 0;
+      color: var(--chocolate);
+      font-size: 16px;
+      line-height: 1.55;
+      max-width: 1060px;
+    }
+
+    .flow {
+      position: relative;
+      min-height: 500px;
+      padding-top: 10px;
+    }
+
+    svg.connector-layer {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      overflow: visible;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .node {
+      position: absolute;
+      z-index: 2;
+      border: 0;
+      padding: 0;
+      background: transparent;
+      cursor: pointer;
+      text-align: left;
+      transition: transform 0.18s ease, box-shadow 0.18s ease, filter 0.18s ease;
+      border-radius: 24px;
+    }
+
+    .node:hover {
+      transform: translateY(-3px);
+      filter: brightness(1.01);
+    }
+
+    .node.active {
+      box-shadow: 0 0 0 4px rgba(87,10,5,0.09), 0 0 0 9px rgba(232,222,245,0.55);
+      transform: translateY(-2px);
+    }
+
+    .card {
+      width: 310px;
+      min-height: 180px;
+      padding: 22px 22px 20px;
+      border-radius: 24px;
+      box-shadow: var(--shadow-soft);
+      border: 1.5px solid rgba(84, 51, 18, 0.14);
+      background: white;
+    }
+
+    .card.campaign {
+      background: linear-gradient(180deg, rgba(255,226,244,0.96), rgba(255,245,237,0.96));
+      border: 2px solid rgba(255,98,199,0.58);
+    }
+
+    .card.content {
+      background: linear-gradient(180deg, rgba(255,241,232,0.98), rgba(255,245,237,0.96));
+      border: 2px solid rgba(255,90,31,0.70);
+    }
+
+    .node-type {
+      font-size: 12px;
+      letter-spacing: 0.10em;
+      text-transform: uppercase;
+      font-weight: 700;
+      color: var(--deep-burgundy);
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .node-icon {
+      width: 22px;
+      height: 22px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 999px;
+      background: rgba(56,51,23,0.08);
+      color: var(--dark-olive);
+      font-size: 13px;
+      flex: 0 0 auto;
+    }
+
+    .node-title {
+      font-size: 20px;
+      line-height: 1.2;
+      font-weight: 700;
+      color: var(--text);
+      margin: 0 0 8px;
+    }
+
+    .node-copy {
+      font-size: 15px;
+      line-height: 1.5;
+      color: var(--chocolate);
+      margin: 0;
+    }
+
+    .content-stack {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      margin-top: 16px;
+    }
+
+    .mini-block {
+      border: 2px solid rgba(255,90,31,0.78);
+      border-radius: 16px;
+      padding: 14px 14px 12px;
+      background: rgba(255,255,255,0.78);
+    }
+
+    .mini-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .mini-line {
+      display: block;
+      height: 3px;
+      border-radius: 999px;
+      background: rgba(255,90,31,0.92);
+      margin-bottom: 10px;
+    }
+
+    .mini-line.short { width: 68%; }
+    .mini-line.tiny { width: 18%; margin-bottom: 0; }
+
+    .flow-label {
+      position: absolute;
+      top: 182px;
+      z-index: 1;
+      font-size: 13px;
+      color: var(--chocolate);
+      background: rgba(255,245,237,0.9);
+      padding: 4px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(84,51,18,0.08);
+    }
+
+    .notes {
+      margin-top: 30px;
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .note-card {
+      background: rgba(255,255,255,0.78);
+      border: 1px solid rgba(84,51,18,0.08);
+      border-radius: 18px;
+      padding: 18px;
+      box-shadow: var(--shadow-soft);
+    }
+
+    .note-card h4 {
+      margin: 0 0 8px;
+      font-size: 12px;
+      letter-spacing: 0.10em;
+      text-transform: uppercase;
+      color: var(--deep-burgundy);
+    }
+
+    .note-card p {
+      margin: 0;
+      font-size: 14px;
+      line-height: 1.6;
+      color: var(--chocolate);
+    }
+
+    .overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(10, 13, 10, 0.38);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 26px;
+      z-index: 30;
+      backdrop-filter: blur(2px);
+    }
+
+    .overlay.open { display: flex; }
+
+    .modal {
+      width: min(760px, 100%);
+      background: rgba(255,250,246,0.98);
+      border: 1px solid rgba(84,51,18,0.12);
+      border-radius: 28px;
+      box-shadow: var(--shadow-strong);
+      overflow: hidden;
+    }
+
+    .modal-header {
+      padding: 24px 26px 18px;
+      border-bottom: 1px solid rgba(84,51,18,0.08);
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 20px;
+    }
+
+    .modal-kicker {
+      font-size: 11px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--deep-burgundy);
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    .modal-title {
+      margin: 0;
+      font-family: "Times New Roman", Georgia, serif;
+      font-size: 34px;
+      line-height: 1.05;
+      color: var(--dark-brown);
+      font-weight: 600;
+    }
+
+    .close-btn {
+      width: 42px;
+      height: 42px;
+      border-radius: 999px;
+      border: 0;
+      cursor: pointer;
+      background: rgba(84,51,18,0.07);
+      color: var(--dark-brown);
+      font-size: 22px;
+      line-height: 1;
+      flex: 0 0 auto;
+    }
+
+    .modal-body {
+      padding: 24px 26px 28px;
+    }
+
+    .modal-body p {
+      margin: 0 0 18px;
+      font-size: 16px;
+      line-height: 1.65;
+      color: var(--chocolate);
+    }
+
+    .meta-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+      margin-top: 18px;
+    }
+
+    .meta-card {
+      background: rgba(255,255,255,0.78);
+      border: 1px solid rgba(84,51,18,0.08);
+      border-radius: 18px;
+      padding: 16px;
+    }
+
+    .meta-card h4 {
+      margin: 0 0 8px;
+      font-size: 12px;
+      letter-spacing: 0.10em;
+      text-transform: uppercase;
+      color: var(--deep-burgundy);
+    }
+
+    .meta-card p {
+      margin: 0;
+      font-size: 14px;
+      line-height: 1.55;
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <div class="shell">
+      <div class="brand">IKOU</div>
+
+      <div class="hero">
+        <div>
+          <h1>Adhoc<br>Rewards</h1>
+          <p>
+            Campaign and content logic for bi-annual gifts, surprise-and-delight rewards, or other one-off reward activations.
+            This is a placement system inside campaigns or solus sends rather than a triggered branch automation.
+          </p>
+        </div>
+
+        <div class="legend">
+          <span class="legend-item"><span class="legend-swatch sw-campaign"></span>Campaign Placement</span>
+          <span class="legend-item"><span class="legend-swatch sw-content"></span>Dynamic Content</span>
+        </div>
+      </div>
+
+      <div class="board">
+        <section class="section">
+          <div class="section-header">
+            <div class="section-kicker">One-off reward placement</div>
+            <h2 class="section-title">Adhoc reward visibility and follow-up content</h2>
+            <p class="section-subtitle">
+              A one-off reward is first introduced in market through a campaign or solus send. Follow-up content blocks can then be used
+              to remind customers to redeem the reward and later create urgency with a final last-chance message.
+            </p>
+          </div>
+
+          <div class="flow">
+            <svg class="connector-layer" viewBox="0 0 1420 500" aria-hidden="true">
+              <defs>
+                <marker id="arrowAdhoc" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto">
+                  <path d="M0,0 L10,5 L0,10 z" fill="#543312"></path>
+                </marker>
+              </defs>
+
+              <path d="M330 205 H 585" stroke="#543312" stroke-width="2.8" fill="none" marker-end="url(#arrowAdhoc)"/>
+              <path d="M900 205 H 1145" stroke="#543312" stroke-width="2.8" fill="none" marker-end="url(#arrowAdhoc)"/>
+            </svg>
+
+            <div class="flow-label" style="left: 450px;">Initial reward prompt</div>
+            <div class="flow-label" style="left: 1010px;">Final urgency prompt</div>
+
+            <button class="node" style="left: 30px; top: 95px;" data-id="campaign-send">
+              <div class="card campaign">
+                <div class="node-type"><span class="node-icon">✦</span>One-off campaign send</div>
+                <h3 class="node-title">Adhoc Reward in Market</h3>
+                <p class="node-copy">Campaign or solus placement used to introduce the one-off reward to the customer base.</p>
+              </div>
+            </button>
+
+            <button class="node" style="left: 585px; top: 65px;" data-id="dynamic-reminder">
+              <div class="card content">
+                <div class="node-type"><span class="node-icon">≋</span>Dynamic content</div>
+                <h3 class="node-title">Redemption Reminder</h3>
+                <p class="node-copy">“Don’t forget to redeem X by X” reminder content shown after the reward is introduced.</p>
+
+                <div class="content-stack">
+                  <div class="mini-block">
+                    <div class="mini-row">
+                      <span class="mini-line short"></span>
+                      <span class="mini-line tiny"></span>
+                    </div>
+                  </div>
+                  <div class="mini-block">
+                    <div class="mini-row">
+                      <span class="mini-line short"></span>
+                      <span class="mini-line tiny"></span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </button>
+
+            <button class="node" style="left: 1145px; top: 65px;" data-id="dynamic-last-chance">
+              <div class="card content">
+                <div class="node-type"><span class="node-icon">≋</span>Dynamic content</div>
+                <h3 class="node-title">Redemption Last Chance</h3>
+                <p class="node-copy">Final urgency-led content block: “This is your last chance to redeem X.”</p>
+
+                <div class="content-stack">
+                  <div class="mini-block">
+                    <div class="mini-row">
+                      <span class="mini-line short"></span>
+                      <span class="mini-line tiny"></span>
+                    </div>
+                  </div>
+                  <div class="mini-block">
+                    <div class="mini-row">
+                      <span class="mini-line short"></span>
+                      <span class="mini-line tiny"></span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </button>
+          </div>
+
+          <div class="notes">
+            <div class="note-card">
+              <h4>Primary use case</h4>
+              <p>Used for bi-annual gifts, surprise-and-delight placements, or other non-evergreen reward activations.</p>
+            </div>
+            <div class="note-card">
+              <h4>Channel logic</h4>
+              <p>Can be executed as a dedicated solus send or inserted into broader campaign inventory as conditional content.</p>
+            </div>
+            <div class="note-card">
+              <h4>Content strategy</h4>
+              <p>Message progression should move from announcement → reminder → urgency, while keeping the redemption CTA clear.</p>
+            </div>
+          </div>
+        </section>
+      </div>
+    </div>
+  </div>
+
+  <div class="overlay" id="overlay" aria-hidden="true">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+      <div class="modal-header">
+        <div>
+          <div class="modal-kicker" id="modalEyebrow">Node details</div>
+          <h2 class="modal-title" id="modalTitle">Title</h2>
+        </div>
+        <button class="close-btn" id="closeBtn" aria-label="Close">×</button>
+      </div>
+
+      <div class="modal-body">
+        <p id="modalDescription"></p>
+        <div class="meta-grid">
+          <div class="meta-card">
+            <h4>Section</h4>
+            <p id="modalSection"></p>
+          </div>
+          <div class="meta-card">
+            <h4>Flow Logic</h4>
+            <p id="modalLogic"></p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const tokenData = {
+      "campaign-send": {
+        eyebrow: "Adhoc rewards",
+        title: "One-off Campaign Send",
+        description: "Initial campaign or solus placement that introduces the one-off reward to customers and establishes reward availability in market.",
+        section: "Launch placement",
+        logic: "This is the first visibility layer for the reward."
+      },
+      "dynamic-reminder": {
+        eyebrow: "Adhoc rewards",
+        title: "Dynamic Content — Redemption Reminder",
+        description: "Follow-up dynamic content used to remind customers that the reward is still available and should be redeemed before the stated deadline.",
+        section: "Reminder stage",
+        logic: "This block follows the initial reward introduction and reinforces redemption behavior."
+      },
+      "dynamic-last-chance": {
+        eyebrow: "Adhoc rewards",
+        title: "Dynamic Content — Redemption Last Chance",
+        description: "Final urgency block used to communicate that the reward is nearing expiry and this is the last opportunity to redeem it.",
+        section: "Urgency stage",
+        logic: "This content is intended as the final reminder before reward expiration."
+      }
+    };
+
+    const overlay = document.getElementById("overlay");
+    const closeBtn = document.getElementById("closeBtn");
+    const modalEyebrow = document.getElementById("modalEyebrow");
+    const modalTitle = document.getElementById("modalTitle");
+    const modalDescription = document.getElementById("modalDescription");
+    const modalSection = document.getElementById("modalSection");
+    const modalLogic = document.getElementById("modalLogic");
+    const nodes = document.querySelectorAll(".node");
+
+    function openModal(id, node) {
+      const data = tokenData[id];
+      if (!data) return;
+
+      nodes.forEach(n => n.classList.remove("active"));
+      node.classList.add("active");
+
+      modalEyebrow.textContent = data.eyebrow;
+      modalTitle.textContent = data.title;
+      modalDescription.textContent = data.description;
+      modalSection.textContent = data.section;
+      modalLogic.textContent = data.logic;
+
+      overlay.classList.add("open");
+      overlay.setAttribute("aria-hidden", "false");
+    }
+
+    function closeModal() {
+      overlay.classList.remove("open");
+      overlay.setAttribute("aria-hidden", "true");
+      nodes.forEach(n => n.classList.remove("active"));
+    }
+
+    nodes.forEach(node => {
+      node.addEventListener("click", (e) => {
+        e.stopPropagation();
+        openModal(node.dataset.id, node);
+      });
+    });
+
+    closeBtn.addEventListener("click", closeModal);
+    overlay.addEventListener("click", (e) => {
+      if (e.target === overlay) closeModal();
+    });
+
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape") closeModal();
+    });
+  </script>
+</body>
+</html>
