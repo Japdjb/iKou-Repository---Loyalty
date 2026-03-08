@@ -1,705 +1,806 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>IKOU Loyalty Comms Directory</title>
-<meta name="description" content="Self-hosted directory of IKOU Loyalty programs, rationale, and email previews (exec + deep-dive)." />
-
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Cormorant+Garamond:wght@500;600;700&display=swap" rel="stylesheet">
-
-<style>
-  :root{
-    --bg:#FFF5ED;
-    --panel:#fffaf6;
-    --panel-2:#ffffff;
-    --muted:#6f6258;
-    --text:#0A0D0A;
-
-    --lavender:#E8DEF5;
-    --dark-olive:#383317;
-    --light-blue:#CFF0FF;
-    --cream:#FFF5ED;
-    --deep-burgundy:#570A05;
-    --dark-brown:#331700;
-    --pale-yellow:#EDE8BA;
-    --charcoal:#0A0D0A;
-    --chocolate:#543312;
-    --dusty-rose:#DBA6A1;
-
-    --brand:var(--dark-olive);
-    --brand-2:var(--chocolate);
-    --stroke:rgba(84,51,18,.12);
-    --stroke-strong:rgba(84,51,18,.18);
-    --mono: ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Courier New",monospace;
-
-    --elev: 0 14px 40px rgba(56,51,23,.08);
-    --elev-strong: 0 24px 70px rgba(56,51,23,.16);
-    --radius-lg: 24px;
-    --radius-md: 18px;
-    --radius-sm: 12px;
-  }
-
-  *{box-sizing:border-box}
-
-  html,body{
-    margin:0;
-    padding:0;
-    color:var(--text);
-    font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
-    background:
-      radial-gradient(circle at top right, rgba(232,222,245,.45), transparent 20%),
-      radial-gradient(circle at bottom left, rgba(207,240,255,.38), transparent 18%),
-      linear-gradient(180deg,#fffaf6 0%, #FFF5ED 42%, #fffaf6 100%);
-  }
-
-  body{min-height:100vh}
-
-  .container{
-    max-width:1280px;
-    margin:0 auto;
-    padding:28px 24px 36px;
-  }
-
-  header{
-    display:flex;
-    justify-content:space-between;
-    align-items:flex-start;
-    gap:20px;
-    margin-bottom:18px;
-  }
-
-  .brand{
-    display:flex;
-    gap:12px;
-    align-items:flex-start;
-  }
-
-  .brand .dot{
-    width:12px;
-    height:12px;
-    border-radius:50%;
-    background:var(--deep-burgundy);
-    box-shadow:0 0 0 6px rgba(219,166,161,.34);
-    margin-top:14px;
-    flex:0 0 auto;
-  }
-
-  .brand-copy{
-    display:flex;
-    flex-direction:column;
-    gap:2px;
-  }
-
-  .eyebrow{
-    font-size:11px;
-    letter-spacing:.16em;
-    text-transform:uppercase;
-    color:var(--deep-burgundy);
-    font-weight:700;
-  }
-
-  h1{
-    margin:0;
-    font-family:"Cormorant Garamond", Georgia, "Times New Roman", serif;
-    font-size:clamp(34px,4.3vw,52px);
-    line-height:.95;
-    font-weight:600;
-    color:var(--dark-brown);
-  }
-
-  .muted{color:var(--muted)}
-
-  .header-side{
-    max-width:380px;
-    padding-top:8px;
-    text-align:right;
-    color:var(--chocolate);
-    font-size:14px;
-    line-height:1.6;
-  }
-
-  .brandbar{
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    gap:16px;
-    background:linear-gradient(180deg, rgba(255,255,255,.72), rgba(255,255,255,.52));
-    border:1px solid var(--stroke);
-    border-radius:20px;
-    padding:18px 20px;
-    margin-bottom:18px;
-    box-shadow:var(--elev);
-    position:relative;
-    overflow:hidden;
-  }
-
-  .brandbar::before{
-    content:"";
-    position:absolute;
-    right:-50px;
-    top:-60px;
-    width:220px;
-    height:220px;
-    border-radius:50%;
-    border:1px solid rgba(219,166,161,.28);
-    pointer-events:none;
-  }
-
-  .brandbar::after{
-    content:"";
-    position:absolute;
-    left:-55px;
-    bottom:-70px;
-    width:180px;
-    height:180px;
-    border-radius:50%;
-    border:1px solid rgba(232,222,245,.48);
-    pointer-events:none;
-  }
-
-  .brandbar-left{
-    position:relative;
-    z-index:1;
-    display:flex;
-    flex-direction:column;
-    gap:8px;
-  }
-
-  .brandbar .tag{
-    display:inline-flex;
-    width:max-content;
-    padding:7px 12px;
-    border:1px solid rgba(87,10,5,.16);
-    border-radius:999px;
-    font-weight:600;
-    color:var(--deep-burgundy);
-    background:rgba(219,166,161,.16);
-  }
-
-  .brandbar-title{
-    font-family:"Cormorant Garamond", Georgia, serif;
-    font-size:28px;
-    line-height:1;
-    color:var(--dark-brown);
-    font-weight:600;
-  }
-
-  .brandbar-text{
-    color:var(--chocolate);
-    line-height:1.6;
-    max-width:760px;
-  }
-
-  .panel{
-    background:linear-gradient(180deg, rgba(255,255,255,.74), rgba(255,255,255,.58));
-    border:1px solid var(--stroke);
-    border-radius:22px;
-    box-shadow:var(--elev);
-    overflow:hidden;
-  }
-
-  .tabs{
-    display:flex;
-    gap:10px;
-    padding:14px 16px;
-    border-bottom:1px solid var(--stroke);
-    background:rgba(255,255,255,.5);
-  }
-
-  .tab{
-    appearance:none;
-    border:1px solid var(--stroke);
-    background:#fffdfb;
-    color:var(--dark-brown);
-    border-radius:999px;
-    padding:10px 14px;
-    font-weight:600;
-    cursor:pointer;
-    transition:.18s ease;
-  }
-
-  .tab:hover{
-    border-color:rgba(84,51,18,.24);
-    background:#fff;
-  }
-
-  .tab[aria-selected="true"]{
-    background:linear-gradient(180deg,var(--dark-olive),var(--chocolate));
-    border-color:var(--dark-olive);
-    color:#FFF5ED;
-    box-shadow:0 10px 24px rgba(56,51,23,.18);
-  }
-
-  .toolbar{
-    display:grid;
-    grid-template-columns: 1fr 220px 240px 170px;
-    gap:10px;
-    padding:16px;
-    align-items:center;
-    border-bottom:1px solid rgba(84,51,18,.08);
-  }
-
-  input[type="search"],select{
-    width:100%;
-    background:#fffdfb;
-    border:1px solid var(--stroke);
-    color:var(--text);
-    padding:13px 14px;
-    border-radius:14px;
-    outline:none;
-    font:inherit;
-  }
-
-  input[type="search"]::placeholder{color:#8b7c72}
-
-  input[type="search"]:focus,select:focus{
-    border-color:rgba(87,10,5,.28);
-    box-shadow:0 0 0 4px rgba(232,222,245,.75);
-  }
-
-  .grid{
-    display:grid;
-    grid-template-columns:repeat(auto-fill,minmax(290px,1fr));
-    gap:14px;
-    padding:16px;
-  }
-
-  .card{
-    background:linear-gradient(180deg, rgba(255,255,255,.90), rgba(255,255,255,.78));
-    border:1px solid var(--stroke);
-    border-radius:20px;
-    padding:14px;
-    display:flex;
-    flex-direction:column;
-    gap:12px;
-    box-shadow:var(--elev);
-    transition:transform .16s ease, box-shadow .16s ease, border-color .16s ease;
-  }
-
-  .card:hover{
-    transform:translateY(-2px);
-    box-shadow:0 16px 36px rgba(56,51,23,.10);
-    border-color:rgba(84,51,18,.18);
-  }
-
-  .badge{
-    display:inline-flex;
-    align-items:center;
-    gap:6px;
-    padding:5px 9px;
-    border-radius:999px;
-    border:1px solid rgba(84,51,18,.10);
-    color:var(--dark-brown);
-    background:#fffdfb;
-    font-size:12px;
-  }
-
-  .badge.orange{
-    border-color:rgba(87,10,5,.14);
-    color:var(--deep-burgundy);
-    background:rgba(219,166,161,.14);
-  }
-
-  .meta{
-    display:flex;
-    flex-wrap:wrap;
-    gap:6px;
-  }
-
-  .row{
-    display:flex;
-    gap:8px;
-    align-items:center;
-    justify-content:space-between;
-  }
-
-  .code{
-    font-family:var(--mono);
-    font-size:12px;
-    color:#5a4a3f;
-    background:rgba(255,255,255,.66);
-    border:1px dashed rgba(84,51,18,.14);
-    border-radius:10px;
-    padding:8px;
-    overflow:auto;
-  }
-
-  .actions{
-    display:flex;
-    gap:8px;
-    flex-wrap:wrap;
-  }
-
-  .btn{
-    appearance:none;
-    border:1px solid var(--stroke);
-    border-radius:12px;
-    padding:10px 13px;
-    font-weight:600;
-    cursor:pointer;
-    background:#fffdfb;
-    color:var(--dark-brown);
-    box-shadow:0 1px 0 rgba(0,0,0,.03);
-    transition:.16s ease;
-    font:inherit;
-  }
-
-  .btn:hover{
-    border-color:rgba(84,51,18,.24);
-    background:#fff;
-  }
-
-  .btn.primary{
-    background:linear-gradient(180deg,var(--dark-olive),var(--chocolate));
-    border-color:var(--dark-olive);
-    color:#FFF5ED;
-    box-shadow:0 10px 24px rgba(56,51,23,.18);
-  }
-
-  .btn.primary:hover{
-    filter:brightness(1.02);
-  }
-
-  .thumb-card{
-    width:100%;
-    height:220px;
-    border-radius:14px;
-    border:1px solid var(--stroke);
-    background:#fff;
-    display:block;
-  }
-
-  .thumb-frame{
-    width:100%;
-    height:100%;
-    border:0;
-    border-radius:14px;
-    background:#fff;
-    pointer-events:none;
-  }
-
-  .thumb-placeholder{
-    width:100%;
-    height:220px;
-    border-radius:14px;
-    border:1px solid var(--stroke);
-    background:#fff;
-    padding:14px;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    text-align:center;
-    color:#6f6258;
-  }
-
-  .thumb-hero{
-    width:100%;
-    height:72vh;
-    min-height:640px;
-    max-height:900px;
-    position:relative;
-    overflow:hidden;
-    border:1px solid var(--stroke);
-    border-radius:16px;
-    background:
-      linear-gradient(180deg, rgba(255,255,255,.58), rgba(255,255,255,.32)),
-      #fff;
-    box-shadow:var(--elev);
-  }
-
-  .program-frame{
-    position:absolute;
-    top:0;
-    left:0;
-    width:1940px;
-    height:860px;
-    border:0;
-    border-radius:16px;
-    background:#fff;
-    transform-origin:top left;
-    will-change:transform;
-  }
-
-  .footer{
-    font-size:12px;
-    padding:26px 24px;
-    text-align:center;
-    background:linear-gradient(180deg, var(--dark-olive), var(--chocolate));
-    border:1px solid rgba(56,51,23,.16);
-    border-radius:20px;
-    margin:18px 0 0;
-    color:#fff7f0;
-    box-shadow:var(--elev);
-  }
-
-  .footer-inner{
-    display:flex;
-    flex-direction:column;
-    gap:8px;
-    align-items:center;
-  }
-
-  .footer-brand{
-    display:flex;
-    align-items:center;
-    gap:8px;
-    font-weight:700;
-    color:#fff;
-  }
-
-  .overlay{
-    position:fixed;
-    inset:0;
-    display:none;
-    background:rgba(10,13,10,.55);
-    z-index:1000;
-    backdrop-filter:blur(4px);
-  }
-
-  .overlay.show{display:block}
-
-  .ov-panel{
-    position:absolute;
-    inset:26px;
-    display:flex;
-    flex-direction:column;
-    background:linear-gradient(180deg, rgba(255,250,246,.98), rgba(255,248,243,.96));
-    border:1px solid var(--stroke);
-    border-radius:24px;
-    box-shadow:var(--elev-strong);
-    overflow:hidden;
-  }
-
-  .ov-bar{
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    border-bottom:1px solid var(--stroke);
-    padding:12px 14px;
-    background:rgba(255,255,255,.55);
-    gap:16px;
-  }
-
-  .ov-title{
-    font-family:"Cormorant Garamond", Georgia, serif;
-    font-size:30px;
-    line-height:1;
-    font-weight:600;
-    color:var(--dark-brown);
-    white-space:nowrap;
-    overflow:hidden;
-    text-overflow:ellipsis;
-  }
-
-  .ov-actions{
-    display:flex;
-    gap:8px;
-    align-items:center;
-  }
-
-  .ov-content{
-    padding:16px;
-    overflow:auto;
-    height:calc(100% - 58px);
-  }
-
-  .ov-cols{
-    display:grid;
-    grid-template-columns:1fr;
-    gap:18px;
-  }
-
-  .close-x{
-    background:#fffdfb;
-    border:1px solid var(--stroke);
-    border-radius:12px;
-    color:var(--dark-brown);
-    padding:10px 12px;
-    cursor:pointer;
-    font:inherit;
-  }
-
-  #prog-desc{
-    color:var(--chocolate);
-    line-height:1.6;
-  }
-
-  #prog-doc h1, #prog-doc h2, #prog-doc h3 {
-    margin: 12px 0 8px;
-    color:var(--dark-brown);
-  }
-
-  #prog-doc h1 {
-    font-family:"Cormorant Garamond", Georgia, serif;
-    font-size: 28px;
-    line-height:1;
-  }
-
-  #prog-doc h2 {
-    font-size: 16px;
-    color:var(--deep-burgundy);
-    text-transform:uppercase;
-    letter-spacing:.08em;
-  }
-
-  #prog-doc h3 {
-    font-size: 15px;
-  }
-
-  #prog-doc p, #prog-doc li {
-    color:var(--text);
-    line-height:1.7;
-  }
-
-  #prog-doc ul { padding-left: 18px; }
-
-  #prog-doc code {
-    font-family: var(--mono);
-    font-size: 12px;
-    background:rgba(255,255,255,.78);
-    border:1px solid rgba(84,51,18,.10);
-    padding:1px 6px;
-    border-radius:6px;
-  }
-
-  iframe#email-preview-frame{
-    width:100%;
-    height:520px;
-    border:1px solid var(--stroke);
-    border-radius:16px;
-    background:#fff;
-    box-shadow:var(--elev);
-  }
-
-  @media (max-width:980px){
-    .toolbar{grid-template-columns:1fr 1fr}
-    .ov-cols{grid-template-columns:1fr}
-    .thumb-hero{
-      height:380px;
-      min-height:380px;
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Onboarding Comms – Existing Customers</title>
+  <style>
+    :root {
+      --bg: #f4eee7;
+      --panel: #f8f4ef;
+      --panel-border: #e2d6ca;
+      --text: #2f1d14;
+      --muted: #6b564b;
+      --line: #6c4b2c;
+      --shadow: 0 18px 40px rgba(58, 35, 22, 0.08);
+
+      --blue-fill: #cfe9f7;
+      --blue-stroke: #9bc9df;
+
+      --purple-fill: #ddd6fb;
+      --purple-stroke: #bcaeea;
+
+      --diamond-fill: #efe5b7;
+      --diamond-stroke: #d2bf72;
+
+      --finish-fill: #493310;
+      --finish-text: #fff7ea;
+
+      --peach-fill: #f3ddd5;
+      --peach-stroke: #d7b6a9;
+
+      --tag-bg: #fff9f2;
+      --tag-border: #e0d2c4;
     }
-    .header-side{display:none}
-    .brandbar{flex-direction:column;align-items:flex-start}
-  }
-</style>
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: Arial, Helvetica, sans-serif;
+    }
+
+    .page {
+      width: 100%;
+      padding: 18px 16px 28px;
+    }
+
+    .shell {
+      max-width: 1440px;
+      margin: 0 auto;
+    }
+
+    .header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 18px;
+      margin-bottom: 12px;
+    }
+
+    .brand {
+      font-size: 14px;
+      letter-spacing: 0.06em;
+      margin-bottom: 6px;
+      color: var(--text);
+    }
+
+    h1 {
+      margin: 0;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(34px, 4vw, 54px);
+      line-height: 0.95;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+    }
+
+    .subcopy {
+      margin-top: 12px;
+      max-width: 760px;
+      font-size: 13px;
+      line-height: 1.45;
+      color: var(--muted);
+    }
+
+    .legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+      justify-content: flex-end;
+      padding-top: 10px;
+    }
+
+    .legend-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      border: 1px solid var(--tag-border);
+      background: var(--tag-bg);
+      font-size: 11px;
+      color: var(--text);
+      white-space: nowrap;
+      box-shadow: 0 2px 8px rgba(58, 35, 22, 0.04);
+    }
+
+    .legend-swatch {
+      width: 10px;
+      height: 10px;
+      border-radius: 3px;
+      border: 1px solid rgba(0,0,0,0.08);
+      flex: 0 0 auto;
+    }
+
+    .section-card {
+      position: relative;
+      background: var(--panel);
+      border: 1px solid var(--panel-border);
+      border-radius: 22px;
+      box-shadow: var(--shadow);
+      padding: 14px 16px 18px;
+      margin-top: 14px;
+      overflow: hidden;
+    }
+
+    .section-card::after {
+      content: "";
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 86px;
+      height: 86px;
+      border-top-right-radius: 22px;
+      border-left: 1px solid rgba(201, 181, 164, 0.45);
+      border-bottom: 1px solid rgba(201, 181, 164, 0.45);
+      border-bottom-left-radius: 86px;
+      opacity: 0.65;
+      pointer-events: none;
+    }
+
+    .eyebrow {
+      font-size: 10px;
+      letter-spacing: 0.12em;
+      font-weight: 700;
+      text-transform: uppercase;
+      margin-bottom: 6px;
+      color: var(--text);
+    }
+
+    .section-title {
+      margin: 0;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(22px, 2.1vw, 36px);
+      line-height: 1.1;
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    .section-desc {
+      margin-top: 8px;
+      font-size: 12px;
+      line-height: 1.45;
+      color: var(--muted);
+      max-width: 980px;
+    }
+
+    .flow-wrap {
+      position: relative;
+      margin-top: 18px;
+      width: 100%;
+      overflow-x: auto;
+      overflow-y: hidden;
+      padding-bottom: 8px;
+    }
+
+    .flow-board {
+      position: relative;
+      min-width: 1260px;
+      width: 1260px;
+      margin: 0 auto;
+    }
+
+    .flow-board.teaser {
+      height: 170px;
+    }
+
+    .flow-board.medium {
+      height: 290px;
+    }
+
+    .flow-svg {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      overflow: visible;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .node {
+      position: absolute;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      border: 0;
+      padding: 0;
+      background: transparent;
+      z-index: 2;
+      transition: transform 0.16s ease, box-shadow 0.16s ease, filter 0.16s ease;
+    }
+
+    .node:hover {
+      transform: translateY(-3px);
+      filter: brightness(1.02);
+    }
+
+    .node.active {
+      transform: translateY(-3px);
+      box-shadow: 0 0 0 5px rgba(73, 51, 16, 0.08);
+      border-radius: 18px;
+    }
+
+    .token {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: left;
+      padding: 10px 12px;
+      box-shadow: 0 8px 18px rgba(58, 35, 22, 0.06);
+    }
+
+    .token-copy {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      justify-content: center;
+      gap: 2px;
+    }
+
+    .token-kicker {
+      font-size: 8px;
+      line-height: 1;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      font-weight: 700;
+      color: #7a5343;
+    }
+
+    .token-title {
+      font-size: 16px;
+      line-height: 1.05;
+      font-weight: 700;
+      color: #120f0d;
+    }
+
+    .token-sub {
+      font-size: 10px;
+      line-height: 1.2;
+      color: #8b6d5d;
+    }
+
+    .token.trigger {
+      width: 132px;
+      height: 74px;
+      border-radius: 10px;
+      background: var(--blue-fill);
+      border: 1.5px solid var(--blue-stroke);
+    }
+
+    .token.email {
+      width: 146px;
+      height: 74px;
+      border-radius: 10px;
+      background: var(--purple-fill);
+      border: 1.5px solid var(--purple-stroke);
+    }
+
+    .token.dynamic {
+      width: 142px;
+      height: 74px;
+      border-radius: 14px;
+      background: #f5ede6;
+      border: 1.5px solid var(--peach-stroke);
+    }
+
+    .token.campaign {
+      width: 154px;
+      height: 80px;
+      border-radius: 14px;
+      background: var(--peach-fill);
+      border: 1.5px solid var(--peach-stroke);
+    }
+
+    .diamond {
+      width: 96px;
+      height: 96px;
+      transform: rotate(45deg);
+      border-radius: 2px;
+      background: var(--diamond-fill);
+      border: 1.5px solid var(--diamond-stroke);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 8px 18px rgba(58, 35, 22, 0.06);
+    }
+
+    .diamond-copy {
+      width: 72px;
+      transform: rotate(-45deg);
+      text-align: center;
+    }
+
+    .diamond .token-kicker {
+      text-align: center;
+      color: #8a7131;
+    }
+
+    .diamond .token-title {
+      font-size: 13px;
+      line-height: 1.05;
+      text-align: center;
+    }
+
+    .diamond .token-sub {
+      text-align: center;
+      font-size: 10px;
+    }
+
+    .finish {
+      width: 124px;
+      height: 82px;
+      border-radius: 14px;
+      background: var(--finish-fill);
+      color: var(--finish-text);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 12px;
+      box-shadow: 0 8px 18px rgba(58, 35, 22, 0.12);
+    }
+
+    .finish .token-title {
+      color: var(--finish-text);
+      font-size: 15px;
+      text-align: center;
+    }
+
+    .branch-label {
+      position: absolute;
+      font-size: 10px;
+      font-weight: 700;
+      color: #6d522d;
+      z-index: 1;
+      pointer-events: none;
+    }
+
+    .overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(33, 22, 14, 0.48);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      z-index: 20;
+    }
+
+    .overlay.open {
+      display: flex;
+    }
+
+    .modal {
+      width: min(760px, 100%);
+      background: #fffaf5;
+      border: 1px solid #eaded0;
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: 0 24px 60px rgba(20, 12, 7, 0.24);
+    }
+
+    .modal-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 18px 22px 14px;
+      border-bottom: 1px solid #eee1d4;
+    }
+
+    .modal-title-wrap {
+      min-width: 0;
+    }
+
+    .modal-eyebrow {
+      font-size: 11px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      font-weight: 700;
+      color: #8b6d5d;
+      margin-bottom: 6px;
+    }
+
+    .modal-title {
+      margin: 0;
+      font-size: 24px;
+      line-height: 1.15;
+      color: var(--text);
+    }
+
+    .close-btn {
+      flex: 0 0 auto;
+      width: 38px;
+      height: 38px;
+      border-radius: 999px;
+      border: 0;
+      background: #f1e7dd;
+      color: var(--text);
+      font-size: 22px;
+      cursor: pointer;
+    }
+
+    .modal-body {
+      padding: 22px;
+    }
+
+    .modal-body p {
+      margin: 0 0 14px;
+      font-size: 15px;
+      line-height: 1.6;
+      color: #4f3a2f;
+    }
+
+    .meta-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+      margin-top: 18px;
+    }
+
+    .meta-card {
+      background: #f7efe6;
+      border: 1px solid #eaded0;
+      border-radius: 14px;
+      padding: 14px;
+    }
+
+    .meta-card h4 {
+      margin: 0 0 6px;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: #8b6d5d;
+    }
+
+    .meta-card p {
+      margin: 0;
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    @media (max-width: 980px) {
+      .header {
+        flex-direction: column;
+      }
+
+      .legend {
+        justify-content: flex-start;
+        padding-top: 0;
+      }
+
+      .section-card {
+        padding: 14px 12px 16px;
+      }
+
+      .meta-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
 </head>
-
 <body>
-  <div class="container">
-    <header>
-      <div class="brand">
-        <span class="dot" aria-hidden="true"></span>
-        <div class="brand-copy">
-          <div class="eyebrow">IKOU Loyalty Repository</div>
-          <h1>Comms Directory</h1>
-        </div>
-      </div>
-      <div class="header-side">
-        Programs, rationale, flow assets, and email previews in one executive-ready directory.
-      </div>
-    </header>
-
-    <section class="brandbar" aria-label="IKOU Loyalty">
-      <div class="brandbar-left">
-        <span class="tag">IKOU Loyalty</span>
-        <div class="brandbar-title">Executive-ready communication system</div>
-        <div class="brandbar-text">
-          A single repository for loyalty journey logic, messaging rationale, and email previews — structured for both leadership review and detailed build reference.
-        </div>
-      </div>
-    </section>
-
-    <section class="panel" aria-labelledby="filters-heading">
-      <div class="tabs" role="tablist">
-        <button id="tab-programs" class="tab" role="tab" aria-controls="programs-view" aria-selected="true">Programs</button>
-        <button id="tab-emails" class="tab" role="tab" aria-controls="emails-view" aria-selected="false">Emails</button>
-      </div>
-
-      <h2 id="filters-heading" class="visually-hidden" style="position:absolute;left:-9999px">Filters</h2>
-
-      <div class="toolbar">
-        <label class="field">
-          <input type="search" id="q" placeholder="Search programs… e.g. Birthday, Upgrade, Spend to Maintain" aria-label="Search" />
-        </label>
-
-        <label class="field">
-          <select id="phaseFilter" aria-label="Phase filter">
-            <option value="">All phases</option>
-            <option value="01-welcome">01 — Welcome</option>
-            <option value="02-lifecycle">02 — Lifecycle</option>
-            <option value="03-tier-progression">03 — Tier progression</option>
-            <option value="04-retention-risk">04 — Retention risk</option>
-          </select>
-        </label>
-
-        <div class="field" style="display:flex;gap:8px;align-items:center;justify-content:flex-end">
-          <span class="muted" style="font-size:12px">View:</span>
-          <button id="mode-exec" class="btn primary" type="button">Executive</button>
-          <button id="mode-deep" class="btn" type="button">Deep dive</button>
+  <div class="page">
+    <div class="shell">
+      <div class="header">
+        <div>
+          <div class="brand">IKOU</div>
+          <h1>Onboarding Comms<br />Existing Customers</h1>
+          <div class="subcopy">
+            Loyalty onboarding structure for existing customers, including pre-launch teaser placement,
+            active-customer entry, and reactivated-customer entry. Hover or click any node to review
+            purpose and logic.
+          </div>
         </div>
 
-        <label class="field">
-          <select id="sort" aria-label="Sort">
-            <option value="order_asc">Journey order</option>
-            <option value="name_asc">Name A→Z</option>
-          </select>
-        </label>
+        <div class="legend" aria-label="Legend">
+          <div class="legend-pill"><span class="legend-swatch" style="background:#cfe9f7;"></span>Trigger</div>
+          <div class="legend-pill"><span class="legend-swatch" style="background:#efe5b7;"></span>Conditional Split</div>
+          <div class="legend-pill"><span class="legend-swatch" style="background:#ddd6fb;"></span>Email</div>
+          <div class="legend-pill"><span class="legend-swatch" style="background:#f3ddd5;"></span>Program Content</div>
+          <div class="legend-pill"><span class="legend-swatch" style="background:#493310;"></span>Finish</div>
+        </div>
       </div>
 
-      <div id="programs-view" class="grid" aria-live="polite"></div>
-      <div id="emails-view" class="grid" aria-live="polite" style="display:none"></div>
-    </section>
+      <!-- SECTION 1 -->
+      <section class="section-card">
+        <div class="eyebrow">Pre-launch teaser</div>
+        <h2 class="section-title">2 weeks before launch</h2>
+        <div class="section-desc">
+          Seed teaser messaging into every relevant campaign email for customers who have purchased in the last
+          12 months. The teaser is delivered via conditional content rather than a standalone automation.
+        </div>
 
-    <footer class="footer">
-      <div class="footer-inner">
-        <div class="footer-brand"><span class="dot" aria-hidden="true"></span>IKOU • Loyalty Repository</div>
-        <div style="opacity:.9">Executive-ready repository for loyalty comms, journeys, and previews</div>
-        <div class="muted" style="color:#f7e7d7">© <span id="year"></span></div>
-      </div>
-    </footer>
+        <div class="flow-wrap">
+          <div class="flow-board teaser">
+            <svg class="flow-svg" viewBox="0 0 1260 170" aria-hidden="true">
+              <defs>
+                <marker id="arrowA" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto">
+                  <path d="M0,0 L8,4 L0,8 z" fill="#6c4b2c"></path>
+                </marker>
+              </defs>
+              <path d="M382 78 H 502" stroke="#6c4b2c" stroke-width="2.2" fill="none" marker-end="url(#arrowA)" />
+            </svg>
+
+            <button class="node" style="left:320px; top:38px;" data-id="bau-campaign">
+              <div class="token campaign">
+                <div class="token-copy">
+                  <div class="token-kicker">Campaign placement</div>
+                  <div class="token-title">BAU Campaign Sends</div>
+                  <div class="token-sub">Teaser seeded into relevant BAU emails</div>
+                </div>
+              </div>
+            </button>
+
+            <button class="node" style="left:522px; top:42px;" data-id="dynamic-content">
+              <div class="token dynamic">
+                <div class="token-copy">
+                  <div class="token-kicker">Dynamic content</div>
+                  <div class="token-title">Loyalty teaser block</div>
+                  <div class="token-sub">Targeted teaser visibility</div>
+                </div>
+              </div>
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- SECTION 2 -->
+      <section class="section-card">
+        <div class="eyebrow">Active customers</div>
+        <h2 class="section-title">One-off flow for customers who purchased in the last 12 months</h2>
+        <div class="section-desc">
+          Entry path for existing customers already active within the last 12 months. The sequence exits early if reward redemption occurs.
+        </div>
+
+        <div class="flow-wrap">
+          <div class="flow-board medium">
+            <svg class="flow-svg" viewBox="0 0 1260 290" aria-hidden="true">
+              <defs>
+                <marker id="arrowB" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto">
+                  <path d="M0,0 L8,4 L0,8 z" fill="#6c4b2c"></path>
+                </marker>
+              </defs>
+
+              <path d="M130 114 H 240" stroke="#6c4b2c" stroke-width="2.2" fill="none" marker-end="url(#arrowB)" />
+              <path d="M394 114 H 486" stroke="#6c4b2c" stroke-width="2.2" fill="none" marker-end="url(#arrowB)" />
+              <path d="M622 114 H 714" stroke="#6c4b2c" stroke-width="2.2" fill="none" marker-end="url(#arrowB)" />
+              <path d="M850 114 H 942" stroke="#6c4b2c" stroke-width="2.2" fill="none" marker-end="url(#arrowB)" />
+              <path d="M1078 114 H 1112" stroke="#6c4b2c" stroke-width="2.2" fill="none" marker-end="url(#arrowB)" />
+
+              <path d="M534 156 V 228" stroke="#9a7958" stroke-width="2" stroke-dasharray="5 5" fill="none" />
+              <path d="M990 156 V 228" stroke="#9a7958" stroke-width="2" stroke-dasharray="5 5" fill="none" />
+
+              <path d="M534 228 H 770" stroke="#9a7958" stroke-width="2" stroke-dasharray="5 5" fill="none" />
+              <path d="M990 228 H 1118" stroke="#9a7958" stroke-width="2" stroke-dasharray="5 5" fill="none" />
+              <path d="M990 228 H 770" stroke="#9a7958" stroke-width="2" stroke-dasharray="5 5" fill="none" />
+            </svg>
+
+            <div class="branch-label" style="left:508px; top:206px;">Yes</div>
+            <div class="branch-label" style="left:632px; top:98px;">No</div>
+            <div class="branch-label" style="left:964px; top:206px;">Yes</div>
+            <div class="branch-label" style="left:1088px; top:98px;">No</div>
+
+            <button class="node" style="left:20px; top:76px;" data-id="trigger-recent">
+              <div class="token trigger">
+                <div class="token-copy">
+                  <div class="token-kicker">Trigger</div>
+                  <div class="token-title">Purchased in last 12 months</div>
+                  <div class="token-sub">Active customer entry</div>
+                </div>
+              </div>
+            </button>
+
+            <button class="node" style="left:248px; top:76px;" data-id="email1-recent">
+              <div class="token email">
+                <div class="token-copy">
+                  <div class="token-kicker">Send email</div>
+                  <div class="token-title">Welcome Existing #1</div>
+                  <div class="token-sub">Loyalty introduction</div>
+                </div>
+              </div>
+            </button>
+
+            <button class="node" style="left:486px; top:66px;" data-id="split1-recent">
+              <div class="diamond">
+                <div class="diamond-copy">
+                  <div class="token-kicker">Split</div>
+                  <div class="token-title">Redeemed Reward?</div>
+                  <div class="token-sub">True / False</div>
+                </div>
+              </div>
+            </button>
+
+            <button class="node" style="left:714px; top:76px;" data-id="email2-recent">
+              <div class="token email">
+                <div class="token-copy">
+                  <div class="token-kicker">Send email</div>
+                  <div class="token-title">Welcome Existing #2</div>
+                  <div class="token-sub">Reward reminder</div>
+                </div>
+              </div>
+            </button>
+
+            <button class="node" style="left:942px; top:66px;" data-id="split2-recent">
+              <div class="diamond">
+                <div class="diamond-copy">
+                  <div class="token-kicker">Split</div>
+                  <div class="token-title">Redeemed Reward?</div>
+                  <div class="token-sub">True / False</div>
+                </div>
+              </div>
+            </button>
+
+            <button class="node" style="left:770px; top:190px;" data-id="email3-recent">
+              <div class="token email">
+                <div class="token-copy">
+                  <div class="token-kicker">Send email</div>
+                  <div class="token-title">Welcome Existing #3</div>
+                  <div class="token-sub">Last chance</div>
+                </div>
+              </div>
+            </button>
+
+            <button class="node" style="left:1118px; top:186px;" data-id="finish-recent">
+              <div class="finish">
+                <div class="token-copy" style="align-items:center;">
+                  <div class="token-title">Sequence complete</div>
+                </div>
+              </div>
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- SECTION 3 -->
+      <section class="section-card">
+        <div class="eyebrow">Reactivated customers</div>
+        <h2 class="section-title">Data flow for existing customers who have not spent in the last 12 months</h2>
+        <div class="section-desc">
+          This branch activates after a placed order event, then filters out anyone already active in the prior 12 months.
+          Qualifying customers enter the same reminder structure and exit early if redemption occurs.
+        </div>
+
+        <div class="flow-wrap">
+          <div class="flow-board medium">
+            <svg class="flow-svg" viewBox="0 0 1260 290" aria-hidden="true">
+              <defs>
+                <marker id="arrowC" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto">
+                  <path d="M0,0 L8,4 L0,8 z" fill="#6c4b2c"></path>
+                </marker>
+              </defs>
+
+              <path d="M132 114 H 186" stroke="#6c4b2c" stroke-width="2.2" fill="none" marker-end="url(#arrowC)" />
+              <path d="M320 114 H 392" stroke="#6c4b2c" stroke-width="2.2" fill="none" marker-end="url(#arrowC)" />
+              <path d="M528 114 H 598" stroke="#6c4b2c" stroke-width="2.2" fill="none" marker-end="url(#arrowC)" />
+              <path d="M734 114 H 804" stroke="#6c4b2c" stroke-width="2.2" fill="none" marker-end="url(#arrowC)" />
+              <path d="M940 114 H 1010" stroke="#6c4b2c" stroke-width="2.2" fill="none" marker-end="url(#arrowC)" />
+              <path d="M1146 114 H 1160" stroke="#6c4b2c" stroke-width="2.2" fill="none" marker-end="url(#arrowC)" />
+
+              <path d="M236 156 V 248 H 1106" stroke="#9a7958" stroke-width="2" stroke-dasharray="5 5" fill="none" />
+              <path d="M646 156 V 248" stroke="#9a7958" stroke-width="2" stroke-dasharray="5 5" fill="none" />
+              <path d="M1058 156 V 248" stroke="#9a7958" stroke-width="2" stroke-dasharray="5 5" fill="none" />
+            </svg>
+
+            <div class="branch-label" style="left:206px; top:98px;">No</div>
+            <div class="branch-label" style="left:210px; top:227px;">Yes</div>
+
+            <div class="branch-label" style="left:620px; top:227px;">Yes</div>
+            <div class="branch-label" style="left:742px; top:98px;">No</div>
+
+            <div class="branch-label" style="left:1030px; top:227px;">Yes</div>
+            <div class="branch-label" style="left:1148px; top:98px;">No</div>
+
+            <button class="node" style="left:20px; top:76px;" data-id="trigger-lapsed">
+              <div class="token trigger">
+                <div class="token-copy">
+                  <div class="token-kicker">Trigger</div>
+                  <div class="token-title">Placed Order</div>
+                  <div class="token-sub">Reactivated customer entry</div>
+                </div>
+              </div>
+            </button>
+
+            <button class="node" style="left:188px; top:66px;" data-id="split0-lapsed">
+              <div class="diamond">
+                <div class="diamond-copy">
+                  <div class="token-kicker">Split</div>
+                  <div class="token-title">Placed order in last 12 months?</div>
+                  <div class="token-sub">Filter active customers</div>
+                </div>
+              </div>
+            </button>
+
+            <button class="node" style="left:394px; top:76px;" data-id="email1-lapsed">
+              <div class="token email">
+                <div class="token-copy">
+                  <div class="token-kicker">Send email</div>
+                  <div class="token-title">Welcome Existing #1</div>
+                  <div class="token-sub">Loyalty introduction</div>
+                </div>
+              </div>
+            </button>
+
+            <button class="node" style="left:600px; top:66px;" data-id="split1-lapsed">
+              <div class="diamond">
+                <div class="diamond-copy">
+                  <div class="token-kicker">Split</div>
+                  <div class="token-title">Redeemed Reward?</div>
+                  <div class="token-sub">True / False</div>
+                </div>
+              </div>
+            </button>
+
+            <button class="node" style="left:806px; top:76px;" data-id="email2-lapsed">
+              <div class="token email">
+                <div class="token-copy">
+                  <div class="token-kicker">Send email</div>
+                  <div class="token-title">Welcome Existing #2</div>
+                  <div class="token-sub">Reward reminder</div>
+                </div>
+              </div>
+            </button>
+
+            <button class="node" style="left:1012px; top:66px;" data-id="split2-lapsed">
+              <div class="diamond">
+                <div class="diamond-copy">
+                  <div class="token-kicker">Split</div>
+                  <div class="token-title">Redeemed Reward?</div>
+                  <div class="token-sub">True / False</div>
+                </div>
+              </div>
+            </button>
+
+            <button class="node" style="left:806px; top:190px;" data-id="email3-lapsed">
+              <div class="token email">
+                <div class="token-copy">
+                  <div class="token-kicker">Send email</div>
+                  <div class="token-title">Welcome Existing #3</div>
+                  <div class="token-sub">Last chance</div>
+                </div>
+              </div>
+            </button>
+
+            <button class="node" style="left:1060px; top:186px;" data-id="finish-lapsed">
+              <div class="finish">
+                <div class="token-copy" style="align-items:center;">
+                  <div class="token-title">Sequence complete</div>
+                </div>
+              </div>
+            </button>
+          </div>
+        </div>
+      </section>
+    </div>
   </div>
 
-  <!-- Program overlay -->
-  <div id="prog-overlay" class="overlay" aria-hidden="true">
-    <div class="ov-panel" role="dialog" aria-modal="true" aria-labelledby="prog-title">
-      <div class="ov-bar">
-        <div id="prog-title" class="ov-title">Program</div>
-        <div class="ov-actions">
-          <button id="open-program-new-tab" class="btn" type="button" title="Open program in new tab">Open in new tab</button>
-          <button id="prog-close" class="close-x" aria-label="Close">Close</button>
+  <div class="overlay" id="overlay" aria-hidden="true">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+      <div class="modal-header">
+        <div class="modal-title-wrap">
+          <div class="modal-eyebrow" id="modalEyebrow">Token details</div>
+          <h2 class="modal-title" id="modalTitle">Title</h2>
         </div>
+        <button class="close-btn" id="closeBtn" aria-label="Close">×</button>
       </div>
-
-      <div class="ov-content">
-        <div class="ov-cols">
-          <div>
-            <div id="zoom-container" class="thumb-hero" aria-label="Program HTML preview area">
-              <iframe id="prog-html" class="program-frame" title="Program flow preview"></iframe>
-            </div>
-            <div class="muted" style="font-size:12px;margin-top:8px" id="prog-meta"></div>
-            <div class="muted" style="font-size:12px;margin-top:6px">
-              Interactive HTML flow preview. Use “Open in new tab” for a larger standalone view.
-            </div>
+      <div class="modal-body">
+        <p id="modalDescription"></p>
+        <div class="meta-grid">
+          <div class="meta-card">
+            <h4>Section</h4>
+            <p id="modalSection"></p>
           </div>
-
-          <div>
-            <div id="prog-desc" style="margin-bottom:10px"></div>
-
-            <div id="prog-doc"></div>
-
-            <div id="email-preview-wrap" style="display:none;margin-top:14px">
-              <div class="row" style="margin-bottom:8px">
-                <div style="font-weight:700;color:var(--dark-brown)">Email Preview</div>
-                <button id="email-preview-close" class="btn" type="button">Close preview</button>
-              </div>
-              <iframe id="email-preview-frame"></iframe>
-            </div>
-
-            <div style="font-weight:700;margin:14px 0 8px;color:var(--dark-brown)">Included Emails</div>
-            <div id="prog-emails" class="grid" style="grid-template-columns:1fr;padding:0"></div>
+          <div class="meta-card">
+            <h4>Flow logic</h4>
+            <p id="modalLogic"></p>
           </div>
         </div>
       </div>
@@ -707,358 +808,175 @@
   </div>
 
   <script>
-    let STATE = { mode:"exec", programs:[], emails:[], active:null };
-    const PROGRAM_PREVIEW_FALLBACK_SIZE = { width: 1940, height: 860 };
-
-    function el(id){ return document.getElementById(id); }
-    function escapeHTML(str){
-      return (str||"").replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;");
-    }
-    function phaseLabel(phase){
-      const map={
-        "01-welcome":"Welcome",
-        "02-lifecycle":"Lifecycle",
-        "03-tier-progression":"Tier Progression",
-        "04-retention-risk":"Retention Risk"
-      };
-      return map[phase] || phase || "";
-    }
-
-    function getProgramPreviewPath(p){
-      return p.programHtml || p.programScreenshot || "";
-    }
-
-    async function fetchJSON(path){
-      const res = await fetch(path,{cache:"no-store"});
-      if(!res.ok) throw new Error(`Failed to load ${path} (${res.status})`);
-      return await res.json();
-    }
-    async function fetchText(path){
-      const res = await fetch(path,{cache:"no-store"});
-      if(!res.ok) throw new Error(`Failed to load ${path} (${res.status})`);
-      return await res.text();
-    }
-
-    function setMode(mode){
-      STATE.mode = mode;
-      const execBtn = el("mode-exec");
-      const deepBtn = el("mode-deep");
-      if(execBtn && deepBtn){
-        if(mode==="exec"){
-          execBtn.classList.add("primary");
-          deepBtn.classList.remove("primary");
-        }else{
-          deepBtn.classList.add("primary");
-          execBtn.classList.remove("primary");
-        }
+    const tokenData = {
+      "bau-campaign": {
+        eyebrow: "Pre-launch teaser",
+        title: "BAU Campaign Sends",
+        description: "Regular business-as-usual campaign sends where the teaser message is seeded into relevant emails going to customers who have purchased in the last 12 months.",
+        section: "2 weeks before launch",
+        logic: "Acts as the broad distribution layer for the teaser. The message is not yet a standalone flow; it is inserted into existing campaign inventory."
+      },
+      "dynamic-content": {
+        eyebrow: "Pre-launch teaser",
+        title: "Loyalty teaser block",
+        description: "Targeted dynamic content block that shows the teaser only to the intended audience segment.",
+        section: "2 weeks before launch",
+        logic: "Functions as the personalization layer. In production, this maps to conditional content rules within BAU campaigns."
+      },
+      "trigger-recent": {
+        eyebrow: "Active customers",
+        title: "Trigger — Purchased in last 12 months",
+        description: "Starts the onboarding path for customers who are already active within the last 12 months.",
+        section: "One-off flow for customers who purchased in the last 12 months",
+        logic: "Entry condition for the active-customer branch."
+      },
+      "email1-recent": {
+        eyebrow: "Active customers",
+        title: "Send Email — Welcome Existing #1",
+        description: "First loyalty email introducing the program and reward value.",
+        section: "One-off flow for customers who purchased in the last 12 months",
+        logic: "Initial onboarding touchpoint after entry."
+      },
+      "split1-recent": {
+        eyebrow: "Active customers",
+        title: "Conditional Split — Redeemed Reward?",
+        description: "Checks whether the customer has already redeemed the reward after Email #1.",
+        section: "One-off flow for customers who purchased in the last 12 months",
+        logic: "Yes path exits the reminder sequence. No path continues to Email #2."
+      },
+      "email2-recent": {
+        eyebrow: "Active customers",
+        title: "Send Email — Welcome Existing #2",
+        description: "Reminder email for customers who have not redeemed yet.",
+        section: "One-off flow for customers who purchased in the last 12 months",
+        logic: "Reminder stage intended to improve reward redemption."
+      },
+      "split2-recent": {
+        eyebrow: "Active customers",
+        title: "Conditional Split — Redeemed Reward?",
+        description: "Checks again whether the customer has redeemed after Email #2.",
+        section: "One-off flow for customers who purchased in the last 12 months",
+        logic: "Yes path exits. No path continues to the final email."
+      },
+      "email3-recent": {
+        eyebrow: "Active customers",
+        title: "Send Email — Welcome Existing #3",
+        description: "Final last-chance message for those who still have not redeemed.",
+        section: "One-off flow for customers who purchased in the last 12 months",
+        logic: "Urgency-led final redemption push before completion."
+      },
+      "finish-recent": {
+        eyebrow: "Active customers",
+        title: "Sequence complete",
+        description: "The active-customer sequence ends here.",
+        section: "One-off flow for customers who purchased in the last 12 months",
+        logic: "Terminal step for redeemed users and those who completed the reminder path."
+      },
+      "trigger-lapsed": {
+        eyebrow: "Reactivated customers",
+        title: "Trigger — Placed Order",
+        description: "Starts the reactivated-customer path after a placed order event.",
+        section: "Data flow for existing customers who have not spent in the last 12 months",
+        logic: "Entry point for the reactivated/lapsed branch."
+      },
+      "split0-lapsed": {
+        eyebrow: "Reactivated customers",
+        title: "Conditional Split — Placed order in last 12 months?",
+        description: "Filters out customers who are already active in the last 12 months.",
+        section: "Data flow for existing customers who have not spent in the last 12 months",
+        logic: "Yes path does not continue through this branch. No path enters the reactivation onboarding sequence."
+      },
+      "email1-lapsed": {
+        eyebrow: "Reactivated customers",
+        title: "Send Email — Welcome Existing #1",
+        description: "First email introducing loyalty to reactivated or long-lapsed customers.",
+        section: "Data flow for existing customers who have not spent in the last 12 months",
+        logic: "Starts the loyalty reminder sequence after the lapsed-customer filter."
+      },
+      "split1-lapsed": {
+        eyebrow: "Reactivated customers",
+        title: "Conditional Split — Redeemed Reward?",
+        description: "Checks if the reward has been redeemed after Email #1.",
+        section: "Data flow for existing customers who have not spent in the last 12 months",
+        logic: "Yes exits. No continues to Email #2."
+      },
+      "email2-lapsed": {
+        eyebrow: "Reactivated customers",
+        title: "Send Email — Welcome Existing #2",
+        description: "Reminder email for customers who still have not redeemed.",
+        section: "Data flow for existing customers who have not spent in the last 12 months",
+        logic: "Second reminder stage."
+      },
+      "split2-lapsed": {
+        eyebrow: "Reactivated customers",
+        title: "Conditional Split — Redeemed Reward?",
+        description: "Checks again whether the reward has been redeemed before the final prompt.",
+        section: "Data flow for existing customers who have not spent in the last 12 months",
+        logic: "Yes exits. No continues to Email #3."
+      },
+      "email3-lapsed": {
+        eyebrow: "Reactivated customers",
+        title: "Send Email — Welcome Existing #3",
+        description: "Final last-chance message for remaining non-redeemers.",
+        section: "Data flow for existing customers who have not spent in the last 12 months",
+        logic: "Final urgency stage before completion."
+      },
+      "finish-lapsed": {
+        eyebrow: "Reactivated customers",
+        title: "Sequence complete",
+        description: "The reactivated-customer sequence ends here.",
+        section: "Data flow for existing customers who have not spent in the last 12 months",
+        logic: "Terminal step for this branch."
       }
-      if(STATE.active) renderProgramDoc(STATE.active).catch(console.error);
+    };
+
+    const overlay = document.getElementById("overlay");
+    const closeBtn = document.getElementById("closeBtn");
+    const modalTitle = document.getElementById("modalTitle");
+    const modalEyebrow = document.getElementById("modalEyebrow");
+    const modalDescription = document.getElementById("modalDescription");
+    const modalSection = document.getElementById("modalSection");
+    const modalLogic = document.getElementById("modalLogic");
+    const nodes = document.querySelectorAll(".node");
+
+    function openModal(id, node) {
+      const data = tokenData[id];
+      if (!data) return;
+
+      nodes.forEach(n => n.classList.remove("active"));
+      if (node) node.classList.add("active");
+
+      modalEyebrow.textContent = data.eyebrow;
+      modalTitle.textContent = data.title;
+      modalDescription.textContent = data.description;
+      modalSection.textContent = data.section;
+      modalLogic.textContent = data.logic;
+
+      overlay.classList.add("open");
+      overlay.setAttribute("aria-hidden", "false");
     }
 
-    function closeInlineEmailPreview(){
-      const wrap = el("email-preview-wrap");
-      const frame = el("email-preview-frame");
-      if(frame) frame.removeAttribute("src");
-      if(wrap) wrap.style.display = "none";
+    function closeModal() {
+      overlay.classList.remove("open");
+      overlay.setAttribute("aria-hidden", "true");
+      nodes.forEach(n => n.classList.remove("active"));
     }
 
-    function openInlineEmailPreview(email){
-      const wrap = el("email-preview-wrap");
-      const frame = el("email-preview-frame");
-      if(!wrap || !frame) return;
-      frame.src = email.previewPath;
-      wrap.style.display = "";
-      wrap.scrollIntoView({behavior:"smooth", block:"start"});
-    }
-
-    function closeProgram(){
-      const overlay = el("prog-overlay");
-      overlay.classList.remove("show");
-      overlay.setAttribute("aria-hidden","true");
-      STATE.active = null;
-
-      const frame = el("prog-html");
-      if(frame){
-        frame.removeAttribute("src");
-        frame.style.transform = "scale(1)";
-        frame.style.left = "0px";
-        frame.style.top = "0px";
-        frame.style.width = `${PROGRAM_PREVIEW_FALLBACK_SIZE.width}px`;
-        frame.style.height = `${PROGRAM_PREVIEW_FALLBACK_SIZE.height}px`;
-      }
-
-      closeInlineEmailPreview();
-    }
-
-    async function renderProgramDoc(p){
-      const target = el("prog-doc");
-      const path = (STATE.mode==="exec") ? p.execDoc : p.deepDoc;
-      if(!path){
-        target.innerHTML = `<div class="muted">No ${STATE.mode} doc path set for this program.</div>`;
-        return;
-      }
-      const md = await fetchText(path);
-      if(window.marked){
-        target.innerHTML = window.marked.parse(md);
-      }else{
-        target.innerHTML = `<pre class="code">${escapeHTML(md)}</pre>`;
-      }
-    }
-
-    function renderProgramEmails(p){
-      const root = el("prog-emails");
-      if(!root) return;
-
-      closeInlineEmailPreview();
-      root.innerHTML = "";
-
-      const rows = STATE.emails
-        .filter(e => e.programId === p.id)
-        .sort((a,b) => (a.order ?? 9999) - (b.order ?? 9999));
-
-      if(rows.length === 0){
-        const empty = document.createElement("div");
-        empty.className = "card";
-        empty.innerHTML = `<div class="muted">No emails mapped yet for this program. Add rows to <code>data/emails.json</code>.</div>`;
-        root.appendChild(empty);
-        return;
-      }
-
-      rows.forEach(email => {
-        const card = document.createElement("article");
-        card.className = "card";
-
-        card.innerHTML = `
-          <div class="row">
-            <div style="font-weight:700;color:var(--dark-brown)">${escapeHTML(email.title || email.id)}</div>
-            <span class="badge">${escapeHTML(email.status || "Draft")}</span>
-          </div>
-          ${email.description ? `<div class="muted" style="font-size:12px">${escapeHTML(email.description)}</div>` : ""}
-          <div class="actions">
-            <button class="btn primary" type="button">Preview</button>
-            <a class="btn" href="${escapeHTML(email.previewPath || "#")}" target="_blank" rel="noopener">Open in new tab</a>
-          </div>
-          <div class="code">${escapeHTML(email.previewPath || "")}</div>
-        `;
-
-        card.querySelector("button.primary").addEventListener("click", ()=> openInlineEmailPreview(email));
-        root.appendChild(card);
+    nodes.forEach(node => {
+      node.addEventListener("click", (e) => {
+        e.stopPropagation();
+        openModal(node.dataset.id, node);
       });
-    }
+    });
 
-    function fitProgramPreview(){
-      const wrap = el("zoom-container");
-      const frame = el("prog-html");
-      if(!wrap || !frame) return;
+    closeBtn.addEventListener("click", closeModal);
+    overlay.addEventListener("click", (e) => {
+      if (e.target === overlay) closeModal();
+    });
 
-      let baseWidth = PROGRAM_PREVIEW_FALLBACK_SIZE.width;
-      let baseHeight = PROGRAM_PREVIEW_FALLBACK_SIZE.height;
-
-      try{
-        const doc = frame.contentDocument || frame.contentWindow?.document;
-        if(doc){
-          const body = doc.body;
-          const root = doc.documentElement;
-          baseWidth = Math.max(
-            PROGRAM_PREVIEW_FALLBACK_SIZE.width,
-            body ? body.scrollWidth : 0,
-            root ? root.scrollWidth : 0
-          );
-          baseHeight = Math.max(
-            PROGRAM_PREVIEW_FALLBACK_SIZE.height,
-            body ? body.scrollHeight : 0,
-            root ? root.scrollHeight : 0
-          );
-        }
-      }catch(err){
-        // Same-origin is expected here, but keep fallback sizes if measurement is unavailable.
-      }
-
-      const availableWidth = Math.max(320, wrap.clientWidth - 24);
-      const availableHeight = Math.max(320, wrap.clientHeight - 24);
-      const scale = Math.min(
-        1,
-        availableWidth / baseWidth,
-        availableHeight / baseHeight
-      );
-
-      frame.style.width = `${baseWidth}px`;
-      frame.style.height = `${baseHeight}px`;
-      frame.style.transform = `scale(${scale})`;
-
-      const renderedWidth = baseWidth * scale;
-      const renderedHeight = baseHeight * scale;
-      const offsetX = Math.max(12, (wrap.clientWidth - renderedWidth) / 2);
-      const offsetY = Math.max(12, (wrap.clientHeight - renderedHeight) / 2);
-
-      frame.style.left = `${offsetX}px`;
-      frame.style.top = `${offsetY}px`;
-    }
-
-    function attachProgramPreviewHandlers(){
-      const frame = el("prog-html");
-      if(!frame) return;
-
-      frame.onload = () => {
-        requestAnimationFrame(() => {
-          fitProgramPreview();
-          setTimeout(fitProgramPreview, 120);
-        });
-      };
-    }
-
-    function openProgram(p){
-      STATE.active = p;
-
-      el("prog-title").textContent = p.title || "Program";
-      el("prog-desc").textContent  = p.description || "";
-      el("prog-meta").textContent  = `${phaseLabel(p.phase)} • ${p.status || "Draft"}`;
-
-      const frame = el("prog-html");
-      frame.style.transform = "scale(1)";
-      frame.style.left = "0px";
-      frame.style.top = "0px";
-      frame.style.width = `${PROGRAM_PREVIEW_FALLBACK_SIZE.width}px`;
-      frame.style.height = `${PROGRAM_PREVIEW_FALLBACK_SIZE.height}px`;
-
-      if(p.programHtml){
-        frame.src = p.programHtml;
-      }else if(p.programScreenshot){
-        frame.src = p.programScreenshot;
-      }else{
-        frame.removeAttribute("src");
-      }
-
-      const openInNewTabBtn = el("open-program-new-tab");
-      if(openInNewTabBtn){
-        openInNewTabBtn.onclick = () => {
-          const path = getProgramPreviewPath(p);
-          if(path) window.open(path, "_blank", "noopener");
-        };
-      }
-
-      renderProgramDoc(p).catch(err=>{
-        el("prog-doc").innerHTML = `<div class="muted">Could not load doc: ${escapeHTML(err.message || String(err))}</div>`;
-      });
-
-      renderProgramEmails(p);
-
-      const overlay = el("prog-overlay");
-      overlay.classList.add("show");
-      overlay.setAttribute("aria-hidden","false");
-
-      requestAnimationFrame(() => {
-        fitProgramPreview();
-        setTimeout(fitProgramPreview, 120);
-      });
-    }
-
-    function buildProgramCard(p){
-      const card = document.createElement("article");
-      card.className="card";
-      const previewPath = getProgramPreviewPath(p);
-
-      card.innerHTML = `
-       <div class="thumb-placeholder">
-  <div>
-    <div style="font-family:'Cormorant Garamond', Georgia, serif;font-size:20px;color:var(--dark-brown);margin-bottom:6px;">IKOU</div>
-    <div style="font-weight:700;color:var(--dark-brown);margin-bottom:4px;">${escapeHTML(p.title)}</div>
-    <div style="font-size:12px;color:var(--muted)">Open program to view the full flow</div>
-  </div>
-</div>
-        <div class="row">
-          <div style="font-weight:700;color:var(--dark-brown)">${escapeHTML(p.title)}</div>
-          <span class="badge orange">${escapeHTML(phaseLabel(p.phase))}</span>
-        </div>
-        <div class="meta">
-          <span class="badge">${escapeHTML(p.status || "Draft")}</span>
-          ${(p.tags||[]).slice(0,4).map(t=>`<span class="badge">#${escapeHTML(t)}</span>`).join("")}
-        </div>
-        <div class="muted">${escapeHTML(p.description||"")}</div>
-        <div class="actions"><button class="btn primary" type="button">Open program</button></div>
-      `;
-      card.querySelector("button").addEventListener("click",()=>openProgram(p));
-      return card;
-    }
-
-    function renderPrograms(){
-      const root = el("programs-view");
-      const query = (el("q").value||"").trim().toLowerCase();
-      const phase = el("phaseFilter").value;
-      const sort  = el("sort").value;
-
-      let rows = STATE.programs.slice();
-
-      if(phase) rows = rows.filter(p => (p.phase||"") === phase);
-
-      if(query){
-        rows = rows.filter(p=>{
-          const hay = [p.title,p.description,(p.tags||[]).join(" "),p.phase].join(" ").toLowerCase();
-          return hay.includes(query);
-        });
-      }
-
-      if(sort==="name_asc"){
-        rows.sort((a,b)=> (a.title||"").localeCompare(b.title||""));
-      }else{
-        rows.sort((a,b)=> (a.displayOrder ?? 9999) - (b.displayOrder ?? 9999));
-      }
-
-      root.innerHTML="";
-      if(rows.length===0){
-        const empty=document.createElement("div");
-        empty.className="card";
-        empty.innerHTML = `<div class="muted">No programs match your filters.</div>`;
-        root.appendChild(empty);
-        return;
-      }
-      rows.forEach(p => root.appendChild(buildProgramCard(p)));
-    }
-
-    function setTab(programsSelected){
-      el("tab-programs").setAttribute("aria-selected", programsSelected ? "true" : "false");
-      el("tab-emails").setAttribute("aria-selected", programsSelected ? "false" : "true");
-      el("programs-view").style.display = programsSelected ? "" : "none";
-      el("emails-view").style.display   = programsSelected ? "none" : "";
-
-      if(programsSelected) renderPrograms();
-      else el("emails-view").innerHTML = `<div class="card"><div class="muted">Emails tab (global) comes after program emails are working.</div></div>`;
-    }
-
-    async function init(){
-      el("year").textContent = new Date().getFullYear();
-
-      el("mode-exec").addEventListener("click",()=>setMode("exec"));
-      el("mode-deep").addEventListener("click",()=>setMode("deep"));
-      setMode("exec");
-
-      el("prog-close").addEventListener("click", closeProgram);
-      el("prog-overlay").addEventListener("click",(e)=>{ if(e.target===el("prog-overlay")) closeProgram(); });
-      document.addEventListener("keydown",(e)=>{ if(e.key==="Escape") closeProgram(); });
-
-      const closeEmailBtn = el("email-preview-close");
-      if(closeEmailBtn) closeEmailBtn.addEventListener("click", closeInlineEmailPreview);
-
-      el("tab-programs").addEventListener("click",()=>setTab(true));
-      el("tab-emails").addEventListener("click",()=>setTab(false));
-
-      el("q").addEventListener("input", renderPrograms);
-      el("phaseFilter").addEventListener("change", renderPrograms);
-      el("sort").addEventListener("change", renderPrograms);
-
-      window.addEventListener("resize", () => {
-        if(STATE.active) fitProgramPreview();
-      });
-
-      attachProgramPreviewHandlers();
-
-      try{ STATE.programs = await fetchJSON("data/programs.json"); } catch(e){ STATE.programs = []; console.error(e); }
-      try{ STATE.emails   = await fetchJSON("data/emails.json"); } catch(e){ STATE.emails   = []; console.error(e); }
-
-      setTab(true);
-    }
-
-    document.addEventListener("DOMContentLoaded", init);
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape") closeModal();
+    });
   </script>
 </body>
 </html>
