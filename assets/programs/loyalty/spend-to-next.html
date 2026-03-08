@@ -497,33 +497,33 @@
 
         <svg class="connectors" width="2040" height="940" viewBox="0 0 2040 940" aria-hidden="true">
           <defs>
-            <marker id="arrow" markerWidth="9" markerHeight="9" refX="8" refY="4.5" orient="auto" markerUnits="strokeWidth">
+            <marker id="arrow" markerWidth="9" markerHeight="9" refX="8.5" refY="5.3" orient="auto" markerUnits="strokeWidth">
               <path d="M0,0 L9,4.5 L0,9 z" fill="#5A3A1B"></path>
             </marker>
-            <marker id="arrow-olive" markerWidth="9" markerHeight="9" refX="8" refY="4.5" orient="auto" markerUnits="strokeWidth">
+            <marker id="arrow-olive" markerWidth="9" markerHeight="9" refX="8.5" refY="5.3" orient="auto" markerUnits="strokeWidth">
               <path d="M0,0 L9,4.5 L0,9 z" fill="#4A3F12"></path>
             </marker>
           </defs>
 
           <!-- Trigger to routing -->
-          <path class="solid" d="M152 440 H 190" />
-          <text class="tag" x="158" y="428">Wait</text>
-          <text class="tag" x="150" y="442" opacity=".8">5 minutes</text>
+          <path class="solid" d="M360 440 H 225" />
+          <text class="tag" x="273" y="428">Wait</text>
+          <text class="tag" x="263" y="452" opacity=".8">5 minutes</text>
 
-          <path class="solid" d="M288 440 H 330" />
+         
 
           <!-- Routing branches -->
-          <path class="dashed" d="M378 392 V 148 H 590" />
-          <text class="tag" x="384" y="302">Yes</text>
+          <path class="dashed" d="M478 412 V 148 H 590" />
+          <text class="tag" x="488" y="302">Yes</text>
 
-          <path class="dashed" d="M430 440 H 470" />
-          <text class="tag" x="438" y="428">No</text>
+          <path class="dashed" d="M350 440 H 480" />
+          <text class="tag" x="518" y="455">No</text>
 
-          <path class="dashed" d="M520 440 H 560" />
-          <text class="tag" x="528" y="428">Yes</text>
+          <path class="dashed" d="M495 440 H 560" />
+          <text class="tag" x="868" y="428">wait</text>
 
-          <path class="dashed" d="M470 488 V 732 H 700" />
-          <text class="tag" x="476" y="566">No</text>
+          <path class="dashed" d="M615 438 V 732 H 700" />
+          <text class="tag" x="626" y="586">No</text>
 
           <!-- Level 2 main flow -->
           <path class="solid" d="M722 148 H 764" />
@@ -553,10 +553,10 @@
 
           <!-- Level 3 entry -->
           <path class="dashed" d="M658 440 H 734" />
-          <text class="tag" x="666" y="428">Yes</text>
+          <text class="tag" x="686" y="428">Yes</text>
 
           <!-- Level 3 main flow -->
-          <path class="solid" d="M866 440 H 908" />
+          <path class="solid" d="M766 440 H 908" />
           <path class="solid" d="M1006 440 H 1044" />
           <text class="tag" x="1016" y="428">No</text>
 
@@ -582,7 +582,7 @@
           <path class="finish-line" d="M1772 440 H 1856" />
 
           <!-- Level 4 entry -->
-          <path class="dashed" d="M798 732 H 840" />
+          <path class="dashed" d="M798 732 H 830" />
 
           <!-- Level 4 main flow -->
           <path class="solid" d="M972 732 H 1014" />
@@ -613,7 +613,7 @@
 
         <!-- Trigger -->
         <div class="node trigger"
-             style="left:68px; top:382px;"
+             style="left:160px; top:382px;"
              data-section="Entry"
              data-type="Trigger"
              data-title="Spend to Next"
@@ -629,7 +629,7 @@
 
         <!-- Routing -->
         <div class="node split"
-             style="left:190px; top:392px;"
+             style="left:340px; top:392px;"
              data-section="Routing"
              data-type="Conditional Split"
              data-title="Level = 2?"
@@ -645,7 +645,7 @@
         </div>
 
         <div class="node split"
-             style="left:330px; top:392px;"
+             style="left:566px; top:392px;"
              data-section="Routing"
              data-type="Conditional Split"
              data-title="Level = 3?"
