@@ -1,1046 +1,973 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Upgrade Journey</title>
+  <title>IKOU CRM — Upgrade Journey</title>
   <style>
-    :root {
-      --bg: #FFF5ED;
-      --surface: #fffaf6;
-      --text: #0A0D0A;
-      --muted: #543312;
-      --line: #543312;
-
-      --lavender: #E8DEF5;
-      --dark-olive: #383317;
-      --light-blue: #CFF0FF;
-      --deep-burgundy: #570A05;
-      --dark-brown: #331700;
-      --pale-yellow: #EDE8BA;
-      --chocolate: #543312;
-      --dusty-rose: #DBA6A1;
-
-      --shadow-soft: 0 12px 30px rgba(56, 51, 23, 0.08);
-      --shadow-strong: 0 24px 60px rgba(56, 51, 23, 0.18);
+    :root{
+      --page-bg:#FFF5ED;
+      --canvas-bg:#FFFAF6;
+      --surface:#FFFDF9;
+      --text:#0A0D0A;
+      --subtext:#543312;
+      --line:#5A3A1B;
+      --line-soft:rgba(90,58,27,.24);
+      --trigger-bg:#CFF0FF;
+      --trigger-border:#67CDD7;
+      --email-bg:#E8DEF5;
+      --email-border:#BDA9FF;
+      --split-bg:#EDE8BA;
+      --split-border:#E2A400;
+      --finish-bg:#4A3F12;
+      --finish-text:#FFF5ED;
+      --shadow:0 16px 38px rgba(84,51,18,.08);
+      --shadow-hover:0 18px 48px rgba(84,51,18,.14);
+      --radius:20px;
+      --modal-radius:24px;
+      --node-w:170px;
+      --node-h:92px;
+      --gap-x:120px;
+      --step-x:220px;
+      --lane-y-1:110px;
+      --lane-y-2:360px;
+      --lane-y-3:610px;
+      --route-y:360px;
+      --finish-x:1770px;
+      --finish-y:360px;
     }
 
-    * { box-sizing: border-box; }
-
-    html, body {
-      margin: 0;
-      background: var(--bg);
-      color: var(--text);
-      font-family: Inter, Arial, Helvetica, sans-serif;
+    *{box-sizing:border-box}
+    html,body{margin:0;padding:0;background:var(--page-bg);color:var(--text)}
+    body{
+      font-family: Arial, Helvetica, sans-serif;
+      line-height:1.35;
+      -webkit-font-smoothing:antialiased;
+      padding:22px;
     }
 
-    body {
-      min-width: 1660px;
+    .diagram-shell{
+      background:linear-gradient(180deg, rgba(255,255,255,.42), rgba(255,255,255,.16));
+      border:1px solid rgba(90,58,27,.1);
+      border-radius:28px;
+      box-shadow:0 20px 60px rgba(84,51,18,.08);
+      overflow:hidden;
     }
 
-    .page {
-      padding: 42px 40px 60px;
-      overflow-x: auto;
+    .diagram-head{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:18px;
+      padding:22px 26px 16px;
+      border-bottom:1px solid rgba(90,58,27,.08);
+      background:rgba(255,250,246,.82);
+      backdrop-filter: blur(8px);
     }
 
-    .shell {
-      max-width: 1760px;
-      margin: 0 auto;
+    .title-wrap h1{
+      margin:0;
+      font-family:"Times New Roman", Georgia, serif;
+      font-size:30px;
+      font-weight:600;
+      letter-spacing:.01em;
+      color:var(--text);
     }
 
-    .brand {
-      font-family: "Times New Roman", Georgia, serif;
-      font-size: 24px;
-      letter-spacing: 0.08em;
-      color: var(--dark-olive);
-      margin-bottom: 18px;
+    .title-wrap p{
+      margin:6px 0 0;
+      color:var(--subtext);
+      font-size:12px;
+      max-width:760px;
     }
 
-    .hero {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-      gap: 24px;
-      margin-bottom: 28px;
+    .legend{
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+      justify-content:flex-end;
     }
 
-    .hero h1 {
-      margin: 0;
-      font-family: "Times New Roman", Georgia, serif;
-      font-size: 64px;
-      line-height: 0.98;
-      font-weight: 600;
-      color: var(--dark-brown);
+    .legend-item{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:9px 12px;
+      border-radius:999px;
+      background:rgba(255,255,255,.56);
+      border:1px solid rgba(90,58,27,.08);
+      color:var(--subtext);
+      font-size:12px;
+      white-space:nowrap;
     }
 
-    .hero p {
-      margin: 14px 0 0;
-      max-width: 880px;
-      font-size: 20px;
-      line-height: 1.5;
-      color: var(--chocolate);
+    .legend-dot{
+      width:12px;
+      height:12px;
+      border-radius:999px;
+      border:1px solid rgba(0,0,0,.08);
+      flex:0 0 auto;
     }
 
-    .legend {
-      display: flex;
-      gap: 14px;
-      align-items: center;
-      flex-wrap: wrap;
-      background: rgba(255,255,255,0.55);
-      border: 1px solid rgba(84, 51, 18, 0.12);
-      border-radius: 999px;
-      padding: 14px 18px;
-      box-shadow: var(--shadow-soft);
-      margin-top: 8px;
-    }
-
-    .legend-item {
-      display: inline-flex;
-      align-items: center;
-      gap: 10px;
-      font-size: 14px;
-      color: var(--dark-olive);
-      font-weight: 600;
-      white-space: nowrap;
-    }
-
-    .legend-swatch {
-      width: 16px;
-      height: 16px;
-      border-radius: 5px;
-      border: 1.5px solid rgba(56, 51, 23, 0.28);
-      flex: 0 0 auto;
-    }
-
-    .sw-trigger { background: var(--light-blue); }
-    .sw-email { background: var(--lavender); }
-    .sw-split { background: var(--pale-yellow); }
-    .sw-finish { background: var(--dark-olive); border-color: var(--dark-olive); }
-
-    .board {
-      position: relative;
-      width: 1660px;
-      min-height: 1500px;
+    .board-scroll{
+      overflow-x:auto;
+      overflow-y:hidden;
+      padding:22px;
       background:
-        radial-gradient(circle at top right, rgba(232,222,245,0.35), transparent 24%),
-        radial-gradient(circle at bottom left, rgba(207,240,255,0.30), transparent 22%),
-        var(--surface);
-      border: 1px solid rgba(84, 51, 18, 0.08);
-      border-radius: 32px;
-      box-shadow: var(--shadow-soft);
-      padding: 34px 34px 50px;
-      overflow: hidden;
+        radial-gradient(circle at top left, rgba(255,255,255,.7), transparent 30%),
+        linear-gradient(180deg, rgba(255,255,255,.2), rgba(255,255,255,.02));
     }
 
-    .board::before,
-    .board::after {
-      content: "";
-      position: absolute;
-      pointer-events: none;
-      border: 1px solid rgba(219,166,161,0.28);
-      border-radius: 999px;
+    .board{
+      position:relative;
+      width:2140px;
+      height:860px;
+      border-radius:26px;
+      background:var(--canvas-bg);
+      border:1px solid rgba(90,58,27,.09);
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,.5);
+      overflow:hidden;
     }
 
-    .board::before {
-      width: 280px;
-      height: 280px;
-      top: -140px;
-      right: -90px;
+    .board::before{
+      content:"";
+      position:absolute;
+      inset:0;
+      background-image:
+        linear-gradient(rgba(90,58,27,.028) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(90,58,27,.028) 1px, transparent 1px);
+      background-size:48px 48px;
+      pointer-events:none;
     }
 
-    .board::after {
-      width: 220px;
-      height: 220px;
-      bottom: -90px;
-      left: -80px;
+    .lane-band{
+      position:absolute;
+      left:178px;
+      width:1755px;
+      height:164px;
+      border-radius:26px;
+      background:linear-gradient(180deg, rgba(255,255,255,.48), rgba(255,255,255,.18));
+      border:1px solid rgba(90,58,27,.07);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.7);
+    }
+    .lane-1{ top:74px; }
+    .lane-2{ top:324px; }
+    .lane-3{ top:574px; }
+
+    .lane-label{
+      position:absolute;
+      left:26px;
+      font-size:11px;
+      text-transform:uppercase;
+      letter-spacing:.18em;
+      color:rgba(84,51,18,.68);
+    }
+    .lane-1 .lane-label{ top:16px; }
+    .lane-2 .lane-label{ top:16px; }
+    .lane-3 .lane-label{ top:16px; }
+
+    .node{
+      position:absolute;
+      width:var(--node-w);
+      min-height:var(--node-h);
+      padding:14px 14px 12px;
+      border-radius:var(--radius);
+      border:1.5px solid transparent;
+      background:var(--surface);
+      box-shadow:var(--shadow);
+      cursor:pointer;
+      transition:transform .18s ease, box-shadow .18s ease, filter .18s ease;
+      display:flex;
+      align-items:flex-start;
+      justify-content:flex-start;
+      z-index:2;
     }
 
-    .section {
-      position: relative;
-      border-radius: 26px;
-      padding: 28px 24px 36px;
-      background: rgba(255,255,255,0.45);
-      border: 1px solid rgba(84, 51, 18, 0.07);
+    .node:hover{
+      transform:translateY(-3px);
+      box-shadow:var(--shadow-hover);
+      filter:brightness(1.01);
     }
 
-    .section-header {
-      margin-bottom: 18px;
+    .node-label{
+      display:block;
+      margin-bottom:8px;
+      font-size:10px;
+      line-height:1;
+      letter-spacing:.16em;
+      text-transform:uppercase;
+      color:rgba(10,13,10,.62);
     }
 
-    .section-kicker {
-      font-size: 12px;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      color: var(--deep-burgundy);
-      font-weight: 700;
-      margin-bottom: 10px;
+    .node-title{
+      display:block;
+      font-size:14px;
+      line-height:1.2;
+      font-weight:700;
+      color:var(--text);
+      margin-bottom:5px;
     }
 
-    .section-title {
-      margin: 0;
-      font-family: "Times New Roman", Georgia, serif;
-      font-size: 34px;
-      line-height: 1.1;
-      color: var(--dark-brown);
-      font-weight: 600;
+    .node-desc{
+      display:block;
+      font-size:12px;
+      color:var(--subtext);
+      line-height:1.35;
     }
 
-    .section-subtitle {
-      margin: 10px 0 0;
-      color: var(--chocolate);
-      font-size: 16px;
-      line-height: 1.55;
-      max-width: 1050px;
+    .trigger{
+      background:var(--trigger-bg);
+      border-color:var(--trigger-border);
     }
 
-    .flow {
-      position: relative;
-      min-height: 1220px;
-      padding-top: 10px;
+    .email{
+      background:var(--email-bg);
+      border-color:var(--email-border);
     }
 
-    svg.connector-layer {
-      position: absolute;
-      inset: 0;
-      width: 100%;
-      height: 100%;
-      overflow: visible;
-      pointer-events: none;
-      z-index: 0;
+    .finish{
+      width:165px;
+      min-height:88px;
+      background:var(--finish-bg);
+      border-color:rgba(255,245,237,.22);
+      color:var(--finish-text);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      text-align:center;
+      border-radius:24px;
     }
 
-    .lane-label {
-      position: absolute;
-      left: 18px;
-      z-index: 2;
-      display: inline-flex;
-      align-items: center;
-      gap: 10px;
-      background: rgba(255,245,237,0.9);
-      border: 1px solid rgba(84,51,18,0.10);
-      border-radius: 999px;
-      padding: 10px 14px;
-      font-size: 14px;
-      color: var(--dark-brown);
-      font-weight: 700;
-      box-shadow: var(--shadow-soft);
+    .finish .node-label,
+    .finish .node-title,
+    .finish .node-desc{
+      color:var(--finish-text);
     }
 
-    .lane-dot {
-      width: 10px;
-      height: 10px;
-      border-radius: 999px;
-      background: var(--deep-burgundy);
-      flex: 0 0 auto;
+    .finish .node-label{ opacity:.8; }
+    .finish .node-title{ font-size:16px; margin-bottom:3px; }
+
+    .split{
+      width:118px;
+      height:118px;
+      padding:0;
+      border:none;
+      background:transparent;
+      box-shadow:none;
+      overflow:visible;
     }
 
-    .node {
-      position: absolute;
-      z-index: 2;
-      border: 0;
-      padding: 0;
-      background: transparent;
-      cursor: pointer;
-      text-align: left;
-      transition: transform 0.18s ease, box-shadow 0.18s ease, filter 0.18s ease;
-      border-radius: 24px;
+    .split:hover{
+      transform:translateY(-3px);
+      filter:none;
+      box-shadow:none;
     }
 
-    .node:hover {
-      transform: translateY(-3px);
-      filter: brightness(1.01);
+    .split-shape{
+      position:absolute;
+      inset:14px;
+      background:var(--split-bg);
+      border:1.5px solid var(--split-border);
+      border-radius:20px;
+      transform:rotate(45deg);
+      box-shadow:var(--shadow);
+      transition:transform .18s ease, box-shadow .18s ease, filter .18s ease;
     }
 
-    .node.active {
-      box-shadow: 0 0 0 4px rgba(87,10,5,0.09), 0 0 0 9px rgba(232,222,245,0.55);
-      transform: translateY(-2px);
+    .split:hover .split-shape{
+      transform:rotate(45deg) translateY(-3px);
+      box-shadow:var(--shadow-hover);
+      filter:brightness(1.015);
     }
 
-    .card {
-      width: 240px;
-      min-height: 118px;
-      padding: 18px 18px 16px;
-      border-radius: 22px;
-      box-shadow: var(--shadow-soft);
-      border: 1.5px solid rgba(84, 51, 18, 0.14);
-      background: white;
+    .split-content{
+      position:absolute;
+      inset:14px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      text-align:center;
+      padding:14px;
+      z-index:1;
     }
 
-    .card.trigger {
-      background: linear-gradient(180deg, rgba(207,240,255,0.92), rgba(207,240,255,0.72));
-      border-color: rgba(56,51,23,0.15);
+    .split .node-label{
+      margin-bottom:6px;
+      font-size:9px;
+      letter-spacing:.14em;
     }
 
-    .card.email {
-      background: linear-gradient(180deg, rgba(232,222,245,0.98), rgba(232,222,245,0.82));
-      border-color: rgba(116,80,255,0.22);
+    .split .node-title{
+      font-size:12px;
+      margin-bottom:4px;
     }
 
-    .card.finish {
-      background: var(--dark-olive);
-      border-color: var(--dark-olive);
-      color: var(--bg);
-      min-height: 96px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
+    .split .node-desc{
+      font-size:10px;
+      line-height:1.2;
     }
 
-    .card.finish .node-type,
-    .card.finish .node-title,
-    .card.finish .node-copy {
-      color: var(--bg);
+    .type-icon{
+      position:absolute;
+      right:12px;
+      top:12px;
+      width:18px;
+      height:18px;
+      opacity:.55;
     }
 
-    .node-type {
-      font-size: 12px;
-      letter-spacing: 0.10em;
-      text-transform: uppercase;
-      font-weight: 700;
-      color: var(--deep-burgundy);
-      margin-bottom: 10px;
-      display: flex;
-      align-items: center;
-      gap: 10px;
+    .split .type-icon{
+      display:none;
     }
 
-    .node-icon {
-      width: 22px;
-      height: 22px;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      border-radius: 999px;
-      background: rgba(56,51,23,0.08);
-      color: var(--dark-olive);
-      font-size: 13px;
-      flex: 0 0 auto;
+    .branch-note{
+      position:absolute;
+      font-size:11px;
+      font-weight:600;
+      color:var(--subtext);
+      background:rgba(255,250,246,.94);
+      padding:3px 8px;
+      border-radius:999px;
+      border:1px solid rgba(90,58,27,.08);
+      z-index:3;
     }
 
-    .node-title {
-      font-size: 17px;
-      line-height: 1.25;
-      font-weight: 700;
-      color: var(--text);
-      margin: 0 0 6px;
+    svg.connectors{
+      position:absolute;
+      inset:0;
+      width:100%;
+      height:100%;
+      z-index:1;
+      overflow:visible;
+      pointer-events:none;
     }
 
-    .node-copy {
-      font-size: 14px;
-      line-height: 1.45;
-      color: var(--chocolate);
-      margin: 0;
+    .flow{
+      fill:none;
+      stroke:var(--line);
+      stroke-width:2;
+      stroke-linecap:round;
+      stroke-linejoin:round;
+      marker-end:url(#arrow);
+      opacity:.92;
     }
 
-    .diamond {
-      width: 170px;
-      height: 170px;
-      transform: rotate(45deg);
-      background: linear-gradient(180deg, rgba(237,232,186,0.96), rgba(255,245,237,0.95));
-      border: 1.8px solid rgba(56,51,23,0.24);
-      border-radius: 26px;
-      box-shadow: var(--shadow-soft);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      position: relative;
+    .flow.dashed{
+      stroke-dasharray:8 8;
+      opacity:.78;
     }
 
-    .diamond-inner {
-      width: 118px;
-      transform: rotate(-45deg);
-      text-align: center;
+    .rail{
+      fill:none;
+      stroke:rgba(90,58,27,.35);
+      stroke-width:1.5;
+      stroke-dasharray:2 9;
     }
 
-    .diamond .node-type {
-      justify-content: center;
-      margin-bottom: 8px;
-      font-size: 11px;
-      letter-spacing: 0.10em;
+    .modal-backdrop{
+      position:fixed;
+      inset:0;
+      background:rgba(10,13,10,.24);
+      backdrop-filter: blur(5px);
+      display:none;
+      align-items:center;
+      justify-content:center;
+      padding:24px;
+      z-index:50;
     }
 
-    .diamond .node-title {
-      font-size: 16px;
-      margin-bottom: 4px;
+    .modal-backdrop.open{ display:flex; }
+
+    .modal{
+      width:min(760px, 100%);
+      background:var(--canvas-bg);
+      border:1px solid rgba(90,58,27,.12);
+      border-radius:var(--modal-radius);
+      box-shadow:0 28px 80px rgba(84,51,18,.18);
+      overflow:hidden;
     }
 
-    .diamond .node-copy {
-      font-size: 13px;
-      line-height: 1.35;
+    .modal-head{
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap:18px;
+      padding:24px 26px 18px;
+      border-bottom:1px solid rgba(90,58,27,.08);
+      background:linear-gradient(180deg, rgba(255,255,255,.48), rgba(255,255,255,.12));
     }
 
-    .route-label {
-      position: absolute;
-      z-index: 1;
-      font-size: 13px;
-      color: var(--chocolate);
-      background: rgba(255,245,237,0.9);
-      padding: 3px 8px;
-      border-radius: 999px;
-      border: 1px solid rgba(84,51,18,0.08);
+    .modal-kicker{
+      font-size:11px;
+      text-transform:uppercase;
+      letter-spacing:.18em;
+      color:rgba(84,51,18,.7);
+      margin-bottom:8px;
     }
 
-    .overlay {
-      position: fixed;
-      inset: 0;
-      background: rgba(10, 13, 10, 0.38);
-      display: none;
-      align-items: center;
-      justify-content: center;
-      padding: 26px;
-      z-index: 30;
-      backdrop-filter: blur(2px);
+    .modal-title{
+      margin:0;
+      font-family:"Times New Roman", Georgia, serif;
+      font-size:28px;
+      font-weight:600;
+      color:var(--text);
     }
 
-    .overlay.open { display: flex; }
-
-    .modal {
-      width: min(760px, 100%);
-      background: rgba(255,250,246,0.98);
-      border: 1px solid rgba(84,51,18,0.12);
-      border-radius: 28px;
-      box-shadow: 0 24px 60px rgba(56, 51, 23, 0.18);
-      overflow: hidden;
+    .modal-subtitle{
+      margin:8px 0 0;
+      font-size:14px;
+      color:var(--subtext);
     }
 
-    .modal-header {
-      padding: 24px 26px 18px;
-      border-bottom: 1px solid rgba(84,51,18,0.08);
-      display: flex;
-      align-items: flex-start;
-      justify-content: space-between;
-      gap: 20px;
+    .modal-close{
+      appearance:none;
+      border:none;
+      background:rgba(90,58,27,.08);
+      color:var(--text);
+      width:40px;
+      height:40px;
+      border-radius:999px;
+      cursor:pointer;
+      font-size:20px;
+      line-height:1;
+      transition:background .18s ease, transform .18s ease;
+      flex:0 0 auto;
+    }
+    .modal-close:hover{
+      background:rgba(90,58,27,.14);
+      transform:scale(1.04);
     }
 
-    .modal-kicker {
-      font-size: 11px;
-      letter-spacing: 0.14em;
-      text-transform: uppercase;
-      color: var(--deep-burgundy);
-      font-weight: 700;
-      margin-bottom: 8px;
+    .modal-body{
+      padding:24px 26px 28px;
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:16px;
     }
 
-    .modal-title {
-      margin: 0;
-      font-family: "Times New Roman", Georgia, serif;
-      font-size: 34px;
-      line-height: 1.05;
-      color: var(--dark-brown);
-      font-weight: 600;
+    .modal-card{
+      background:rgba(255,255,255,.56);
+      border:1px solid rgba(90,58,27,.08);
+      border-radius:18px;
+      padding:16px;
+      min-height:116px;
     }
 
-    .close-btn {
-      width: 42px;
-      height: 42px;
-      border-radius: 999px;
-      border: 0;
-      cursor: pointer;
-      background: rgba(84,51,18,0.07);
-      color: var(--dark-brown);
-      font-size: 22px;
-      line-height: 1;
-      flex: 0 0 auto;
+    .modal-card.full{ grid-column:1 / -1; }
+
+    .modal-card h3{
+      margin:0 0 8px;
+      font-size:12px;
+      text-transform:uppercase;
+      letter-spacing:.14em;
+      color:rgba(84,51,18,.7);
     }
 
-    .modal-body {
-      padding: 24px 26px 28px;
+    .modal-card p{
+      margin:0;
+      font-size:14px;
+      color:var(--text);
+      line-height:1.5;
     }
 
-    .modal-body p {
-      margin: 0 0 18px;
-      font-size: 16px;
-      line-height: 1.65;
-      color: var(--chocolate);
+    .modal-card ul{
+      margin:0;
+      padding-left:18px;
+      color:var(--text);
     }
 
-    .meta-grid {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 14px;
-      margin-top: 18px;
+    .modal-card li{
+      margin:0 0 8px;
+      font-size:14px;
+      line-height:1.45;
     }
 
-    .meta-card {
-      background: rgba(255,255,255,0.78);
-      border: 1px solid rgba(84,51,18,0.08);
-      border-radius: 18px;
-      padding: 16px;
-    }
-
-    .meta-card h4 {
-      margin: 0 0 8px;
-      font-size: 12px;
-      letter-spacing: 0.10em;
-      text-transform: uppercase;
-      color: var(--deep-burgundy);
-    }
-
-    .meta-card p {
-      margin: 0;
-      font-size: 14px;
-      line-height: 1.55;
+    @media (max-width: 920px){
+      .diagram-head{
+        align-items:flex-start;
+        flex-direction:column;
+      }
+      .legend{justify-content:flex-start}
+      .modal-body{grid-template-columns:1fr}
+      .modal-card.full{grid-column:auto}
     }
   </style>
 </head>
 <body>
-  <div class="page">
-    <div class="shell">
-      <div class="brand">IKOU</div>
-
-      <div class="hero">
-        <div>
-          <h1>Upgrade<br>Journey</h1>
-          <p>
-            Tier-upgrade onboarding for customers entering Level 2, Level 3, or Level 4.
-            Each branch delivers a welcome email, checks reward redemption, then either exits early
-            or continues into reminder and last-chance messaging.
-          </p>
-        </div>
-
-        <div class="legend">
-          <span class="legend-item"><span class="legend-swatch sw-trigger"></span>Trigger</span>
-          <span class="legend-item"><span class="legend-swatch sw-split"></span>Conditional Split</span>
-          <span class="legend-item"><span class="legend-swatch sw-email"></span>Email</span>
-          <span class="legend-item"><span class="legend-swatch sw-finish"></span>Finish</span>
-        </div>
+  <div class="diagram-shell">
+    <div class="diagram-head">
+      <div class="title-wrap">
+        <h1>Upgrade Journey</h1>
+        <p>Internal IKOU CRM documentation for post-upgrade loyalty messaging. The journey routes customers into the appropriate tier lane, then progresses through welcome, reminder, and last-chance messaging until reward redemption or shared completion.</p>
       </div>
 
-      <div class="board">
-        <section class="section">
-          <div class="section-header">
-            <div class="section-kicker">Tier-based onboarding</div>
-            <h2 class="section-title">Upgrade routing and reminder sequence</h2>
-            <p class="section-subtitle">
-              Customers enter through the upgrade trigger, are routed by level, and then receive the corresponding
-              tier welcome and reward reminder sequence. Each path exits early when reward redemption is confirmed.
-            </p>
+      <div class="legend" aria-label="Legend">
+        <div class="legend-item"><span class="legend-dot" style="background:#CFF0FF;border-color:#67CDD7"></span>Trigger</div>
+        <div class="legend-item"><span class="legend-dot" style="background:#E8DEF5;border-color:#BDA9FF"></span>Email</div>
+        <div class="legend-item"><span class="legend-dot" style="background:#EDE8BA;border-color:#E2A400"></span>Conditional Split</div>
+        <div class="legend-item"><span class="legend-dot" style="background:#4A3F12;border-color:#4A3F12"></span>Finish</div>
+      </div>
+    </div>
+
+    <div class="board-scroll">
+      <div class="board" id="board">
+        <div class="lane-band lane-1"><div class="lane-label">Level 2 lane</div></div>
+        <div class="lane-band lane-2"><div class="lane-label">Level 3 lane</div></div>
+        <div class="lane-band lane-3"><div class="lane-label">Level 4 lane</div></div>
+
+        <svg class="connectors" viewBox="0 0 2140 860" preserveAspectRatio="none" aria-hidden="true">
+          <defs>
+            <marker id="arrow" viewBox="0 0 12 12" refX="10" refY="6" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+              <path d="M 0 0 L 12 6 L 0 12 z" fill="#5A3A1B"></path>
+            </marker>
+          </defs>
+
+          <!-- shared finish rail -->
+          <path class="rail" d="M 1890 90 L 1890 736" />
+
+          <!-- entry routing -->
+          <path class="flow" d="M 141 406 L 220 406" />
+          <path class="flow dashed" d="M 338 406 L 395 406" />
+          <path class="flow dashed" d="M 513 406 L 652 406" />
+          <path class="flow dashed" d="M 454 465 L 454 655 L 652 655" />
+          <path class="flow dashed" d="M 279 346 L 279 155 L 652 155" />
+
+          <!-- L2 lane -->
+          <path class="flow" d="M 822 156 L 938 156" />
+          <path class="flow dashed" d="M 1058 156 L 1174 156" />
+          <path class="flow" d="M 1301 156 L 1416 156" />
+          <path class="flow dashed" d="M 1536 156 L 1660 156 L 1660 406 L 1929 406" />
+          <path class="flow dashed" d="M 998 215 L 998 406 L 1929 406" />
+          <path class="flow dashed" d="M 1234 215 L 1234 406 L 1929 406" />
+
+          <!-- L3 lane -->
+          <path class="flow" d="M 822 406 L 938 406" />
+          <path class="flow dashed" d="M 1058 406 L 1174 406" />
+          <path class="flow" d="M 1301 406 L 1416 406" />
+          <path class="flow dashed" d="M 1536 406 L 1929 406" />
+          <path class="flow dashed" d="M 998 465 L 998 406 L 1929 406" />
+          <path class="flow dashed" d="M 1234 465 L 1234 406 L 1929 406" />
+
+          <!-- L4 lane -->
+          <path class="flow" d="M 822 656 L 938 656" />
+          <path class="flow dashed" d="M 1058 656 L 1174 656" />
+          <path class="flow" d="M 1301 656 L 1416 656" />
+          <path class="flow dashed" d="M 1536 656 L 1660 656 L 1660 406 L 1929 406" />
+          <path class="flow dashed" d="M 998 715 L 998 736 L 1890 736 L 1890 406 L 1929 406" />
+          <path class="flow dashed" d="M 1476 715 L 1476 736 L 1890 736 L 1890 406 L 1929 406" />
+
+          <!-- finish connector into final card -->
+          <path class="flow" d="M 1929 406 L 1930 406" />
+        </svg>
+
+        <div class="branch-note" style="left:135px; top:366px;">Entry</div>
+        <div class="branch-note" style="left:305px; top:322px;">Yes → L2</div>
+        <div class="branch-note" style="left:352px; top:390px;">No</div>
+        <div class="branch-note" style="left:470px; top:390px;">Yes → L3</div>
+        <div class="branch-note" style="left:470px; top:520px;">No → L4</div>
+        <div class="branch-note" style="left:984px; top:238px;">Yes</div>
+        <div class="branch-note" style="left:1218px; top:238px;">Yes</div>
+        <div class="branch-note" style="left:985px; top:488px;">Yes</div>
+        <div class="branch-note" style="left:1218px; top:488px;">Yes</div>
+        <div class="branch-note" style="left:985px; top:738px;">Yes</div>
+        <div class="branch-note" style="left:1460px; top:738px;">Yes</div>
+
+        <!-- Trigger -->
+        <button class="node trigger" style="left:40px; top:360px;"
+          data-section="Entry Trigger"
+          data-title="Upgrade Experience Trigger"
+          data-description="Customers enter the automation after a loyalty tier profile update is registered."
+          data-logic="Entry point for the journey. This node listens for a qualifying upgrade event and hands the customer into the routing layer after a brief delay for data consistency."
+          data-type="Trigger">
+          <svg class="type-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path d="M13 2L5 13h5l-1 9 8-11h-5l1-9Z" stroke="#0A0D0A" stroke-width="1.6" stroke-linejoin="round"/>
+          </svg>
+          <div>
+            <span class="node-label">Trigger</span>
+            <span class="node-title">Upgrade Experience</span>
+            <span class="node-desc">Profile property updates after tier change</span>
           </div>
+        </button>
 
-          <div class="flow">
-            <svg class="connector-layer" viewBox="0 0 1590 1220" aria-hidden="true">
-              <defs>
-                <marker id="arrowU" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto">
-                  <path d="M0,0 L10,5 L0,10 z" fill="#543312"></path>
-                </marker>
-              </defs>
+        <!-- Routing -->
+        <button class="node split" style="left:220px; top:346px;"
+          data-section="Routing Logic"
+          data-title="Level = 2?"
+          data-description="First routing decision. Determines whether the upgraded customer should enter the Level 2 lane."
+          data-logic="If profile property 'Loyalty Level' equals 2, route directly into the Level 2 messaging lane. If not, continue to the next conditional check."
+          data-type="Conditional Split">
+          <span class="split-shape"></span>
+          <span class="split-content">
+            <span>
+              <span class="node-label">Conditional Split</span>
+              <span class="node-title">Level = 2?</span>
+              <span class="node-desc">Tier routing check</span>
+            </span>
+          </span>
+        </button>
 
-              <!-- trigger to first split -->
-              <path d="M270 250 H 360" stroke="#543312" stroke-width="2.5" fill="none" marker-end="url(#arrowU)"/>
+        <button class="node split" style="left:395px; top:346px;"
+          data-section="Routing Logic"
+          data-title="Level = 3?"
+          data-description="Second routing decision for customers who did not qualify for Level 2."
+          data-logic="If profile property 'Loyalty Level' equals 3, route into the Level 3 lane. Otherwise continue to the Level 4 check."
+          data-type="Conditional Split">
+          <span class="split-shape"></span>
+          <span class="split-content">
+            <span>
+              <span class="node-label">Conditional Split</span>
+              <span class="node-title">Level = 3?</span>
+              <span class="node-desc">Tier routing check</span>
+            </span>
+          </span>
+        </button>
 
-              <!-- level 2 yes -->
-              <path d="M525 250 H 615" stroke="#543312" stroke-width="2.5" fill="none" marker-end="url(#arrowU)"/>
+        <button class="node split" style="left:395px; top:596px;"
+          data-section="Routing Logic"
+          data-title="Level = 4"
+          data-description="Fallback routing for customers who did not enter the Level 2 or Level 3 lanes."
+          data-logic="When the first two checks are false, the customer flows into the Level 4 lane by default."
+          data-type="Conditional Split">
+          <span class="split-shape"></span>
+          <span class="split-content">
+            <span>
+              <span class="node-label">Conditional Split</span>
+              <span class="node-title">Level = 4</span>
+              <span class="node-desc">Final tier routing</span>
+            </span>
+          </span>
+        </button>
 
-              <!-- level 2 no to level3 split -->
-              <path d="M445 335 V 500 H 500" stroke="#543312" stroke-width="2.5" fill="none" stroke-dasharray="8 8" marker-end="url(#arrowU)"/>
-
-              <!-- level 3 yes -->
-              <path d="M665 500 H 755" stroke="#543312" stroke-width="2.5" fill="none" marker-end="url(#arrowU)"/>
-
-              <!-- level 3 no to level4 split -->
-              <path d="M585 585 V 760 H 640" stroke="#543312" stroke-width="2.5" fill="none" stroke-dasharray="8 8" marker-end="url(#arrowU)"/>
-
-              <!-- level 4 yes -->
-              <path d="M805 760 H 895" stroke="#543312" stroke-width="2.5" fill="none" marker-end="url(#arrowU)"/>
-
-              <!-- lane 2 -->
-              <path d="M855 250 H 950" stroke="#543312" stroke-width="2.5" fill="none" marker-end="url(#arrowU)"/>
-              <path d="M1120 250 H 1215" stroke="#543312" stroke-width="2.5" fill="none" marker-end="url(#arrowU)"/>
-              <path d="M1455 250 H 1530" stroke="#543312" stroke-width="2.5" fill="none" marker-end="url(#arrowU)"/>
-
-              <!-- lane 2 yes exits -->
-              <path d="M1035 335 V 430 H 1535 V 290" stroke="#543312" stroke-width="2.5" fill="none" stroke-dasharray="8 8"/>
-              <path d="M1300 335 V 430 H 1535 V 290" stroke="#543312" stroke-width="2.5" fill="none" stroke-dasharray="8 8"/>
-
-              <!-- lane 3 -->
-              <path d="M995 500 H 1090" stroke="#543312" stroke-width="2.5" fill="none" marker-end="url(#arrowU)"/>
-              <path d="M1260 500 H 1355" stroke="#543312" stroke-width="2.5" fill="none" marker-end="url(#arrowU)"/>
-              <path d="M1595 500 H 1530" stroke="#543312" stroke-width="2.5" fill="none" marker-end="url(#arrowU)"/>
-
-              <!-- lane 3 yes exits -->
-              <path d="M1175 585 V 680 H 1535 V 540" stroke="#543312" stroke-width="2.5" fill="none" stroke-dasharray="8 8"/>
-              <path d="M1440 585 V 680 H 1535 V 540" stroke="#543312" stroke-width="2.5" fill="none" stroke-dasharray="8 8"/>
-
-              <!-- lane 4 -->
-              <path d="M1135 760 H 1230" stroke="#543312" stroke-width="2.5" fill="none" marker-end="url(#arrowU)"/>
-              <path d="M1400 760 H 1495" stroke="#543312" stroke-width="2.5" fill="none" marker-end="url(#arrowU)"/>
-              <path d="M1735 760 H 1530" stroke="#543312" stroke-width="2.5" fill="none" marker-end="url(#arrowU)"/>
-
-              <!-- lane 4 yes exits -->
-              <path d="M1315 845 V 940 H 1535 V 800" stroke="#543312" stroke-width="2.5" fill="none" stroke-dasharray="8 8"/>
-              <path d="M1580 845 V 940 H 1535 V 800" stroke="#543312" stroke-width="2.5" fill="none" stroke-dasharray="8 8"/>
-            </svg>
-
-            <div class="lane-label" style="top: 198px;"><span class="lane-dot"></span>Level 2 upgrade path</div>
-            <div class="lane-label" style="top: 448px;"><span class="lane-dot"></span>Level 3 upgrade path</div>
-            <div class="lane-label" style="top: 708px;"><span class="lane-dot"></span>Level 4 upgrade path</div>
-
-            <div class="route-label" style="left: 540px; top: 232px;">Yes</div>
-            <div class="route-label" style="left: 418px; top: 408px;">No</div>
-
-            <div class="route-label" style="left: 682px; top: 482px;">Yes</div>
-            <div class="route-label" style="left: 560px; top: 668px;">No</div>
-
-            <div class="route-label" style="left: 822px; top: 742px;">Yes</div>
-
-            <div class="route-label" style="left: 1082px; top: 232px;">No</div>
-            <div class="route-label" style="left: 1348px; top: 232px;">No</div>
-            <div class="route-label" style="left: 1055px; top: 372px;">Yes</div>
-            <div class="route-label" style="left: 1322px; top: 372px;">Yes</div>
-
-            <div class="route-label" style="left: 1222px; top: 482px;">No</div>
-            <div class="route-label" style="left: 1488px; top: 482px;">No</div>
-            <div class="route-label" style="left: 1195px; top: 622px;">Yes</div>
-            <div class="route-label" style="left: 1462px; top: 622px;">Yes</div>
-
-            <div class="route-label" style="left: 1362px; top: 742px;">No</div>
-            <div class="route-label" style="left: 1628px; top: 742px;">No</div>
-            <div class="route-label" style="left: 1335px; top: 882px;">Yes</div>
-            <div class="route-label" style="left: 1602px; top: 882px;">Yes</div>
-
-            <!-- trigger -->
-            <button class="node" style="left: 40px; top: 190px;" data-id="trigger-upgrade">
-              <div class="card trigger">
-                <div class="node-type"><span class="node-icon">⚡</span>Trigger</div>
-                <h3 class="node-title">Upgrade Tier Welcome</h3>
-                <p class="node-copy">Entry point for customers who qualify for a tier-upgrade onboarding journey.</p>
-              </div>
-            </button>
-
-            <!-- routing -->
-            <button class="node" style="left: 360px; top: 165px;" data-id="split-level2-route">
-              <div class="diamond">
-                <div class="diamond-inner">
-                  <div class="node-type"><span class="node-icon">◇</span>Split</div>
-                  <div class="node-title">Level = 2?</div>
-                  <div class="node-copy">Route tier entry</div>
-                </div>
-              </div>
-            </button>
-
-            <button class="node" style="left: 500px; top: 415px;" data-id="split-level3-route">
-              <div class="diamond">
-                <div class="diamond-inner">
-                  <div class="node-type"><span class="node-icon">◇</span>Split</div>
-                  <div class="node-title">Level = 3?</div>
-                  <div class="node-copy">Route tier entry</div>
-                </div>
-              </div>
-            </button>
-
-            <button class="node" style="left: 640px; top: 675px;" data-id="split-level4-route">
-              <div class="diamond">
-                <div class="diamond-inner">
-                  <div class="node-type"><span class="node-icon">◇</span>Split</div>
-                  <div class="node-title">Level = 4?</div>
-                  <div class="node-copy">Route tier entry</div>
-                </div>
-              </div>
-            </button>
-
-            <!-- LEVEL 2 -->
-            <button class="node" style="left: 615px; top: 190px;" data-id="l2-email1">
-              <div class="card email">
-                <div class="node-type"><span class="node-icon">✉</span>Send email</div>
-                <h3 class="node-title">L2 Upgrade Email #1</h3>
-                <p class="node-copy">Welcome to Tier.</p>
-              </div>
-            </button>
-
-            <button class="node" style="left: 950px; top: 165px;" data-id="l2-split1">
-              <div class="diamond">
-                <div class="diamond-inner">
-                  <div class="node-type"><span class="node-icon">◇</span>Split</div>
-                  <div class="node-title">Redeemed Reward?</div>
-                  <div class="node-copy">Equals true</div>
-                </div>
-              </div>
-            </button>
-
-            <button class="node" style="left: 1215px; top: 190px;" data-id="l2-email2">
-              <div class="card email">
-                <div class="node-type"><span class="node-icon">✉</span>Send email</div>
-                <h3 class="node-title">L2 Upgrade Email #2</h3>
-                <p class="node-copy">Reward reminder.</p>
-              </div>
-            </button>
-
-            <button class="node" style="left: 1530px; top: 180px;" data-id="finish-l2">
-              <div class="card finish">
-                <div>
-                  <div class="node-type">Finish</div>
-                  <div class="node-title">Level 2 complete</div>
-                </div>
-              </div>
-            </button>
-
-            <button class="node" style="left: 1215px; top: 430px;" data-id="l2-split2">
-              <div class="diamond">
-                <div class="diamond-inner">
-                  <div class="node-type"><span class="node-icon">◇</span>Split</div>
-                  <div class="node-title">Redeemed Reward?</div>
-                  <div class="node-copy">Final check</div>
-                </div>
-              </div>
-            </button>
-
-            <button class="node" style="left: 950px; top: 450px;" data-id="l2-email3">
-              <div class="card email">
-                <div class="node-type"><span class="node-icon">✉</span>Send email</div>
-                <h3 class="node-title">L2 Upgrade Email #3</h3>
-                <p class="node-copy">Reward last chance.</p>
-              </div>
-            </button>
-
-            <!-- LEVEL 3 -->
-            <button class="node" style="left: 755px; top: 440px;" data-id="l3-email1">
-              <div class="card email">
-                <div class="node-type"><span class="node-icon">✉</span>Send email</div>
-                <h3 class="node-title">L3 Upgrade Email #1</h3>
-                <p class="node-copy">Welcome to Tier.</p>
-              </div>
-            </button>
-
-            <button class="node" style="left: 1090px; top: 415px;" data-id="l3-split1">
-              <div class="diamond">
-                <div class="diamond-inner">
-                  <div class="node-type"><span class="node-icon">◇</span>Split</div>
-                  <div class="node-title">Redeemed Reward?</div>
-                  <div class="node-copy">Equals true</div>
-                </div>
-              </div>
-            </button>
-
-            <button class="node" style="left: 1355px; top: 440px;" data-id="l3-email2">
-              <div class="card email">
-                <div class="node-type"><span class="node-icon">✉</span>Send email</div>
-                <h3 class="node-title">L3 Upgrade Email #2</h3>
-                <p class="node-copy">Reward reminder.</p>
-              </div>
-            </button>
-
-            <button class="node" style="left: 1530px; top: 430px;" data-id="finish-l3">
-              <div class="card finish">
-                <div>
-                  <div class="node-type">Finish</div>
-                  <div class="node-title">Level 3 complete</div>
-                </div>
-              </div>
-            </button>
-
-            <button class="node" style="left: 1355px; top: 680px;" data-id="l3-split2">
-              <div class="diamond">
-                <div class="diamond-inner">
-                  <div class="node-type"><span class="node-icon">◇</span>Split</div>
-                  <div class="node-title">Redeemed Reward?</div>
-                  <div class="node-copy">Final check</div>
-                </div>
-              </div>
-            </button>
-
-            <button class="node" style="left: 1090px; top: 700px;" data-id="l3-email3">
-              <div class="card email">
-                <div class="node-type"><span class="node-icon">✉</span>Send email</div>
-                <h3 class="node-title">L3 Upgrade Email #3</h3>
-                <p class="node-copy">Reward last chance.</p>
-              </div>
-            </button>
-
-            <!-- LEVEL 4 -->
-            <button class="node" style="left: 895px; top: 700px;" data-id="l4-email1">
-              <div class="card email">
-                <div class="node-type"><span class="node-icon">✉</span>Send email</div>
-                <h3 class="node-title">L4 Upgrade Email #1</h3>
-                <p class="node-copy">Welcome to Tier.</p>
-              </div>
-            </button>
-
-            <button class="node" style="left: 1230px; top: 675px;" data-id="l4-split1">
-              <div class="diamond">
-                <div class="diamond-inner">
-                  <div class="node-type"><span class="node-icon">◇</span>Split</div>
-                  <div class="node-title">Redeemed Reward?</div>
-                  <div class="node-copy">Equals true</div>
-                </div>
-              </div>
-            </button>
-
-            <button class="node" style="left: 1495px; top: 700px;" data-id="l4-email2">
-              <div class="card email">
-                <div class="node-type"><span class="node-icon">✉</span>Send email</div>
-                <h3 class="node-title">L4 Upgrade Email #2</h3>
-                <p class="node-copy">Reward reminder.</p>
-              </div>
-            </button>
-
-            <button class="node" style="left: 1530px; top: 690px;" data-id="finish-l4">
-              <div class="card finish">
-                <div>
-                  <div class="node-type">Finish</div>
-                  <div class="node-title">Level 4 complete</div>
-                </div>
-              </div>
-            </button>
-
-            <button class="node" style="left: 1495px; top: 940px;" data-id="l4-split2">
-              <div class="diamond">
-                <div class="diamond-inner">
-                  <div class="node-type"><span class="node-icon">◇</span>Split</div>
-                  <div class="node-title">Redeemed Reward?</div>
-                  <div class="node-copy">Final check</div>
-                </div>
-              </div>
-            </button>
-
-            <button class="node" style="left: 1230px; top: 960px;" data-id="l4-email3">
-              <div class="card email">
-                <div class="node-type"><span class="node-icon">✉</span>Send email</div>
-                <h3 class="node-title">L4 Upgrade Email #3</h3>
-                <p class="node-copy">Reward last chance.</p>
-              </div>
-            </button>
+        <!-- Lane 1 -->
+        <button class="node email" style="left:652px; top:110px;"
+          data-section="Level 2 Messaging"
+          data-title="L2 Upgrade Email #1"
+          data-description="Initial welcome communication for newly upgraded Level 2 customers."
+          data-logic="First send in the lane. Introduces the new tier, reinforces value, and prompts reward discovery."
+          data-type="Send Email">
+          <svg class="type-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path d="M3 6.5h18v11H3z" stroke="#0A0D0A" stroke-width="1.5"/><path d="M3.5 7l8.5 7 8.5-7" stroke="#0A0D0A" stroke-width="1.5" fill="none"/>
+          </svg>
+          <div>
+            <span class="node-label">Send Email</span>
+            <span class="node-title">L2 Upgrade Email #1</span>
+            <span class="node-desc">Welcome to Tier</span>
           </div>
-        </section>
+        </button>
+
+        <button class="node split" style="left:938px; top:90px;"
+          data-section="Level 2 Decision"
+          data-title="Redeemed Reward?"
+          data-description="Checks whether the member redeemed the reward after the welcome email."
+          data-logic="If reward redemption equals true, exit the lane and join the shared finish. If false, continue into the reminder message."
+          data-type="Conditional Split">
+          <span class="split-shape"></span>
+          <span class="split-content">
+            <span>
+              <span class="node-label">Conditional Split</span>
+              <span class="node-title">Redeemed Reward?</span>
+              <span class="node-desc">Equals true</span>
+            </span>
+          </span>
+        </button>
+
+        <button class="node email" style="left:1174px; top:110px;"
+          data-section="Level 2 Messaging"
+          data-title="L2 Upgrade Email #2"
+          data-description="Reminder email for customers who have not yet redeemed their reward."
+          data-logic="Second message in the lane. Sent only when redemption remains false after the first send."
+          data-type="Send Email">
+          <svg class="type-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path d="M3 6.5h18v11H3z" stroke="#0A0D0A" stroke-width="1.5"/><path d="M3.5 7l8.5 7 8.5-7" stroke="#0A0D0A" stroke-width="1.5" fill="none"/>
+          </svg>
+          <div>
+            <span class="node-label">Send Email</span>
+            <span class="node-title">L2 Upgrade Email #2</span>
+            <span class="node-desc">Reward reminder</span>
+          </div>
+        </button>
+
+        <button class="node split" style="left:1416px; top:90px;"
+          data-section="Level 2 Decision"
+          data-title="Redeemed Reward?"
+          data-description="Final redemption check before sending the last chance message."
+          data-logic="If true, the member exits immediately to finish. If false, they receive the last-chance communication."
+          data-type="Conditional Split">
+          <span class="split-shape"></span>
+          <span class="split-content">
+            <span>
+              <span class="node-label">Conditional Split</span>
+              <span class="node-title">Redeemed Reward?</span>
+              <span class="node-desc">Final check</span>
+            </span>
+          </span>
+        </button>
+
+        <button class="node email" style="left:1660px; top:110px;"
+          data-section="Level 2 Messaging"
+          data-title="L2 Upgrade Email #3"
+          data-description="Last chance prompt for customers who still have not redeemed."
+          data-logic="Final send in the Level 2 lane. After this communication, the lane resolves into the shared finish."
+          data-type="Send Email">
+          <svg class="type-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path d="M3 6.5h18v11H3z" stroke="#0A0D0A" stroke-width="1.5"/><path d="M3.5 7l8.5 7 8.5-7" stroke="#0A0D0A" stroke-width="1.5" fill="none"/>
+          </svg>
+          <div>
+            <span class="node-label">Send Email</span>
+            <span class="node-title">L2 Upgrade Email #3</span>
+            <span class="node-desc">Reward last chance</span>
+          </div>
+        </button>
+
+        <!-- Lane 2 -->
+        <button class="node email" style="left:652px; top:360px;"
+          data-section="Level 3 Messaging"
+          data-title="L3 Upgrade Email #1"
+          data-description="Initial welcome communication for newly upgraded Level 3 customers."
+          data-logic="First send in the lane. Frames the value of the tier upgrade and encourages immediate reward use."
+          data-type="Send Email">
+          <svg class="type-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path d="M3 6.5h18v11H3z" stroke="#0A0D0A" stroke-width="1.5"/><path d="M3.5 7l8.5 7 8.5-7" stroke="#0A0D0A" stroke-width="1.5" fill="none"/>
+          </svg>
+          <div>
+            <span class="node-label">Send Email</span>
+            <span class="node-title">L3 Upgrade Email #1</span>
+            <span class="node-desc">Welcome to Tier</span>
+          </div>
+        </button>
+
+        <button class="node split" style="left:938px; top:340px;"
+          data-section="Level 3 Decision"
+          data-title="Redeemed Reward?"
+          data-description="Checks for redemption after the initial welcome communication."
+          data-logic="True routes to finish; false continues to the reminder step."
+          data-type="Conditional Split">
+          <span class="split-shape"></span>
+          <span class="split-content">
+            <span>
+              <span class="node-label">Conditional Split</span>
+              <span class="node-title">Redeemed Reward?</span>
+              <span class="node-desc">Equals true</span>
+            </span>
+          </span>
+        </button>
+
+        <button class="node email" style="left:1174px; top:360px;"
+          data-section="Level 3 Messaging"
+          data-title="L3 Upgrade Email #2"
+          data-description="Reminder message for unredeemed Level 3 customers."
+          data-logic="Continues the lane only when the reward remains unused after the first touchpoint."
+          data-type="Send Email">
+          <svg class="type-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path d="M3 6.5h18v11H3z" stroke="#0A0D0A" stroke-width="1.5"/><path d="M3.5 7l8.5 7 8.5-7" stroke="#0A0D0A" stroke-width="1.5" fill="none"/>
+          </svg>
+          <div>
+            <span class="node-label">Send Email</span>
+            <span class="node-title">L3 Upgrade Email #2</span>
+            <span class="node-desc">Reward reminder</span>
+          </div>
+        </button>
+
+        <button class="node split" style="left:1416px; top:340px;"
+          data-section="Level 3 Decision"
+          data-title="Redeemed Reward?"
+          data-description="Final redemption check before the last-chance message."
+          data-logic="True ends the journey. False continues into the final email before the shared finish."
+          data-type="Conditional Split">
+          <span class="split-shape"></span>
+          <span class="split-content">
+            <span>
+              <span class="node-label">Conditional Split</span>
+              <span class="node-title">Redeemed Reward?</span>
+              <span class="node-desc">Final check</span>
+            </span>
+          </span>
+        </button>
+
+        <button class="node email" style="left:1660px; top:360px;"
+          data-section="Level 3 Messaging"
+          data-title="L3 Upgrade Email #3"
+          data-description="Final prompt for non-redeemers in the Level 3 lane."
+          data-logic="Last-chance communication before the lane resolves into the common finish state."
+          data-type="Send Email">
+          <svg class="type-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path d="M3 6.5h18v11H3z" stroke="#0A0D0A" stroke-width="1.5"/><path d="M3.5 7l8.5 7 8.5-7" stroke="#0A0D0A" stroke-width="1.5" fill="none"/>
+          </svg>
+          <div>
+            <span class="node-label">Send Email</span>
+            <span class="node-title">L3 Upgrade Email #3</span>
+            <span class="node-desc">Reward last chance</span>
+          </div>
+        </button>
+
+        <!-- Lane 3 -->
+        <button class="node email" style="left:652px; top:610px;"
+          data-section="Level 4 Messaging"
+          data-title="L4 Upgrade Email #1"
+          data-description="Initial welcome communication for newly upgraded Level 4 customers."
+          data-logic="Introduces top-tier benefits and prompts immediate reward discovery."
+          data-type="Send Email">
+          <svg class="type-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path d="M3 6.5h18v11H3z" stroke="#0A0D0A" stroke-width="1.5"/><path d="M3.5 7l8.5 7 8.5-7" stroke="#0A0D0A" stroke-width="1.5" fill="none"/>
+          </svg>
+          <div>
+            <span class="node-label">Send Email</span>
+            <span class="node-title">L4 Upgrade Email #1</span>
+            <span class="node-desc">Welcome to Tier</span>
+          </div>
+        </button>
+
+        <button class="node split" style="left:938px; top:590px;"
+          data-section="Level 4 Decision"
+          data-title="Redeemed Reward?"
+          data-description="Checks whether the Level 4 customer redeemed after the welcome send."
+          data-logic="True exits to finish. False moves to the reminder step."
+          data-type="Conditional Split">
+          <span class="split-shape"></span>
+          <span class="split-content">
+            <span>
+              <span class="node-label">Conditional Split</span>
+              <span class="node-title">Redeemed Reward?</span>
+              <span class="node-desc">Equals true</span>
+            </span>
+          </span>
+        </button>
+
+        <button class="node email" style="left:1174px; top:610px;"
+          data-section="Level 4 Messaging"
+          data-title="L4 Upgrade Email #2"
+          data-description="Reminder message for customers who still have not redeemed."
+          data-logic="Sent only when the first redemption check stays false."
+          data-type="Send Email">
+          <svg class="type-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path d="M3 6.5h18v11H3z" stroke="#0A0D0A" stroke-width="1.5"/><path d="M3.5 7l8.5 7 8.5-7" stroke="#0A0D0A" stroke-width="1.5" fill="none"/>
+          </svg>
+          <div>
+            <span class="node-label">Send Email</span>
+            <span class="node-title">L4 Upgrade Email #2</span>
+            <span class="node-desc">Reward reminder</span>
+          </div>
+        </button>
+
+        <button class="node split" style="left:1416px; top:590px;"
+          data-section="Level 4 Decision"
+          data-title="Redeemed Reward?"
+          data-description="Final redemption check for the Level 4 lane."
+          data-logic="True exits early to finish. False proceeds into the last-chance communication."
+          data-type="Conditional Split">
+          <span class="split-shape"></span>
+          <span class="split-content">
+            <span>
+              <span class="node-label">Conditional Split</span>
+              <span class="node-title">Redeemed Reward?</span>
+              <span class="node-desc">Final check</span>
+            </span>
+          </span>
+        </button>
+
+        <button class="node email" style="left:1660px; top:610px;"
+          data-section="Level 4 Messaging"
+          data-title="L4 Upgrade Email #3"
+          data-description="Last-chance message before the lane is resolved."
+          data-logic="Final send in the Level 4 lane. The customer then resolves into the shared finish state."
+          data-type="Send Email">
+          <svg class="type-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path d="M3 6.5h18v11H3z" stroke="#0A0D0A" stroke-width="1.5"/><path d="M3.5 7l8.5 7 8.5-7" stroke="#0A0D0A" stroke-width="1.5" fill="none"/>
+          </svg>
+          <div>
+            <span class="node-label">Send Email</span>
+            <span class="node-title">L4 Upgrade Email #3</span>
+            <span class="node-desc">Reward last chance</span>
+          </div>
+        </button>
+
+        <!-- Shared finish -->
+        <button class="node finish" style="left:1930px; top:360px;"
+          data-section="Shared Completion"
+          data-title="Journey Finish"
+          data-description="Shared endpoint for all tier branches regardless of exit path."
+          data-logic="Customers can arrive here after reward redemption or after the final last-chance send. This keeps the documentation structured and reinforces a single resolution state."
+          data-type="Finish">
+          <div>
+            <span class="node-label">Finish</span>
+            <span class="node-title">Complete</span>
+            <span class="node-desc">Shared exit endpoint</span>
+          </div>
+        </button>
       </div>
     </div>
   </div>
 
-  <div class="overlay" id="overlay" aria-hidden="true">
+  <div class="modal-backdrop" id="modalBackdrop" aria-hidden="true">
     <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
-      <div class="modal-header">
+      <div class="modal-head">
         <div>
-          <div class="modal-kicker" id="modalEyebrow">Node details</div>
-          <h2 class="modal-title" id="modalTitle">Title</h2>
+          <div class="modal-kicker" id="modalSection">Section</div>
+          <h2 class="modal-title" id="modalTitle">Node Title</h2>
+          <p class="modal-subtitle" id="modalSubtitle">Description</p>
         </div>
-        <button class="close-btn" id="closeBtn" aria-label="Close">×</button>
+        <button class="modal-close" id="modalClose" aria-label="Close">×</button>
       </div>
-
       <div class="modal-body">
-        <p id="modalDescription"></p>
-
-        <div class="meta-grid">
-          <div class="meta-card">
-            <h4>Section</h4>
-            <p id="modalSection"></p>
-          </div>
-          <div class="meta-card">
-            <h4>Flow Logic</h4>
-            <p id="modalLogic"></p>
-          </div>
+        <div class="modal-card">
+          <h3>Node Type</h3>
+          <p id="modalType">—</p>
+        </div>
+        <div class="modal-card">
+          <h3>Documentation Summary</h3>
+          <p id="modalDescription">—</p>
+        </div>
+        <div class="modal-card full">
+          <h3>Flow Logic</h3>
+          <p id="modalLogic">—</p>
         </div>
       </div>
     </div>
   </div>
 
   <script>
-    const tokenData = {
-      "trigger-upgrade": {
-        eyebrow: "Upgrade journey",
-        title: "Trigger — Upgrade Tier Welcome",
-        description: "Entry point for customers who newly qualify for a loyalty tier upgrade onboarding sequence.",
-        section: "Entry",
-        logic: "This trigger starts the journey before the profile is routed into the correct level-specific branch."
-      },
+    const nodes = document.querySelectorAll('.node');
+    const modalBackdrop = document.getElementById('modalBackdrop');
+    const modalClose = document.getElementById('modalClose');
+    const modalSection = document.getElementById('modalSection');
+    const modalTitle = document.getElementById('modalTitle');
+    const modalSubtitle = document.getElementById('modalSubtitle');
+    const modalType = document.getElementById('modalType');
+    const modalDescription = document.getElementById('modalDescription');
+    const modalLogic = document.getElementById('modalLogic');
 
-      "split-level2-route": {
-        eyebrow: "Routing",
-        title: "Conditional Split — Level = 2?",
-        description: "Checks whether the customer should enter the Level 2 upgrade branch.",
-        section: "Routing",
-        logic: "Yes routes into Level 2 messaging. No continues to the Level 3 routing check."
-      },
-      "split-level3-route": {
-        eyebrow: "Routing",
-        title: "Conditional Split — Level = 3?",
-        description: "Checks whether the customer should enter the Level 3 upgrade branch.",
-        section: "Routing",
-        logic: "Yes routes into Level 3 messaging. No continues to the Level 4 routing check."
-      },
-      "split-level4-route": {
-        eyebrow: "Routing",
-        title: "Conditional Split — Level = 4?",
-        description: "Checks whether the customer should enter the Level 4 upgrade branch.",
-        section: "Routing",
-        logic: "Yes routes into Level 4 messaging."
-      },
-
-      "l2-email1": {
-        eyebrow: "Level 2 branch",
-        title: "L2 Upgrade Email #1",
-        description: "Welcome email for customers entering Level 2.",
-        section: "Level 2",
-        logic: "First touchpoint in the Level 2 upgrade journey."
-      },
-      "l2-split1": {
-        eyebrow: "Level 2 branch",
-        title: "Conditional Split — Redeemed Reward?",
-        description: "Checks whether the customer redeemed the Level 2 reward after the first welcome email.",
-        section: "Level 2",
-        logic: "Yes exits the branch early. No continues to the reward reminder."
-      },
-      "l2-email2": {
-        eyebrow: "Level 2 branch",
-        title: "L2 Upgrade Email #2",
-        description: "Reminder email for Level 2 customers who have not redeemed yet.",
-        section: "Level 2",
-        logic: "Second touchpoint focused on reward redemption."
-      },
-      "l2-split2": {
-        eyebrow: "Level 2 branch",
-        title: "Conditional Split — Redeemed Reward? Final check",
-        description: "Final redemption check after reminder messaging in the Level 2 path.",
-        section: "Level 2",
-        logic: "Yes exits. No continues to the last-chance email."
-      },
-      "l2-email3": {
-        eyebrow: "Level 2 branch",
-        title: "L2 Upgrade Email #3",
-        description: "Last-chance message for Level 2 customers who still have not redeemed.",
-        section: "Level 2",
-        logic: "Creates final urgency before branch completion."
-      },
-      "finish-l2": {
-        eyebrow: "Level 2 branch",
-        title: "Finish — Level 2 complete",
-        description: "End state for the Level 2 upgrade path.",
-        section: "Level 2",
-        logic: "Customers exit here after redeeming early or completing the full sequence."
-      },
-
-      "l3-email1": {
-        eyebrow: "Level 3 branch",
-        title: "L3 Upgrade Email #1",
-        description: "Welcome email for customers entering Level 3.",
-        section: "Level 3",
-        logic: "First touchpoint in the Level 3 upgrade journey."
-      },
-      "l3-split1": {
-        eyebrow: "Level 3 branch",
-        title: "Conditional Split — Redeemed Reward?",
-        description: "Checks whether the customer redeemed the Level 3 reward after the first welcome email.",
-        section: "Level 3",
-        logic: "Yes exits the branch early. No continues to the reward reminder."
-      },
-      "l3-email2": {
-        eyebrow: "Level 3 branch",
-        title: "L3 Upgrade Email #2",
-        description: "Reminder email for Level 3 customers who have not redeemed yet.",
-        section: "Level 3",
-        logic: "Second touchpoint focused on reward redemption."
-      },
-      "l3-split2": {
-        eyebrow: "Level 3 branch",
-        title: "Conditional Split — Redeemed Reward? Final check",
-        description: "Final redemption check after reminder messaging in the Level 3 path.",
-        section: "Level 3",
-        logic: "Yes exits. No continues to the last-chance email."
-      },
-      "l3-email3": {
-        eyebrow: "Level 3 branch",
-        title: "L3 Upgrade Email #3",
-        description: "Last-chance message for Level 3 customers who still have not redeemed.",
-        section: "Level 3",
-        logic: "Creates final urgency before branch completion."
-      },
-      "finish-l3": {
-        eyebrow: "Level 3 branch",
-        title: "Finish — Level 3 complete",
-        description: "End state for the Level 3 upgrade path.",
-        section: "Level 3",
-        logic: "Customers exit here after redeeming early or completing the full sequence."
-      },
-
-      "l4-email1": {
-        eyebrow: "Level 4 branch",
-        title: "L4 Upgrade Email #1",
-        description: "Welcome email for customers entering Level 4.",
-        section: "Level 4",
-        logic: "First touchpoint in the Level 4 upgrade journey."
-      },
-      "l4-split1": {
-        eyebrow: "Level 4 branch",
-        title: "Conditional Split — Redeemed Reward?",
-        description: "Checks whether the customer redeemed the Level 4 reward after the first welcome email.",
-        section: "Level 4",
-        logic: "Yes exits the branch early. No continues to the reward reminder."
-      },
-      "l4-email2": {
-        eyebrow: "Level 4 branch",
-        title: "L4 Upgrade Email #2",
-        description: "Reminder email for Level 4 customers who have not redeemed yet.",
-        section: "Level 4",
-        logic: "Second touchpoint focused on reward redemption."
-      },
-      "l4-split2": {
-        eyebrow: "Level 4 branch",
-        title: "Conditional Split — Redeemed Reward? Final check",
-        description: "Final redemption check after reminder messaging in the Level 4 path.",
-        section: "Level 4",
-        logic: "Yes exits. No continues to the last-chance email."
-      },
-      "l4-email3": {
-        eyebrow: "Level 4 branch",
-        title: "L4 Upgrade Email #3",
-        description: "Last-chance message for Level 4 customers who still have not redeemed.",
-        section: "Level 4",
-        logic: "Creates final urgency before branch completion."
-      },
-      "finish-l4": {
-        eyebrow: "Level 4 branch",
-        title: "Finish — Level 4 complete",
-        description: "End state for the Level 4 upgrade path.",
-        section: "Level 4",
-        logic: "Customers exit here after redeeming early or completing the full sequence."
-      }
-    };
-
-    const overlay = document.getElementById("overlay");
-    const closeBtn = document.getElementById("closeBtn");
-    const modalEyebrow = document.getElementById("modalEyebrow");
-    const modalTitle = document.getElementById("modalTitle");
-    const modalDescription = document.getElementById("modalDescription");
-    const modalSection = document.getElementById("modalSection");
-    const modalLogic = document.getElementById("modalLogic");
-    const nodes = document.querySelectorAll(".node");
-
-    function openModal(id, node) {
-      const data = tokenData[id];
-      if (!data) return;
-
-      nodes.forEach(n => n.classList.remove("active"));
-      node.classList.add("active");
-
-      modalEyebrow.textContent = data.eyebrow;
-      modalTitle.textContent = data.title;
-      modalDescription.textContent = data.description;
-      modalSection.textContent = data.section;
-      modalLogic.textContent = data.logic;
-
-      overlay.classList.add("open");
-      overlay.setAttribute("aria-hidden", "false");
+    function openModal(node){
+      modalSection.textContent = node.dataset.section || 'Flow Detail';
+      modalTitle.textContent = node.dataset.title || 'Node';
+      modalSubtitle.textContent = node.dataset.description || '';
+      modalType.textContent = node.dataset.type || '—';
+      modalDescription.textContent = node.dataset.description || '—';
+      modalLogic.textContent = node.dataset.logic || '—';
+      modalBackdrop.classList.add('open');
+      modalBackdrop.setAttribute('aria-hidden', 'false');
+      document.body.style.overflow = 'hidden';
     }
 
-    function closeModal() {
-      overlay.classList.remove("open");
-      overlay.setAttribute("aria-hidden", "true");
-      nodes.forEach(n => n.classList.remove("active"));
+    function closeModal(){
+      modalBackdrop.classList.remove('open');
+      modalBackdrop.setAttribute('aria-hidden', 'true');
+      document.body.style.overflow = '';
     }
 
     nodes.forEach(node => {
-      node.addEventListener("click", (e) => {
-        e.stopPropagation();
-        openModal(node.dataset.id, node);
-      });
+      node.addEventListener('click', () => openModal(node));
     });
 
-    closeBtn.addEventListener("click", closeModal);
-    overlay.addEventListener("click", (e) => {
-      if (e.target === overlay) closeModal();
+    modalClose.addEventListener('click', closeModal);
+    modalBackdrop.addEventListener('click', (event) => {
+      if(event.target === modalBackdrop) closeModal();
     });
 
-    document.addEventListener("keydown", (e) => {
-      if (e.key === "Escape") closeModal();
+    window.addEventListener('keydown', (event) => {
+      if(event.key === 'Escape' && modalBackdrop.classList.contains('open')){
+        closeModal();
+      }
     });
   </script>
 </body>
