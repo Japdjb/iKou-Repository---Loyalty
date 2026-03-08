@@ -496,7 +496,7 @@
           <h1>Onboarding Comms<br />Existing Customers</h1>
           <div class="subcopy">
             Loyalty onboarding structure for existing customers, including pre-launch teaser placement,
-            active-customer entry, and reactivated-customer entry. Hover or click any node to review
+            active-customer entry, and data flow for existing customers that have NOT spent in the last 12 Months. Hover or click any node to review
             purpose and logic.
           </div>
         </div>
@@ -578,10 +578,11 @@
 
               <path d="M498 164 V 228" stroke="#9a7958" stroke-width="2.4" stroke-dasharray="5 5" fill="none" />
               <path d="M910 164 V 228" stroke="#9a7958" stroke-width="2.4" stroke-dasharray="5 5" fill="none" />
-
-              <path d="M498 228 H 690" stroke="#9a7958" stroke-width="2.4" stroke-dasharray="5 5" fill="none" />
-              <path d="M910 228 H 1042" stroke="#9a7958" stroke-width="2.4" stroke-dasharray="5 5" fill="none" />
-              <path d="M788 228 H 670" stroke="#9a7958" stroke-width="2.4" stroke-dasharray="5 5" fill="none" />
+              <path d="M1110 200 V 155" stroke="#9a7958" stroke-width="2.4" stroke-dasharray="5 5" fill="none" />
+              
+              <path d="M498 228 H 990" stroke="#9a7958" stroke-width="2.4" stroke-dasharray="5 5" fill="none" />
+              <path d="M810 228 H 1042" stroke="#9a7958" stroke-width="2.4" stroke-dasharray="5 5" fill="none" />
+              <path d="M818 228 H 1042" stroke="#9a7958" stroke-width="2.4" stroke-dasharray="5 5" fill="none" />
             </svg>
 
             <div class="branch-label" style="left:468px; top:206px;">Yes</div>
@@ -639,7 +640,7 @@
               </div>
             </button>
 
-            <button class="node" style="left:652px; top:190px;" data-id="email3-recent">
+            <button class="node" style="left:1062px; top:76px;" data-id="email3-recent">
               <div class="token email">
                 <div class="token-copy">
                   <div class="token-kicker">Send email</div>
@@ -688,15 +689,17 @@
               <path d="M238 164 V 248 H 1106" stroke="#9a7958" stroke-width="2.4" stroke-dasharray="5 5" fill="none" />
               <path d="M650 164 V 248" stroke="#9a7958" stroke-width="2.4" stroke-dasharray="5 5" fill="none" />
               <path d="M1062 164 V 248" stroke="#9a7958" stroke-width="2.4" stroke-dasharray="5 5" fill="none" />
+              <path d="M1272 104 V 248" stroke="#9a7958" stroke-width="2.4" stroke-dasharray="5 5" fill="none" />
             </svg>
 
             <div class="branch-label" style="left:206px; top:98px;">No</div>
             <div class="branch-label" style="left:210px; top:227px;">Yes</div>
 
             <div class="branch-label" style="left:620px; top:227px;">Yes</div>
+            <div class="branch-label" style="left:1035px; top:197px;">Yes</div>
             <div class="branch-label" style="left:742px; top:98px;">No</div>
 
-            <div class="branch-label" style="left:1030px; top:227px;">Yes</div>
+            <div class="branch-label" style="left:1230px; top:227px;">No</div>
             <div class="branch-label" style="left:1148px; top:98px;">No</div>
 
             <button class="node" style="left:0px; top:76px;" data-id="trigger-lapsed">
@@ -704,7 +707,7 @@
                 <div class="token-copy">
                   <div class="token-kicker">Trigger</div>
                   <div class="token-title">Placed Order</div>
-                  <div class="token-sub">Reactivated customer entry</div>
+                  <div class="token-sub">When someone - Placed Order</div>
                 </div>
               </div>
             </button>
@@ -713,8 +716,8 @@
               <div class="diamond">
                 <div class="diamond-copy">
                   <div class="token-kicker">Split</div>
-                  <div class="token-title">Placed order in last 12 months?</div>
-                  <div class="token-sub">Filter active customers</div>
+                  <div class="token-title">Placed order at least 2</div>
+                  <div class="token-sub">in last 12 months?</div>
                 </div>
               </div>
             </button>
@@ -724,7 +727,7 @@
                 <div class="token-copy">
                   <div class="token-kicker">Send email</div>
                   <div class="token-title">Welcome Existing #1</div>
-                  <div class="token-sub">Loyalty introduction</div>
+                  <div class="token-sub">Welcome to Loyalty, Loyalist</div>
                 </div>
               </div>
             </button>
@@ -734,7 +737,7 @@
                 <div class="diamond-copy">
                   <div class="token-kicker">Split</div>
                   <div class="token-title">Redeemed Reward?</div>
-                  <div class="token-sub">True / False</div>
+                  <div class="token-sub">True</div>
                 </div>
               </div>
             </button>
@@ -754,12 +757,12 @@
                 <div class="diamond-copy">
                   <div class="token-kicker">Split</div>
                   <div class="token-title">Redeemed Reward?</div>
-                  <div class="token-sub">True / False</div>
+                  <div class="token-sub">True</div>
                 </div>
               </div>
             </button>
 
-            <button class="node" style="left:806px; top:200px;" data-id="email3-lapsed">
+            <button class="node" style="left:1200px; top:76px;" data-id="email3-lapsed">
               <div class="token email">
                 <div class="token-copy">
                   <div class="token-kicker">Send email</div>
@@ -769,7 +772,7 @@
               </div>
             </button>
 
-            <button class="node" style="left:1060px; top:196px;" data-id="finish-lapsed">
+            <button class="node" style="left:1120px; top:196px;" data-id="finish-lapsed">
               <div class="finish">
                 <div class="token-copy" style="align-items:center;">
                   <div class="token-title">Sequence complete</div>
