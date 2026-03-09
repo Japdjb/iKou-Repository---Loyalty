@@ -11,7 +11,7 @@
   {
     "id": "Welcome-Series-New",
     "title": "Welcome Series New",
-    "phase": "01-tier-progression",
+    "phase": "02-welcome",
     "displayOrder": 2,
     "status": "Live",
     "programHtml": "assets/programs/loyalty/welcome-series-new.html",
