@@ -1,0 +1,879 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Welcome Series – New | IKOU CRM</title>
+  <style>
+    :root{
+      --bg:#FFF5ED;
+      --panel:#FFFAF6;
+      --panel-border:rgba(90,58,27,.14);
+      --text:#0A0D0A;
+      --body:#543312;
+      --muted:rgba(84,51,18,.70);
+      --line:#5A3A1B;
+      --shadow:0 18px 38px rgba(58,35,22,.08);
+
+      --trigger-fill:#CFF0FF;
+      --trigger-stroke:#67CDD7;
+
+      --email-fill:#E8DEF5;
+      --email-stroke:#BDA9FF;
+
+      --split-fill:#EDE8BA;
+      --split-stroke:#E2A400;
+
+      --wait-fill:#F6EEE3;
+      --wait-stroke:#D9C2A6;
+
+      --finish-fill:#4A3F12;
+      --finish-text:#FFF5ED;
+
+      --lead-fill:#E8D1B9;
+      --lead-stroke:#D09F72;
+    }
+
+    *{box-sizing:border-box}
+    html,body{margin:0;padding:0;background:var(--bg);color:var(--text)}
+    body{
+      font-family:Arial, Helvetica, sans-serif;
+      -webkit-font-smoothing:antialiased;
+      text-rendering:optimizeLegibility;
+    }
+
+    .page{
+      min-height:100vh;
+      padding:24px;
+      background:
+        radial-gradient(circle at top left, rgba(255,255,255,.45), transparent 28%),
+        linear-gradient(180deg, rgba(255,255,255,.28), rgba(255,255,255,0) 18%),
+        var(--bg);
+    }
+
+    .shell{
+      max-width:100%;
+      margin:0 auto;
+      background:var(--panel);
+      border:1px solid var(--panel-border);
+      border-radius:28px;
+      box-shadow:var(--shadow);
+      overflow:hidden;
+    }
+
+    .header{
+      padding:26px 30px 16px;
+      border-bottom:1px solid rgba(90,58,27,.10);
+      background:linear-gradient(180deg, rgba(255,255,255,.44), rgba(255,255,255,0));
+    }
+
+    .eyebrow{
+      display:inline-flex;
+      align-items:center;
+      padding:7px 12px;
+      border:1px solid rgba(90,58,27,.14);
+      border-radius:999px;
+      font-size:11px;
+      letter-spacing:.16em;
+      text-transform:uppercase;
+      color:var(--body);
+      background:rgba(255,255,255,.56);
+      margin-bottom:12px;
+    }
+
+    h1{
+      margin:0;
+      font-family:"Times New Roman", Georgia, serif;
+      font-size:36px;
+      font-weight:600;
+      letter-spacing:.01em;
+      color:var(--text);
+    }
+
+    .sub{
+      margin-top:10px;
+      max-width:980px;
+      font-size:14px;
+      line-height:1.65;
+      color:var(--body);
+    }
+
+    .canvas-wrap{
+      padding:18px;
+      overflow-x:auto;
+      overflow-y:hidden;
+    }
+
+    .canvas{
+      position:relative;
+      width:2140px;
+      height:720px;
+      margin:0 auto;
+      border-radius:24px;
+      background:
+        linear-gradient(rgba(90,58,27,.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(90,58,27,.04) 1px, transparent 1px),
+        linear-gradient(180deg, rgba(255,255,255,.52), rgba(255,255,255,.18));
+      background-size:32px 32px, 32px 32px, 100% 100%;
+      border:1px solid rgba(90,58,27,.08);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.45);
+    }
+
+    .flow-tag{
+      position:absolute;
+      top:16px;
+      left:16px;
+      padding:8px 13px;
+      border-radius:999px;
+      font-size:12px;
+      font-weight:700;
+      color:var(--body);
+      background:#F2EAE0;
+      border:1px solid rgba(90,58,27,.14);
+      z-index:6;
+    }
+
+    .lane{
+      position:absolute;
+      left:74px;
+      right:74px;
+      border:1px solid rgba(90,58,27,.08);
+      border-radius:22px;
+      background:rgba(255,255,255,.24);
+      z-index:0;
+    }
+
+    .lane-main{ top:88px; height:150px; }
+    .lane-branch-top{ top:254px; height:118px; }
+    .lane-branch-bottom{ top:390px; height:118px; }
+    .lane-outcome{ top:528px; height:108px; }
+
+    .lane-label{
+      position:absolute;
+      font-size:11px;
+      letter-spacing:.18em;
+      text-transform:uppercase;
+      color:rgba(84,51,18,.62);
+      z-index:6;
+    }
+
+    .rail-label{
+      position:absolute;
+      font-size:10px;
+      letter-spacing:.18em;
+      text-transform:uppercase;
+      color:rgba(84,51,18,.55);
+      background:rgba(255,250,246,.92);
+      padding:4px 8px;
+      border:1px solid rgba(90,58,27,.08);
+      border-radius:999px;
+      z-index:6;
+      white-space:nowrap;
+    }
+
+    .node{
+      position:absolute;
+      width:146px;
+      min-height:92px;
+      padding:12px 12px 11px;
+      border-radius:18px;
+      border:1.7px solid;
+      background:#fff;
+      box-shadow:0 10px 22px rgba(58,35,22,.05);
+      color:var(--text);
+      cursor:pointer;
+      transition:
+        transform .18s ease,
+        box-shadow .18s ease,
+        filter .18s ease,
+        border-color .18s ease;
+      z-index:5;
+      display:flex;
+      flex-direction:column;
+      justify-content:flex-start;
+      text-align:center;
+    }
+
+    .node:hover,
+    .wait-chip:hover{
+      transform:translateY(-3px);
+      box-shadow:0 16px 30px rgba(58,35,22,.11);
+      filter:brightness(1.015);
+    }
+
+    .split{
+      position:absolute;
+      width:112px;
+      height:112px;
+      transform:rotate(45deg);
+      border:1.8px solid var(--split-stroke);
+      background:var(--split-fill);
+      border-radius:20px;
+      box-shadow:0 10px 22px rgba(58,35,22,.05);
+      cursor:pointer;
+      transition:
+        box-shadow .18s ease,
+        filter .18s ease,
+        border-color .18s ease;
+      z-index:5;
+    }
+
+    .split:hover{
+      box-shadow:0 16px 30px rgba(58,35,22,.11);
+      filter:brightness(1.015);
+      border-color:#cf9400;
+    }
+
+    .node.trigger{
+      background:var(--trigger-fill);
+      border-color:var(--trigger-stroke);
+    }
+
+    .node.email{
+      background:var(--email-fill);
+      border-color:var(--email-stroke);
+    }
+
+    .node.finish-end{
+      width:154px;
+      min-height:68px;
+      justify-content:center;
+      background:var(--finish-fill);
+      border-color:rgba(74,63,18,.25);
+      color:var(--finish-text);
+    }
+
+    .node.lead-end{
+      width:170px;
+      min-height:72px;
+      justify-content:center;
+      background:var(--lead-fill);
+      border-color:var(--lead-stroke);
+      color:#5A3418;
+    }
+
+    .kicker{
+      font-size:10px;
+      line-height:1.1;
+      letter-spacing:.16em;
+      text-transform:uppercase;
+      font-weight:700;
+      color:rgba(84,51,18,.82);
+      margin-bottom:8px;
+    }
+
+    .title{
+      font-size:13px;
+      line-height:1.25;
+      font-weight:700;
+      color:var(--text);
+      margin-bottom:5px;
+    }
+
+    .desc{
+      font-size:11px;
+      line-height:1.35;
+      color:var(--body);
+    }
+
+    .wait-chip{
+      position:absolute;
+      display:flex;
+      align-items:center;
+      gap:8px;
+      padding:8px 12px;
+      min-height:34px;
+      border-radius:999px;
+      border:1px solid var(--wait-stroke);
+      background:var(--wait-fill);
+      color:var(--body);
+      box-shadow:0 8px 16px rgba(58,35,22,.04);
+      cursor:pointer;
+      transition:
+        transform .18s ease,
+        box-shadow .18s ease,
+        filter .18s ease,
+        border-color .18s ease;
+      z-index:5;
+      white-space:nowrap;
+    }
+
+    .wait-chip .dot{
+      width:7px;
+      height:7px;
+      border-radius:999px;
+      background:#C7A781;
+      flex:0 0 auto;
+    }
+
+    .wait-chip .wait-text{
+      font-size:11px;
+      letter-spacing:.12em;
+      text-transform:uppercase;
+      font-weight:700;
+      line-height:1;
+    }
+
+    .wait-chip .wait-days{
+      font-size:12px;
+      font-weight:700;
+      color:var(--text);
+      line-height:1;
+    }
+
+    .split-inner{
+      position:absolute;
+      inset:0;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:12px;
+      transform:rotate(-45deg);
+      text-align:center;
+      flex-direction:column;
+    }
+
+    .split .kicker{
+      margin-bottom:5px;
+      font-size:9px;
+      letter-spacing:.16em;
+    }
+
+    .split .title{
+      font-size:12px;
+      line-height:1.15;
+      margin-bottom:0;
+    }
+
+    .split-note{
+      position:absolute;
+      width:156px;
+      text-align:center;
+      font-size:10px;
+      line-height:1.35;
+      color:var(--muted);
+      z-index:5;
+    }
+
+    .tiny-label{
+      position:absolute;
+      font-size:10px;
+      font-weight:700;
+      color:var(--body);
+      background:rgba(255,250,246,.94);
+      padding:2px 7px;
+      border-radius:999px;
+      border:1px solid rgba(90,58,27,.10);
+      z-index:6;
+      white-space:nowrap;
+    }
+
+    .legend{
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+      padding:0 28px 24px;
+    }
+
+    .legend-item{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      font-size:12px;
+      color:var(--body);
+      padding:8px 12px;
+      border-radius:999px;
+      border:1px solid rgba(90,58,27,.10);
+      background:rgba(255,255,255,.45);
+    }
+
+    .swatch{
+      width:14px;height:14px;border-radius:999px;border:1px solid rgba(0,0,0,.08);
+    }
+
+    .svg-layer{
+      position:absolute;
+      inset:0;
+      z-index:1;
+      pointer-events:none;
+    }
+
+    .line{
+      fill:none;
+      stroke:var(--line);
+      stroke-width:1.9;
+      stroke-linecap:round;
+      stroke-linejoin:round;
+    }
+
+    .line.dashed{
+      stroke-dasharray:6 6;
+    }
+
+    .modal{
+      position:fixed;
+      inset:0;
+      display:none;
+      align-items:center;
+      justify-content:center;
+      z-index:30;
+      background:rgba(10,13,10,.22);
+      padding:24px;
+    }
+
+    .modal.open{display:flex}
+
+    .modal-card{
+      width:min(720px, 100%);
+      background:var(--panel);
+      border:1px solid rgba(90,58,27,.14);
+      border-radius:24px;
+      box-shadow:0 28px 70px rgba(28,18,10,.22);
+      overflow:hidden;
+    }
+
+    .modal-head{
+      display:flex;
+      justify-content:space-between;
+      gap:18px;
+      padding:24px 24px 18px;
+      border-bottom:1px solid rgba(90,58,27,.10);
+      background:linear-gradient(180deg, rgba(255,255,255,.48), rgba(255,255,255,0));
+    }
+
+    .modal-head h2{
+      margin:0;
+      font-family:"Times New Roman", Georgia, serif;
+      font-size:28px;
+      font-weight:600;
+      color:var(--text);
+    }
+
+    .modal-type{
+      margin:0 0 8px;
+      font-size:11px;
+      letter-spacing:.18em;
+      text-transform:uppercase;
+      color:var(--body);
+    }
+
+    .close{
+      appearance:none;
+      border:1px solid rgba(90,58,27,.14);
+      background:#fff;
+      color:var(--body);
+      width:38px;height:38px;
+      border-radius:999px;
+      font-size:20px;
+      cursor:pointer;
+      flex:0 0 auto;
+    }
+
+    .modal-body{
+      padding:24px;
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:16px;
+    }
+
+    .meta{
+      border:1px solid rgba(90,58,27,.10);
+      border-radius:18px;
+      padding:16px;
+      background:rgba(255,255,255,.45);
+    }
+
+    .meta h3{
+      margin:0 0 8px;
+      font-size:12px;
+      letter-spacing:.12em;
+      text-transform:uppercase;
+      color:var(--body);
+    }
+
+    .meta p{
+      margin:0;
+      font-size:14px;
+      line-height:1.6;
+      color:var(--text);
+    }
+
+    @media (max-width: 980px){
+      .header{padding:22px 20px 16px}
+      .legend{padding:0 20px 20px}
+      .canvas-wrap{padding:16px}
+      h1{font-size:28px}
+      .modal-body{grid-template-columns:1fr}
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <div class="shell">
+      <div class="header">
+        <div class="eyebrow">IKOU CRM Documentation</div>
+        <h1>Welcome Series – New</h1>
+        <div class="sub">
+          Manually adjusted node placement to tighten the onboarding spine, reduce dead space, and balance the right-side decision cluster.
+        </div>
+      </div>
+
+      <div class="canvas-wrap">
+        <div class="canvas">
+          <div class="flow-tag">Welcome Series – New</div>
+
+          <div class="lane lane-main"></div>
+          <div class="lane lane-branch-top"></div>
+          <div class="lane lane-branch-bottom"></div>
+          <div class="lane lane-outcome"></div>
+
+          <div class="lane-label" style="left:92px; top:104px;">Main Sequence</div>
+          <div class="lane-label" style="left:92px; top:270px;">No Order Path</div>
+          <div class="lane-label" style="left:92px; top:406px;">Order Path</div>
+          <div class="lane-label" style="left:92px; top:544px;">Shared Outcomes</div>
+
+          <div class="rail-label" style="left:1980px; top:85px;">Shared Finish Rail</div>
+          <div class="rail-label" style="left:1778px; top:570px;">Lead Flow Exit</div>
+
+          <svg class="svg-layer" viewBox="0 0 2140 720" preserveAspectRatio="none" aria-hidden="true">
+            <defs>
+              <marker id="arrow-solid" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto" markerUnits="userSpaceOnUse">
+                <path d="M0,0 L12,6 L0,12 Z" fill="#5A3A1B"></path>
+              </marker>
+              <marker id="arrow-dashed" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto" markerUnits="userSpaceOnUse">
+                <path d="M0,0 L12,6 L0,12 Z" fill="#5A3A1B"></path>
+              </marker>
+            </defs>
+
+            <!-- Main spine -->
+            <path class="line" marker-end="url(#arrow-solid)" d="M182 164 H270"></path>
+            <path class="line" marker-end="url(#arrow-solid)" d="M416 164 H520"></path>
+            <path class="line" marker-end="url(#arrow-solid)" d="M666 164 H770"></path>
+            <path class="line" marker-end="url(#arrow-solid)" d="M916 164 H1020"></path>
+            <path class="line" marker-end="url(#arrow-solid)" d="M1166 164 H1238"></path>
+
+            <!-- First split branches -->
+            <path class="line dashed" marker-end="url(#arrow-dashed)" d="M1094 108 V320 H1192"></path>
+            <path class="line dashed" marker-end="url(#arrow-dashed)" d="M1094 220 V446 H1192"></path>
+
+            <!-- No-order path -->
+            <path class="line" marker-end="url(#arrow-solid)" d="M1518 308 H1206"></path>
+
+            <!-- Order path -->
+            <path class="line" marker-end="url(#arrow-solid)" d="M1138 446 H1404"></path>
+
+            <!-- Converge order path upward into loyalty split -->
+            <path class="line" d="M1445 446 V308"></path>
+            <path class="line" marker-end="url(#arrow-solid)" d="M1760 308 H1464"></path>
+
+            <!-- Loyalty split -->
+            <path class="line dashed" marker-end="url(#arrow-dashed)" d="M1642 302 V580 H1688"></path>
+            <path class="line dashed" marker-end="url(#arrow-dashed)" d="M1898 302 H2030"></path>
+
+            <!-- Redeemed split -->
+            <path class="line dashed" marker-end="url(#arrow-dashed)" d="M1445 318 V116 H1828"></path>
+            <path class="line dashed" marker-end="url(#arrow-dashed)" d="M1528 314 V590 H1660"></path>
+
+            <!-- Reward reminder to final split -->
+            <path class="line" marker-end="url(#arrow-solid)" d="M1720 580 H1776"></path>
+
+            <!-- Final split -->
+            <path class="line dashed" marker-end="url(#arrow-dashed)" d="M2032 524 V116 H1828"></path>
+            <path class="line dashed" marker-end="url(#arrow-dashed)" d="M2032 636 H1688"></path>
+          </svg>
+
+          <div class="tiny-label" style="left:1104px; top:240px;">Yes</div>
+          <div class="tiny-label" style="left:1104px; top:366px;">No</div>
+
+          <div class="tiny-label" style="left:1656px; top:448px;">Yes → Lead Flow</div>
+          <div class="tiny-label" style="left:1718px; top:336px;">No</div>
+
+          <div class="tiny-label" style="left:1410px; top:138px;">Yes → Finish</div>
+          <div class="tiny-label" style="left:2000px; top:330px;">No</div>
+
+          <div class="tiny-label" style="left:2046px; top:438px;">Yes → Finish</div>
+          <div class="tiny-label" style="left:2000px; top:628px;">No → Lead Flow</div>
+
+          <!-- Main sequence -->
+          <button class="node trigger" style="left:36px; top:118px;"
+            data-section="Entry"
+            data-type="Trigger"
+            data-title="Profile Created"
+            data-description="Entry point when someone creates an account via profile event."
+            data-logic="This starts the welcome sequence for newly created profiles before any order or loyalty routing is applied.">
+            <div class="kicker">Trigger</div>
+            <div class="title">Profile Created</div>
+            <div class="desc">When someone creates account via profile event</div>
+          </button>
+
+          <button class="node email" style="left:270px; top:118px;"
+            data-section="Email Sequence"
+            data-type="Send Email"
+            data-title="Email 1 — Welcome to IKOU"
+            data-description="Initial welcome and brand introduction."
+            data-logic="First touchpoint in the sequence, designed to orient the customer to the IKOU brand.">
+            <div class="kicker">Send Email</div>
+            <div class="title">Welcome to IKOU</div>
+            <div class="desc">Email 1 · Brand introduction</div>
+          </button>
+
+          <button class="wait-chip" style="left:448px; top:76px;"
+            data-section="Timing"
+            data-type="Time Delay"
+            data-title="Wait 2 Days"
+            data-description="Pause before loyalty introduction."
+            data-logic="Spacing between the welcome email and the loyalty message.">
+            <span class="dot"></span>
+            <span class="wait-text">Wait</span>
+            <span class="wait-days">2 Days</span>
+          </button>
+
+          <button class="node email" style="left:520px; top:118px;"
+            data-section="Email Sequence"
+            data-type="Send Email"
+            data-title="Email 2 — Welcome to Loyalty"
+            data-description="Introduces the loyalty proposition."
+            data-logic="Transitions the customer from brand onboarding into loyalty education.">
+            <div class="kicker">Send Email</div>
+            <div class="title">Welcome to Loyalty</div>
+            <div class="desc">Email 2 · Loyalty introduction</div>
+          </button>
+
+          <button class="wait-chip" style="left:698px; top:76px;"
+            data-section="Timing"
+            data-type="Time Delay"
+            data-title="Wait 4 Days"
+            data-description="Pause before product offering."
+            data-logic="Keeps the cadence calm before the product-focused email.">
+            <span class="dot"></span>
+            <span class="wait-text">Wait</span>
+            <span class="wait-days">4 Days</span>
+          </button>
+
+          <button class="node email" style="left:770px; top:118px;"
+            data-section="Email Sequence"
+            data-type="Send Email"
+            data-title="Email 3 — IKOU Product Offering"
+            data-description="Introduces product range and first-order orientation."
+            data-logic="Moves the customer from welcome and loyalty framing into product education before the first routing decision.">
+            <div class="kicker">Send Email</div>
+            <div class="title">IKOU Product Offering</div>
+            <div class="desc">Email 3 · Product education</div>
+          </button>
+
+          <button class="wait-chip" style="left:948px; top:76px;"
+            data-section="Timing"
+            data-type="Time Delay"
+            data-title="Wait 5 Days"
+            data-description="Pause before order-status check."
+            data-logic="Allows time for early purchase behaviour before the first split.">
+            <span class="dot"></span>
+            <span class="wait-text">Wait</span>
+            <span class="wait-days">5 Days</span>
+          </button>
+
+          <div class="split" style="left:1038px; top:108px;"
+            data-section="Routing"
+            data-type="Conditional Split"
+            data-title="Attended or Booked Service in the Last 15 Days?"
+            data-description="Checks whether the customer has Attended or Booked Service in the Last 15 Days."
+            data-logic="Yes path means no customer activity, so the customer waits 5 days and goes to loyalty level check. NO path means the customer has already ordered or booked a service in the last 15 days so they get Email 4">
+            <div class="split-inner">
+              <div class="kicker">Conditional Split</div>
+              <div class="title">Attended or Booked Servic<br>in the Last 15 Days?</div>
+            </div>
+          </div>
+          <div class="split-note" style="left:930px; top:234px;">
+            Attended or Booked Service in the Last 15 Days
+          </div>
+
+          <!-- Branch top -->
+          <button class="wait-chip" style="left:1192px; top:298px;"
+            data-section="No Order Path"
+            data-type="Time Delay"
+            data-title="Wait 5 Days"
+            data-description="Extra time for non-purchasers."
+            data-logic="Customers with no early purchase activity wait 5 more days before loyalty-level evaluation.">
+            <span class="dot"></span>
+            <span class="wait-text">Wait</span>
+            <span class="wait-days">5 Days</span>
+          </button>
+
+          <div class="split" style="left:1386px; top:252px;"
+            data-section="Loyalty Check"
+            data-type="Conditional Split"
+            data-title="Loyalty Level = 1?"
+            data-description="Checks whether loyalty level equals 1."
+            data-logic="If yes, the profile exits to lead flow. If no, the profile continues to reward-redemption logic.">
+            <div class="split-inner">
+              <div class="kicker">Conditional Split</div>
+              <div class="title">Loyalty Level<br>= 1?</div>
+            </div>
+          </div>
+          <div class="split-note" style="left:1450px; top:378px;">
+            Properties about someone · loyalty level equals 1
+          </div>
+
+          <div class="split" style="left:1595px; top:250px;"
+            data-section="Reward Logic"
+            data-type="Conditional Split"
+            data-title="Redeemed Reward?"
+            data-description="Checks whether the customer redeemed a reward."
+            data-logic="If yes, the sequence finishes. If no, the profile receives a reward reminder and then passes through one final order check.">
+            <div class="split-inner">
+              <div class="kicker">Conditional Split</div>
+              <div class="title">Redeemed<br>Reward?</div>
+            </div>
+          </div>
+          <div class="split-note" style="left:1966px; top:258px;">
+            Has the customer redeemed a reward?
+          </div>
+
+          <!-- Branch bottom -->
+          <button class="node email" style="left:1192px; top:402px;"
+            data-section="Order Path"
+            data-type="Send Email"
+            data-title="Email 4 — Store & Treatments"
+            data-description="Follow-up for customers with order activity."
+            data-logic="Profiles with order activity receive Store and Treatments before converging into the same loyalty-level decision.">
+            <div class="kicker">Send Email</div>
+            <div class="title">Store &amp; Treatments</div>
+            <div class="desc">Email 4 · Post-order nurture</div>
+          </button>
+
+          <button class="wait-chip" style="left:1405px; top:430px;"
+            data-section="Order Path"
+            data-type="Time Delay"
+            data-title="Wait 5 Days"
+            data-description="Pause before loyalty level check."
+            data-logic="Aligns the purchaser path back into the common loyalty decision point.">
+            <span class="dot"></span>
+            <span class="wait-text">Wait</span>
+            <span class="wait-days">5 Days</span>
+          </button>
+
+          <!-- Shared outcomes -->
+          <button class="node lead-end" style="left:1548px; top:564px;"
+            data-section="Exit"
+            data-type="Lead Flow"
+            data-title="Proceed to Lead Flow"
+            data-description="Shared diversion endpoint."
+            data-logic="Used when the customer should continue in lead nurture instead of resolving within this sequence.">
+            <div class="kicker">Exit Path</div>
+            <div class="title">Proceed to Lead Flow</div>
+            <div class="desc">Shared diversion endpoint</div>
+          </button>
+
+          <button class="node email" style="left:1750px; top:255px;"
+            data-section="Reminder Messaging"
+            data-type="Send Email"
+            data-title="Email 5 — Reward Reminder"
+            data-description="Final reminder encouraging reward redemption."
+            data-logic="Only sent to customers who did not redeem after the redemption check.">
+            <div class="kicker">Send Email</div>
+            <div class="title">Reward Reminder</div>
+            <div class="desc">Email 5 · Redemption prompt</div>
+          </button>
+
+          <div class="split" style="left:1976px; top:468px;"
+            data-section="Final Outcome"
+            data-type="Conditional Split"
+            data-title="Placed Order At Least Once?"
+            data-description="Final order-status check for the last 21 days."
+            data-logic="If yes, the customer finishes the sequence. If no, the customer proceeds to lead flow.">
+            <div class="split-inner">
+              <div class="kicker">Conditional Split</div>
+              <div class="title">Placed Order<br>At Least Once?</div>
+            </div>
+          </div>
+          <div class="split-note" style="left:1956px; top:594px;">
+            At least one order placed in the last 21 days
+          </div>
+
+          <button class="node finish-end" style="left:1828px; top:84px;"
+            data-section="Exit"
+            data-type="Finish"
+            data-title="Sequence Complete"
+            data-description="Shared finish endpoint."
+            data-logic="All successful branches converge here.">
+            <div class="kicker" style="color:rgba(255,245,237,.75)">Finish</div>
+            <div class="title" style="color:var(--finish-text)">Sequence Complete</div>
+            <div class="desc" style="color:rgba(255,245,237,.82)">Shared endpoint</div>
+          </button>
+        </div>
+      </div>
+
+      <div class="legend">
+        <div class="legend-item"><span class="swatch" style="background:var(--trigger-fill); border-color:var(--trigger-stroke)"></span> Trigger</div>
+        <div class="legend-item"><span class="swatch" style="background:var(--email-fill); border-color:var(--email-stroke)"></span> Email</div>
+        <div class="legend-item"><span class="swatch" style="background:var(--split-fill); border-color:var(--split-stroke)"></span> Conditional Split</div>
+        <div class="legend-item"><span class="swatch" style="background:var(--wait-fill); border-color:var(--wait-stroke)"></span> Wait Marker</div>
+        <div class="legend-item"><span class="swatch" style="background:var(--finish-fill); border-color:rgba(74,63,18,.25)"></span> Finish</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal" id="nodeModal" aria-hidden="true">
+    <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+      <div class="modal-head">
+        <div>
+          <p class="modal-type" id="modalType">Node Type</p>
+          <h2 id="modalTitle">Node Title</h2>
+        </div>
+        <button class="close" id="closeModal" aria-label="Close">×</button>
+      </div>
+      <div class="modal-body">
+        <div class="meta">
+          <h3>Section Name</h3>
+          <p id="modalSection"></p>
+        </div>
+        <div class="meta">
+          <h3>Description</h3>
+          <p id="modalDescription"></p>
+        </div>
+        <div class="meta" style="grid-column:1 / -1;">
+          <h3>Flow Logic</h3>
+          <p id="modalLogic"></p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const clickableNodes = document.querySelectorAll('.node, .split, .wait-chip');
+    const modal = document.getElementById('nodeModal');
+    const closeModal = document.getElementById('closeModal');
+
+    const modalType = document.getElementById('modalType');
+    const modalTitle = document.getElementById('modalTitle');
+    const modalSection = document.getElementById('modalSection');
+    const modalDescription = document.getElementById('modalDescription');
+    const modalLogic = document.getElementById('modalLogic');
+
+    clickableNodes.forEach(node => {
+      node.addEventListener('click', () => {
+        modalType.textContent = node.dataset.type || 'Node';
+        modalTitle.textContent = node.dataset.title || 'Untitled';
+        modalSection.textContent = node.dataset.section || '—';
+        modalDescription.textContent = node.dataset.description || '—';
+        modalLogic.textContent = node.dataset.logic || '—';
+        modal.classList.add('open');
+        modal.setAttribute('aria-hidden', 'false');
+      });
+    });
+
+    function dismissModal(){
+      modal.classList.remove('open');
+      modal.setAttribute('aria-hidden', 'true');
+    }
+
+    closeModal.addEventListener('click', dismissModal);
+    modal.addEventListener('click', (e) => {
+      if(e.target === modal) dismissModal();
+    });
+    document.addEventListener('keydown', (e) => {
+      if(e.key === 'Escape' && modal.classList.contains('open')) dismissModal();
+    });
+  </script>
+</body>
+</html>
