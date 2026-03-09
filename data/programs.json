@@ -9,10 +9,19 @@
     "programCardPreview": "assets/programs/previews/onboarding-existing-customers-cover.html"
   },
   {
+    "id": "Welcome-Series-New",
+    "title": "Welcome Series New",
+    "phase": "01-tier-progression",
+    "displayOrder": 2,
+    "status": "Live",
+    "programHtml": "assets/programs/loyalty/welcome-series-new.html",
+    "programCardPreview": "assets/programs/previews/welcome-series-new-cover.html"
+  },
+  {
     "id": "upgrade-journey",
     "title": "Upgrade Journey",
     "phase": "03-tier-progression",
-    "displayOrder": 2,
+    "displayOrder": 3,
     "status": "Live",
     "programHtml": "assets/programs/loyalty/upgrade-journey.html",
     "programCardPreview": "assets/programs/previews/upgrade-journey-cover.html"
@@ -21,7 +30,7 @@
     "id": "spend-to-next",
     "title": "Spend to Next Tier",
     "phase": "03-tier-progression",
-    "displayOrder": 3,
+    "displayOrder": 4,
     "status": "Live",
     "programHtml": "assets/programs/loyalty/spend-to-next.html",
     "programCardPreview": "assets/programs/previews/spend-to-next-cover.html"
@@ -30,7 +39,7 @@
     "id": "birthday-series",
     "title": "Birthday Series",
     "phase": "02-lifecycle",
-    "displayOrder": 4,
+    "displayOrder": 5,
     "status": "Live",
     "programHtml": "assets/programs/loyalty/birthday-series.html",
     "programCardPreview": "assets/programs/previews/birthday-series-cover.html"
@@ -39,7 +48,7 @@
     "id": "birthday-capture",
     "title": "Birthday Capture",
     "phase": "02-lifecycle",
-    "displayOrder": 5,
+    "displayOrder": 6,
     "status": "Live",
     "programHtml": "assets/programs/loyalty/birthday-capture.html",
     "programCardPreview": "assets/programs/previews/birthday-capture-cover.html"
@@ -48,7 +57,7 @@
     "id": "loyalty-anniversary",
     "title": "Loyalty Anniversary",
     "phase": "02-lifecycle",
-    "displayOrder": 6,
+    "displayOrder": 7,
     "status": "Live",
     "programHtml": "assets/programs/loyalty/loyalty-anniversary.html",
     "programCardPreview": "assets/programs/previews/loyalty-anniversary-cover.html"
@@ -57,7 +66,7 @@
     "id": "adhoc-rewards",
     "title": "Adhoc Rewards",
     "phase": "02-lifecycle",
-    "displayOrder": 7,
+    "displayOrder": 8,
     "status": "Live",
     "programHtml": "assets/programs/loyalty/adhoc-rewards.html",
     "programCardPreview": "assets/programs/previews/adhoc-rewards-cover.html"
@@ -66,7 +75,7 @@
     "id": "spend-to-maintain",
     "title": "Spend to Maintain / Demotion",
     "phase": "04-retention-risk",
-    "displayOrder": 8,
+    "displayOrder": 9,
     "status": "Live",
     "programHtml": "assets/programs/loyalty/Spend-to-Maintain-Demotion.html",
     "programCardPreview": "assets/programs/previews/spend-to-maintain-demotion-cover.html"
